@@ -1,0 +1,99 @@
+[
+  {
+    "id": "full_gym",
+    "name": "Academia completa",
+    "equipment": [
+      "barbell",
+      "ez_bar",
+      "dumbbells",
+      "kettlebell",
+      "flat_bench",
+      "adjustable_bench",
+      "squat_rack",
+      "smith_machine",
+      "cable_station",
+      "lat_pulldown",
+      "seated_row_machine",
+      "leg_press",
+      "hack_squat",
+      "leg_extension",
+      "leg_curl",
+      "pec_deck",
+      "chest_press_machine",
+      "shoulder_press_machine",
+      "calf_machine",
+      "hip_abduction_machine",
+      "hip_adduction_machine",
+      "back_extension_bench",
+      "dip_station",
+      "pull_up_bar",
+      "resistance_bands",
+      "ab_wheel",
+      "step_box",
+      "trx",
+      "low_bar"
+    ]
+  },
+  {
+    "id": "basic_gym",
+    "name": "Academia básica",
+    "equipment": [
+      "barbell",
+      "ez_bar",
+      "dumbbells",
+      "flat_bench",
+      "adjustable_bench",
+      "squat_rack",
+      "cable_station",
+      "lat_pulldown",
+      "leg_press",
+      "leg_extension",
+      "leg_curl",
+      "pull_up_bar",
+      "dip_station",
+      "step_box"
+    ]
+  },
+  {
+    "id": "home_gym",
+    "name": "Home gym",
+    "equipment": [
+      "barbell",
+      "ez_bar",
+      "dumbbells",
+      "kettlebell",
+      "flat_bench",
+      "adjustable_bench",
+      "squat_rack",
+      "pull_up_bar",
+      "resistance_bands",
+      "ab_wheel",
+      "step_box",
+      "low_bar"
+    ]
+  },
+  {
+    "id": "home",
+    "name": "Casa",
+    "equipment": [
+      "dumbbells",
+      "resistance_bands",
+      "step_box"
+    ]
+  },
+  {
+    "id": "outdoor",
+    "name": "Ao ar livre",
+    "equipment": [
+      "pull_up_bar",
+      "dip_station",
+      "step_box",
+      "low_bar"
+    ]
+  },
+  {
+    "id": "bodyweight",
+    "name": "Apenas peso corporal",
+    "equipment": []
+  }
+]

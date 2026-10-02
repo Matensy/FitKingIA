@@ -1,0 +1,177 @@
+[
+  {
+    "id": "horizontal_push",
+    "name": "Empurrar horizontal",
+    "description": "Empurrar carga à frente do tronco (supinos, flexões).",
+    "related": [
+      "horizontal_adduction"
+    ]
+  },
+  {
+    "id": "vertical_push",
+    "name": "Empurrar vertical",
+    "description": "Empurrar carga acima da cabeça (desenvolvimentos).",
+    "related": []
+  },
+  {
+    "id": "horizontal_pull",
+    "name": "Puxar horizontal",
+    "description": "Puxar carga em direção ao tronco (remadas).",
+    "related": [
+      "vertical_pull",
+      "horizontal_abduction"
+    ]
+  },
+  {
+    "id": "vertical_pull",
+    "name": "Puxar vertical",
+    "description": "Puxar de cima para baixo (barra fixa, puxadas).",
+    "related": [
+      "horizontal_pull"
+    ]
+  },
+  {
+    "id": "squat",
+    "name": "Agachar",
+    "description": "Flexão simultânea de joelhos e quadril, dominante de joelho.",
+    "related": [
+      "lunge",
+      "knee_extension"
+    ]
+  },
+  {
+    "id": "hinge",
+    "name": "Dobradiça de quadril",
+    "description": "Flexão de quadril com joelhos pouco flexionados (terra, stiff).",
+    "related": [
+      "hip_extension",
+      "knee_flexion"
+    ]
+  },
+  {
+    "id": "lunge",
+    "name": "Afundo / unilateral de pernas",
+    "description": "Padrões unilaterais de membros inferiores (afundo, búlgaro, subida no banco).",
+    "related": [
+      "squat"
+    ]
+  },
+  {
+    "id": "hip_extension",
+    "name": "Extensão de quadril",
+    "description": "Ponte e elevação pélvica, foco em glúteos.",
+    "related": [
+      "hinge"
+    ]
+  },
+  {
+    "id": "knee_flexion",
+    "name": "Flexão de joelho",
+    "description": "Flexoras e variações, foco em posterior de coxa.",
+    "related": [
+      "hinge"
+    ]
+  },
+  {
+    "id": "knee_extension",
+    "name": "Extensão de joelho",
+    "description": "Cadeira extensora e variações, foco em quadríceps.",
+    "related": [
+      "squat"
+    ]
+  },
+  {
+    "id": "calf_raise",
+    "name": "Elevação de panturrilha",
+    "description": "Flexão plantar do tornozelo.",
+    "related": []
+  },
+  {
+    "id": "hip_abduction",
+    "name": "Abdução de quadril",
+    "description": "Afastar a coxa da linha média (glúteo médio).",
+    "related": []
+  },
+  {
+    "id": "hip_adduction",
+    "name": "Adução de quadril",
+    "description": "Aproximar a coxa da linha média.",
+    "related": []
+  },
+  {
+    "id": "horizontal_adduction",
+    "name": "Adução horizontal de ombro",
+    "description": "Crucifixos e voador, foco em peitoral.",
+    "related": [
+      "horizontal_push"
+    ]
+  },
+  {
+    "id": "horizontal_abduction",
+    "name": "Abdução horizontal de ombro",
+    "description": "Crucifixo inverso e face pull, foco em deltoide posterior.",
+    "related": [
+      "horizontal_pull"
+    ]
+  },
+  {
+    "id": "shoulder_abduction",
+    "name": "Abdução de ombro",
+    "description": "Elevações laterais, foco em deltoide lateral.",
+    "related": []
+  },
+  {
+    "id": "elbow_flexion",
+    "name": "Flexão de cotovelo",
+    "description": "Roscas, foco em bíceps.",
+    "related": []
+  },
+  {
+    "id": "elbow_extension",
+    "name": "Extensão de cotovelo",
+    "description": "Tríceps na polia, francês, testa.",
+    "related": []
+  },
+  {
+    "id": "anti_extension",
+    "name": "Antiextensão",
+    "description": "Resistir à extensão da coluna (pranchas, roda).",
+    "related": [
+      "anti_rotation",
+      "trunk_flexion"
+    ]
+  },
+  {
+    "id": "anti_rotation",
+    "name": "Antirrotação / antiflexão lateral",
+    "description": "Resistir à rotação ou inclinação lateral do tronco.",
+    "related": [
+      "anti_extension",
+      "carry"
+    ]
+  },
+  {
+    "id": "trunk_flexion",
+    "name": "Flexão de tronco",
+    "description": "Abdominais com flexão da coluna.",
+    "related": [
+      "anti_extension"
+    ]
+  },
+  {
+    "id": "rotation",
+    "name": "Rotação",
+    "description": "Rotação controlada do tronco (lenhador).",
+    "related": [
+      "anti_rotation"
+    ]
+  },
+  {
+    "id": "carry",
+    "name": "Carregar",
+    "description": "Caminhar segurando carga (fazendeiro).",
+    "related": [
+      "anti_rotation"
+    ]
+  }
+]

@@ -1,0 +1,5273 @@
+[
+  {
+    "id": "barbell_back_squat",
+    "name": "Agachamento livre com barra",
+    "aliases": [
+      "agachamento livre",
+      "back squat",
+      "agachamento"
+    ],
+    "pattern": "squat",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors",
+      "lower_back"
+    ],
+    "equipment": [
+      "barbell",
+      "squat_rack"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 3,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 2,
+      "LOWER_BACK": 2
+    },
+    "instructions": [
+      "Barra apoiada no trapézio, pés na largura dos ombros ou pouco mais.",
+      "Inspire, contraia o abdômen e desça flexionando quadril e joelhos juntos.",
+      "Desça até onde mantiver a coluna neutra e suba empurrando o chão."
+    ],
+    "common_mistakes": [
+      "Joelhos colapsando para dentro",
+      "Calcanhares saindo do chão",
+      "Perder a posição neutra da coluna no fundo"
+    ],
+    "safety_notes": [
+      "Use as travas de segurança do rack na altura adequada."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "hack_squat",
+      "smith_squat",
+      "leg_press",
+      "goblet_squat",
+      "bulgarian_split_squat"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "front_squat",
+    "name": "Agachamento frontal",
+    "aliases": [
+      "front squat"
+    ],
+    "pattern": "squat",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "quads"
+    ],
+    "secondary": [
+      "glutes",
+      "abs",
+      "mid_back"
+    ],
+    "equipment": [
+      "barbell",
+      "squat_rack"
+    ],
+    "difficulty": 4,
+    "min_tier": "INTERMEDIATE",
+    "stability": 4,
+    "mobility": 4,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 2,
+      "LOWER_BACK": 1,
+      "WRIST": 2
+    },
+    "instructions": [
+      "Barra apoiada na frente dos ombros, cotovelos altos.",
+      "Tronco mais vertical que no agachamento tradicional.",
+      "Desça com controle e suba mantendo os cotovelos altos."
+    ],
+    "common_mistakes": [
+      "Cotovelos caindo e barra rolando para frente",
+      "Arredondar a parte alta das costas"
+    ],
+    "safety_notes": [
+      "Se o punho incomodar, use pegada cruzada ou com faixas."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "goblet_squat",
+      "hack_squat",
+      "barbell_back_squat",
+      "leg_press"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "goblet_squat",
+    "name": "Agachamento goblet",
+    "aliases": [
+      "goblet",
+      "agachamento com halter"
+    ],
+    "pattern": "squat",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "abs",
+      "adductors"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 1,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Segure um halter na vertical junto ao peito.",
+      "Desça entre as pernas mantendo o tronco ereto.",
+      "Suba empurrando o chão com o pé inteiro."
+    ],
+    "common_mistakes": [
+      "Inclinar demais o tronco à frente",
+      "Encurtar a amplitude por pressa"
+    ],
+    "safety_notes": [
+      "Ótimo para aprender o padrão de agachar."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "leg_press",
+      "bodyweight_squat",
+      "dumbbell_split_squat",
+      "barbell_back_squat"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": "NOVICE"
+  },
+  {
+    "id": "hack_squat",
+    "name": "Agachamento hack (máquina)",
+    "aliases": [
+      "hack",
+      "hack squat"
+    ],
+    "pattern": "squat",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "quads"
+    ],
+    "secondary": [
+      "glutes",
+      "adductors"
+    ],
+    "equipment": [
+      "hack_squat"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 1,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Costas apoiadas no encosto, pés no meio da plataforma.",
+      "Destrave e desça com controle até a amplitude confortável.",
+      "Suba sem travar completamente os joelhos."
+    ],
+    "common_mistakes": [
+      "Tirar a lombar do encosto no fundo",
+      "Descer rápido demais"
+    ],
+    "safety_notes": [
+      "Mantenha as travas da máquina acessíveis."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "leg_press",
+      "smith_squat",
+      "barbell_back_squat",
+      "goblet_squat"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "smith_squat",
+    "name": "Agachamento no Smith",
+    "aliases": [
+      "agachamento smith"
+    ],
+    "pattern": "squat",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "SMITH",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors"
+    ],
+    "equipment": [
+      "smith_machine"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 2,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Barra no trapézio, pés levemente à frente da barra.",
+      "Desça controlando, tronco firme.",
+      "Suba e trave a barra ao final da série."
+    ],
+    "common_mistakes": [
+      "Pés muito atrás, sobrecarregando os joelhos",
+      "Esquecer de travar a barra"
+    ],
+    "safety_notes": [
+      "Ajuste os batentes de segurança antes de começar."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "hack_squat",
+      "leg_press",
+      "barbell_back_squat",
+      "goblet_squat"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "leg_press",
+    "name": "Leg press 45°",
+    "aliases": [
+      "leg press",
+      "legpress"
+    ],
+    "pattern": "squat",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors"
+    ],
+    "equipment": [
+      "leg_press"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 1,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Costas e quadril apoiados, pés na largura do quadril.",
+      "Destrave e desça até onde o quadril não sair do banco.",
+      "Empurre sem estender os joelhos de forma brusca."
+    ],
+    "common_mistakes": [
+      "Quadril saindo do encosto no fundo (lombar arredonda)",
+      "Travar os joelhos com força no topo"
+    ],
+    "safety_notes": [
+      "Não remova as travas com carga sem os pés firmes na plataforma."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "hack_squat",
+      "smith_squat",
+      "goblet_squat",
+      "bulgarian_split_squat"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "bodyweight_squat",
+    "name": "Agachamento livre (peso corporal)",
+    "aliases": [
+      "agachamento sem peso",
+      "air squat"
+    ],
+    "pattern": "squat",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors"
+    ],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 1,
+      "HIP": 1
+    },
+    "instructions": [
+      "Pés na largura dos ombros, braços à frente para equilíbrio.",
+      "Desça como se fosse sentar numa cadeira.",
+      "Suba contraindo glúteos."
+    ],
+    "common_mistakes": [
+      "Joelhos para dentro",
+      "Calcanhares saindo do chão"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "goblet_squat",
+      "split_squat_bodyweight",
+      "reverse_lunge_bodyweight",
+      "step_up"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": "NOVICE"
+  },
+  {
+    "id": "bulgarian_split_squat",
+    "name": "Agachamento búlgaro com halteres",
+    "aliases": [
+      "búlgaro",
+      "bulgaro",
+      "bulgarian"
+    ],
+    "pattern": "lunge",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors"
+    ],
+    "equipment": [
+      "dumbbells",
+      "flat_bench"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 4,
+    "mobility": 3,
+    "joint_demand": {
+      "KNEE": 3,
+      "HIP": 2
+    },
+    "instructions": [
+      "Pé de trás apoiado no banco, pé da frente a ~1 passo largo.",
+      "Desça o joelho de trás em direção ao chão.",
+      "Suba empurrando com o pé da frente."
+    ],
+    "common_mistakes": [
+      "Pé da frente muito próximo do banco",
+      "Perder o equilíbrio por pressa"
+    ],
+    "safety_notes": [
+      "Comece sem carga até dominar o equilíbrio."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "dumbbell_split_squat",
+      "walking_lunge",
+      "step_up",
+      "leg_press"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_split_squat",
+    "name": "Afundo estático com halteres",
+    "aliases": [
+      "afundo",
+      "split squat"
+    ],
+    "pattern": "lunge",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 1
+    },
+    "instructions": [
+      "Base em passada, halteres ao lado do corpo.",
+      "Desça verticalmente até o joelho de trás quase tocar o chão.",
+      "Suba sem mudar a posição dos pés."
+    ],
+    "common_mistakes": [
+      "Base estreita demais (desequilíbrio)",
+      "Joelho da frente colapsando para dentro"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "bulgarian_split_squat",
+      "reverse_lunge_bodyweight",
+      "step_up",
+      "goblet_squat"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "walking_lunge",
+    "name": "Passada com halteres",
+    "aliases": [
+      "passada",
+      "avanço",
+      "walking lunge"
+    ],
+    "pattern": "lunge",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors",
+      "calves"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 4,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 3,
+      "HIP": 2
+    },
+    "instructions": [
+      "Dê um passo largo à frente e desça os dois joelhos.",
+      "Empurre com a perna da frente e avance para o próximo passo.",
+      "Mantenha o tronco ereto."
+    ],
+    "common_mistakes": [
+      "Passos curtos demais",
+      "Bater o joelho de trás no chão"
+    ],
+    "safety_notes": [
+      "Precisa de espaço livre à frente."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "dumbbell_split_squat",
+      "bulgarian_split_squat",
+      "step_up",
+      "reverse_lunge_bodyweight"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "reverse_lunge_bodyweight",
+    "name": "Afundo reverso (peso corporal)",
+    "aliases": [
+      "afundo reverso",
+      "reverse lunge"
+    ],
+    "pattern": "lunge",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "adductors"
+    ],
+    "equipment": [],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 1
+    },
+    "instructions": [
+      "Dê um passo para trás e desça os dois joelhos.",
+      "Volte empurrando com o pé da frente.",
+      "Alterne as pernas ou complete um lado por vez."
+    ],
+    "common_mistakes": [
+      "Tronco caindo para a frente",
+      "Passo curto"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "split_squat_bodyweight",
+      "dumbbell_split_squat",
+      "bodyweight_squat"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "split_squat_bodyweight",
+    "name": "Afundo estático (peso corporal)",
+    "aliases": [
+      "afundo sem peso"
+    ],
+    "pattern": "lunge",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 1
+    },
+    "instructions": [
+      "Base em passada, mãos na cintura.",
+      "Desça e suba verticalmente.",
+      "Complete as repetições e troque de lado."
+    ],
+    "common_mistakes": [
+      "Base estreita",
+      "Joelho da frente para dentro"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "reverse_lunge_bodyweight",
+      "bodyweight_squat",
+      "dumbbell_split_squat"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": "NOVICE"
+  },
+  {
+    "id": "step_up",
+    "name": "Subida no banco com halteres",
+    "aliases": [
+      "step up",
+      "subida no step"
+    ],
+    "pattern": "lunge",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "quads",
+      "glutes"
+    ],
+    "secondary": [
+      "calves"
+    ],
+    "equipment": [
+      "dumbbells",
+      "step_box"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2,
+      "HIP": 1
+    },
+    "instructions": [
+      "Pé inteiro apoiado no banco/caixa.",
+      "Suba empurrando com a perna de cima, sem impulso da de baixo.",
+      "Desça com controle."
+    ],
+    "common_mistakes": [
+      "Impulsionar com a perna de baixo",
+      "Caixa alta demais"
+    ],
+    "safety_notes": [
+      "Use superfície firme e que não deslize."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "dumbbell_split_squat",
+      "bulgarian_split_squat",
+      "reverse_lunge_bodyweight"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "leg_extension",
+    "name": "Cadeira extensora",
+    "aliases": [
+      "extensora"
+    ],
+    "pattern": "knee_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "quads"
+    ],
+    "secondary": [],
+    "equipment": [
+      "leg_extension"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "KNEE": 2
+    },
+    "instructions": [
+      "Ajuste o eixo da máquina alinhado ao joelho.",
+      "Estenda os joelhos até quase travar.",
+      "Desça controlando."
+    ],
+    "common_mistakes": [
+      "Usar embalo",
+      "Encosto mal ajustado"
+    ],
+    "safety_notes": [
+      "Se houver dor no joelho, reduza a amplitude ou a carga."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "sissy_squat",
+      "goblet_squat",
+      "leg_press"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "sissy_squat",
+    "name": "Sissy squat",
+    "aliases": [
+      "sissy"
+    ],
+    "pattern": "knee_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "quads"
+    ],
+    "secondary": [],
+    "equipment": [],
+    "difficulty": 4,
+    "min_tier": "INTERMEDIATE",
+    "stability": 3,
+    "mobility": 3,
+    "joint_demand": {
+      "KNEE": 3
+    },
+    "instructions": [
+      "Segure em um apoio, fique na ponta dos pés.",
+      "Leve os joelhos à frente inclinando o corpo para trás em linha reta.",
+      "Volte contraindo o quadríceps."
+    ],
+    "common_mistakes": [
+      "Quebrar o quadril (vira agachamento comum)",
+      "Amplitude além do controle"
+    ],
+    "safety_notes": [
+      "Alta demanda no joelho; evite com dor patelar."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "leg_extension",
+      "goblet_squat",
+      "split_squat_bodyweight"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "conventional_deadlift",
+    "name": "Levantamento terra",
+    "aliases": [
+      "terra",
+      "deadlift"
+    ],
+    "pattern": "hinge",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "glutes",
+      "hamstrings",
+      "lower_back"
+    ],
+    "secondary": [
+      "quads",
+      "traps",
+      "forearms",
+      "mid_back"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 4,
+    "min_tier": "INTERMEDIATE",
+    "stability": 3,
+    "mobility": 3,
+    "joint_demand": {
+      "LOWER_BACK": 3,
+      "HIP": 2,
+      "KNEE": 1
+    },
+    "instructions": [
+      "Barra sobre o meio do pé, pegada fora das pernas.",
+      "Coluna neutra, puxe a barra junto ao corpo empurrando o chão.",
+      "Estenda quadril e joelhos juntos; desça a barra com controle."
+    ],
+    "common_mistakes": [
+      "Arredondar a lombar",
+      "Barra longe do corpo",
+      "Hiperestender a coluna no topo"
+    ],
+    "safety_notes": [
+      "Técnica antes de carga; considere supervisão no início."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "romanian_deadlift",
+      "dumbbell_romanian_deadlift",
+      "barbell_hip_thrust",
+      "kettlebell_swing"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "romanian_deadlift",
+    "name": "Levantamento terra romeno (stiff) com barra",
+    "aliases": [
+      "stiff",
+      "rdl",
+      "terra romeno"
+    ],
+    "pattern": "hinge",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondary": [
+      "lower_back",
+      "forearms"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 3,
+    "joint_demand": {
+      "LOWER_BACK": 2,
+      "HIP": 2,
+      "KNEE": 1
+    },
+    "instructions": [
+      "Comece em pé, joelhos levemente flexionados.",
+      "Leve o quadril para trás deslizando a barra pelas coxas.",
+      "Desça até sentir alongar o posterior sem perder a coluna neutra; volte contraindo glúteos."
+    ],
+    "common_mistakes": [
+      "Arredondar as costas",
+      "Transformar em agachamento (flexionar demais os joelhos)"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "dumbbell_romanian_deadlift",
+      "back_extension",
+      "lying_or_seated_leg_curl",
+      "cable_pull_through"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_romanian_deadlift",
+    "name": "Stiff com halteres",
+    "aliases": [
+      "stiff halteres",
+      "rdl halteres"
+    ],
+    "pattern": "hinge",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondary": [
+      "lower_back",
+      "forearms"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 3,
+    "joint_demand": {
+      "LOWER_BACK": 2,
+      "HIP": 2,
+      "KNEE": 1
+    },
+    "instructions": [
+      "Halteres à frente das coxas, joelhos levemente flexionados.",
+      "Quadril para trás, halteres próximos às pernas.",
+      "Volte contraindo glúteos."
+    ],
+    "common_mistakes": [
+      "Arredondar as costas",
+      "Halteres longe do corpo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "romanian_deadlift",
+      "single_leg_rdl",
+      "back_extension",
+      "glute_bridge"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "single_leg_rdl",
+    "name": "Stiff unilateral com halter",
+    "aliases": [
+      "stiff unilateral"
+    ],
+    "pattern": "hinge",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondary": [
+      "lower_back"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 4,
+    "mobility": 3,
+    "joint_demand": {
+      "LOWER_BACK": 1,
+      "HIP": 2,
+      "KNEE": 1,
+      "ANKLE": 1
+    },
+    "instructions": [
+      "Apoio em uma perna, joelho levemente flexionado.",
+      "Incline o tronco levando a perna livre para trás.",
+      "Volte mantendo o quadril alinhado."
+    ],
+    "common_mistakes": [
+      "Girar o quadril",
+      "Perder equilíbrio por pressa"
+    ],
+    "safety_notes": [
+      "Use um apoio leve com a mão livre se precisar."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "dumbbell_romanian_deadlift",
+      "single_leg_rdl_bodyweight",
+      "single_leg_glute_bridge"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "single_leg_rdl_bodyweight",
+    "name": "Stiff unilateral (peso corporal)",
+    "aliases": [
+      "stiff unilateral sem peso"
+    ],
+    "pattern": "hinge",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondary": [],
+    "equipment": [],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 4,
+    "mobility": 3,
+    "joint_demand": {
+      "HIP": 1,
+      "ANKLE": 1
+    },
+    "instructions": [
+      "Apoio em uma perna, braços à frente.",
+      "Incline o tronco e leve a perna livre para trás.",
+      "Volte contraindo o glúteo de apoio."
+    ],
+    "common_mistakes": [
+      "Girar o quadril",
+      "Flexionar demais o joelho de apoio"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "single_leg_glute_bridge",
+      "glute_bridge",
+      "slider_leg_curl"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "kettlebell_swing",
+    "name": "Swing com kettlebell",
+    "aliases": [
+      "swing",
+      "kb swing"
+    ],
+    "pattern": "hinge",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "KETTLEBELL",
+    "primary": [
+      "glutes",
+      "hamstrings"
+    ],
+    "secondary": [
+      "lower_back",
+      "abs",
+      "forearms"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "LOWER_BACK": 2,
+      "HIP": 2
+    },
+    "instructions": [
+      "Kettlebell entre as pernas, quadril para trás.",
+      "Projete o quadril à frente de forma explosiva.",
+      "Deixe o sino subir até a altura do peito, sem puxar com os braços."
+    ],
+    "common_mistakes": [
+      "Agachar em vez de dobrar o quadril",
+      "Puxar com os braços",
+      "Hiperestender a lombar no topo"
+    ],
+    "safety_notes": [
+      "Espaço livre ao redor."
+    ],
+    "progression_methods": [
+      "Mais repetições com o mesmo kettlebell, depois o próximo peso (≈4 kg)"
+    ],
+    "substitutes": [
+      "dumbbell_romanian_deadlift",
+      "barbell_hip_thrust",
+      "cable_pull_through"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "back_extension",
+    "name": "Extensão lombar no banco 45°",
+    "aliases": [
+      "hiperextensão",
+      "extensão lombar"
+    ],
+    "pattern": "hinge",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "glutes",
+      "hamstrings"
+    ],
+    "secondary": [
+      "lower_back"
+    ],
+    "equipment": [
+      "back_extension_bench"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "LOWER_BACK": 2,
+      "HIP": 1
+    },
+    "instructions": [
+      "Quadril na borda do apoio, pés presos.",
+      "Desça o tronco com a coluna neutra.",
+      "Suba até alinhar o corpo, sem hiperestender."
+    ],
+    "common_mistakes": [
+      "Hiperestender a coluna no topo",
+      "Movimento rápido demais"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "romanian_deadlift",
+      "dumbbell_romanian_deadlift",
+      "glute_bridge"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "cable_pull_through",
+    "name": "Pull-through na polia",
+    "aliases": [
+      "pull through"
+    ],
+    "pattern": "hinge",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "glutes",
+      "hamstrings"
+    ],
+    "secondary": [
+      "lower_back"
+    ],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "LOWER_BACK": 1,
+      "HIP": 2
+    },
+    "instructions": [
+      "De costas para a polia baixa, corda entre as pernas.",
+      "Leve o quadril para trás deixando a corda passar.",
+      "Estenda o quadril contraindo glúteos."
+    ],
+    "common_mistakes": [
+      "Puxar com os braços",
+      "Agachar"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "kettlebell_swing",
+      "barbell_hip_thrust",
+      "dumbbell_romanian_deadlift"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "barbell_hip_thrust",
+    "name": "Elevação pélvica com barra (hip thrust)",
+    "aliases": [
+      "hip thrust",
+      "elevação pélvica"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "barbell",
+      "flat_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "HIP": 1,
+      "LOWER_BACK": 1,
+      "KNEE": 1
+    },
+    "instructions": [
+      "Escápulas apoiadas no banco, barra sobre o quadril (use proteção).",
+      "Pés firmes, eleve o quadril até alinhar tronco e coxas.",
+      "Pause no topo e desça com controle."
+    ],
+    "common_mistakes": [
+      "Hiperestender a lombar no topo",
+      "Pés longe demais (vira exercício de posterior)"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "dumbbell_hip_thrust",
+      "glute_bridge",
+      "cable_pull_through",
+      "kettlebell_swing"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_hip_thrust",
+    "name": "Elevação pélvica com halter",
+    "aliases": [
+      "hip thrust halter"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "dumbbells",
+      "flat_bench"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "HIP": 1,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Escápulas no banco, halter apoiado no quadril.",
+      "Eleve o quadril até alinhar tronco e coxas.",
+      "Desça com controle."
+    ],
+    "common_mistakes": [
+      "Hiperestender a lombar",
+      "Amplitude curta"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "barbell_hip_thrust",
+      "glute_bridge",
+      "single_leg_glute_bridge"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "glute_bridge",
+    "name": "Ponte de glúteo",
+    "aliases": [
+      "ponte",
+      "glute bridge"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1
+    },
+    "instructions": [
+      "Deitado, joelhos flexionados, pés no chão.",
+      "Eleve o quadril contraindo glúteos.",
+      "Pause e desça."
+    ],
+    "common_mistakes": [
+      "Empurrar com a lombar em vez dos glúteos"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "single_leg_glute_bridge",
+      "dumbbell_hip_thrust",
+      "barbell_hip_thrust"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": "INTERMEDIATE"
+  },
+  {
+    "id": "single_leg_glute_bridge",
+    "name": "Ponte de glúteo unilateral",
+    "aliases": [
+      "ponte unilateral"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1
+    },
+    "instructions": [
+      "Deitado, uma perna estendida no ar.",
+      "Eleve o quadril com a perna de apoio.",
+      "Mantenha a pelve nivelada."
+    ],
+    "common_mistakes": [
+      "Deixar a pelve cair para um lado"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "glute_bridge",
+      "dumbbell_hip_thrust",
+      "single_leg_rdl_bodyweight"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "lying_or_seated_leg_curl",
+    "name": "Flexora (mesa ou cadeira)",
+    "aliases": [
+      "mesa flexora",
+      "cadeira flexora",
+      "flexora"
+    ],
+    "pattern": "knee_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "hamstrings"
+    ],
+    "secondary": [
+      "calves"
+    ],
+    "equipment": [
+      "leg_curl"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "KNEE": 1
+    },
+    "instructions": [
+      "Alinhe o eixo da máquina com o joelho.",
+      "Flexione os joelhos trazendo o rolo em direção aos glúteos.",
+      "Volte com controle até quase estender."
+    ],
+    "common_mistakes": [
+      "Tirar o quadril do apoio",
+      "Usar embalo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "slider_leg_curl",
+      "nordic_curl",
+      "band_leg_curl",
+      "romanian_deadlift"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "nordic_curl",
+    "name": "Flexão nórdica",
+    "aliases": [
+      "nordic",
+      "nórdico"
+    ],
+    "pattern": "knee_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "hamstrings"
+    ],
+    "secondary": [],
+    "equipment": [],
+    "difficulty": 5,
+    "min_tier": "INTERMEDIATE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 2
+    },
+    "instructions": [
+      "Ajoelhado, tornozelos presos (parceiro ou apoio firme).",
+      "Desça o corpo à frente o mais devagar possível, quadril estendido.",
+      "Use as mãos para amortecer e empurre para voltar."
+    ],
+    "common_mistakes": [
+      "Quebrar o quadril",
+      "Cair sem controle"
+    ],
+    "safety_notes": [
+      "Muito exigente: comece com amplitude parcial."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "lying_or_seated_leg_curl",
+      "slider_leg_curl",
+      "band_leg_curl"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "slider_leg_curl",
+    "name": "Flexão de joelhos com deslizamento (toalha)",
+    "aliases": [
+      "leg curl deslizante",
+      "slider curl"
+    ],
+    "pattern": "knee_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "hamstrings"
+    ],
+    "secondary": [
+      "glutes"
+    ],
+    "equipment": [],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 1,
+    "joint_demand": {
+      "KNEE": 1
+    },
+    "instructions": [
+      "Deitado, calcanhares sobre uma toalha em piso liso.",
+      "Eleve o quadril e puxe os calcanhares em direção aos glúteos.",
+      "Estenda devagar mantendo o quadril elevado."
+    ],
+    "common_mistakes": [
+      "Deixar o quadril cair",
+      "Piso que não desliza"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "lying_or_seated_leg_curl",
+      "band_leg_curl",
+      "nordic_curl"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "band_leg_curl",
+    "name": "Flexora com elástico",
+    "aliases": [
+      "flexora elástico"
+    ],
+    "pattern": "knee_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "hamstrings"
+    ],
+    "secondary": [],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "KNEE": 1
+    },
+    "instructions": [
+      "Elástico preso baixo e no tornozelo, deitado de bruços.",
+      "Flexione os joelhos contra a resistência.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Usar embalo",
+      "Elástico fraco demais"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "slider_leg_curl",
+      "lying_or_seated_leg_curl"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "standing_calf_raise_machine",
+    "name": "Panturrilha em pé (máquina)",
+    "aliases": [
+      "panturrilha em pé",
+      "gêmeos"
+    ],
+    "pattern": "calf_raise",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "calves"
+    ],
+    "secondary": [],
+    "equipment": [
+      "calf_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ANKLE": 1
+    },
+    "instructions": [
+      "Ponta dos pés na plataforma, ombros sob as almofadas.",
+      "Desça o calcanhar alongando.",
+      "Suba o máximo possível e pause."
+    ],
+    "common_mistakes": [
+      "Amplitude curta",
+      "Quicar no fundo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "leg_press_calf_raise",
+      "dumbbell_calf_raise",
+      "bodyweight_calf_raise"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "leg_press_calf_raise",
+    "name": "Panturrilha no leg press",
+    "aliases": [
+      "panturrilha leg press"
+    ],
+    "pattern": "calf_raise",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "calves"
+    ],
+    "secondary": [],
+    "equipment": [
+      "leg_press"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "ANKLE": 1
+    },
+    "instructions": [
+      "Ponta dos pés na borda da plataforma, joelhos estendidos sem travar.",
+      "Empurre com a ponta dos pés.",
+      "Desça alongando com controle."
+    ],
+    "common_mistakes": [
+      "Pés escorregando da plataforma",
+      "Destravar a máquina"
+    ],
+    "safety_notes": [
+      "Mantenha as travas de segurança engatadas."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "standing_calf_raise_machine",
+      "dumbbell_calf_raise"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_calf_raise",
+    "name": "Panturrilha unilateral com halter no step",
+    "aliases": [
+      "panturrilha unilateral"
+    ],
+    "pattern": "calf_raise",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "calves"
+    ],
+    "secondary": [],
+    "equipment": [
+      "dumbbells",
+      "step_box"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 1,
+    "joint_demand": {
+      "ANKLE": 1
+    },
+    "instructions": [
+      "Ponta de um pé no degrau, halter na mão do mesmo lado.",
+      "Desça o calcanhar abaixo do degrau.",
+      "Suba ao máximo e pause."
+    ],
+    "common_mistakes": [
+      "Usar impulso",
+      "Apoio frouxo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "bodyweight_calf_raise",
+      "standing_calf_raise_machine"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "bodyweight_calf_raise",
+    "name": "Panturrilha em pé (peso corporal)",
+    "aliases": [
+      "panturrilha sem peso"
+    ],
+    "pattern": "calf_raise",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "calves"
+    ],
+    "secondary": [],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ANKLE": 1
+    },
+    "instructions": [
+      "Em pé, ponta dos pés num degrau se possível.",
+      "Suba e desça com amplitude total.",
+      "Pause no topo."
+    ],
+    "common_mistakes": [
+      "Amplitude curta"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "dumbbell_calf_raise",
+      "standing_calf_raise_machine"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "hip_abduction_machine",
+    "name": "Cadeira abdutora",
+    "aliases": [
+      "abdutora"
+    ],
+    "pattern": "hip_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [],
+    "equipment": [
+      "hip_abduction_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1
+    },
+    "instructions": [
+      "Sente-se com as costas apoiadas.",
+      "Afaste as pernas contra a resistência.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Usar embalo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "band_lateral_walk"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "band_lateral_walk",
+    "name": "Caminhada lateral com elástico",
+    "aliases": [
+      "monster walk",
+      "passada lateral elástico"
+    ],
+    "pattern": "hip_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1,
+      "KNEE": 1
+    },
+    "instructions": [
+      "Elástico acima dos joelhos ou nos tornozelos.",
+      "Semi-agachado, dê passos laterais mantendo tensão.",
+      "Não deixe os joelhos colapsarem."
+    ],
+    "common_mistakes": [
+      "Juntar os pés e perder a tensão"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "hip_abduction_machine"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "hip_adduction_machine",
+    "name": "Cadeira adutora",
+    "aliases": [
+      "adutora"
+    ],
+    "pattern": "hip_adduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "adductors"
+    ],
+    "secondary": [],
+    "equipment": [
+      "hip_adduction_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "HIP": 1
+    },
+    "instructions": [
+      "Sente-se com as costas apoiadas.",
+      "Aproxime as pernas contra a resistência.",
+      "Volte devagar até um alongamento confortável."
+    ],
+    "common_mistakes": [
+      "Abrir além do confortável"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "barbell_bench_press",
+    "name": "Supino reto com barra",
+    "aliases": [
+      "supino",
+      "supino reto",
+      "bench press"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "triceps",
+      "front_delts"
+    ],
+    "equipment": [
+      "barbell",
+      "flat_bench"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "ELBOW": 1,
+      "WRIST": 1
+    },
+    "instructions": [
+      "Deitado, escápulas retraídas, pés firmes no chão.",
+      "Desça a barra até a linha do peito com cotovelos ~45–70° do tronco.",
+      "Empurre a barra para cima e levemente para trás."
+    ],
+    "common_mistakes": [
+      "Quicar a barra no peito",
+      "Cotovelos totalmente abertos a 90°",
+      "Tirar o quadril do banco"
+    ],
+    "safety_notes": [
+      "Use travas/batentes ou um ajudante em cargas próximas do limite."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "dumbbell_bench_press",
+      "machine_chest_press",
+      "smith_bench_press",
+      "push_up"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_bench_press",
+    "name": "Supino reto com halteres",
+    "aliases": [
+      "supino halteres"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "triceps",
+      "front_delts"
+    ],
+    "equipment": [
+      "dumbbells",
+      "flat_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Halteres na linha do peito, escápulas retraídas.",
+      "Empurre para cima aproximando os halteres.",
+      "Desça com controle até alongar o peitoral."
+    ],
+    "common_mistakes": [
+      "Descer rápido demais",
+      "Perder a retração das escápulas"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "barbell_bench_press",
+      "machine_chest_press",
+      "incline_dumbbell_press",
+      "push_up"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "incline_barbell_bench_press",
+    "name": "Supino inclinado com barra",
+    "aliases": [
+      "supino inclinado"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "chest",
+      "front_delts"
+    ],
+    "secondary": [
+      "triceps"
+    ],
+    "equipment": [
+      "barbell",
+      "adjustable_bench"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "ELBOW": 1,
+      "WRIST": 1
+    },
+    "instructions": [
+      "Banco a ~30°, escápulas retraídas.",
+      "Desça a barra na parte alta do peito.",
+      "Empurre de volta mantendo os pés firmes."
+    ],
+    "common_mistakes": [
+      "Banco inclinado demais (vira desenvolvimento)"
+    ],
+    "safety_notes": [
+      "Use batentes de segurança."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "incline_dumbbell_press",
+      "barbell_bench_press",
+      "machine_chest_press"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "incline_dumbbell_press",
+    "name": "Supino inclinado com halteres",
+    "aliases": [
+      "supino inclinado halteres"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "chest",
+      "front_delts"
+    ],
+    "secondary": [
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbells",
+      "adjustable_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Banco a ~30°, halteres na linha da parte alta do peito.",
+      "Empurre para cima e desça com controle.",
+      "Mantenha as escápulas retraídas."
+    ],
+    "common_mistakes": [
+      "Banco inclinado demais",
+      "Amplitude curta"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "incline_barbell_bench_press",
+      "dumbbell_bench_press",
+      "machine_chest_press"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "machine_chest_press",
+    "name": "Supino máquina",
+    "aliases": [
+      "supino na máquina",
+      "chest press"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "triceps",
+      "front_delts"
+    ],
+    "equipment": [
+      "chest_press_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Ajuste o banco para as pegadas ficarem na linha do peito.",
+      "Empurre sem travar os cotovelos.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Banco mal ajustado",
+      "Ombros subindo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "dumbbell_bench_press",
+      "barbell_bench_press",
+      "smith_bench_press",
+      "push_up"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "smith_bench_press",
+    "name": "Supino no Smith",
+    "aliases": [
+      "supino smith"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "SMITH",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "triceps",
+      "front_delts"
+    ],
+    "equipment": [
+      "smith_machine",
+      "flat_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Banco posicionado para a barra descer na linha do peito.",
+      "Destrave, desça com controle e empurre.",
+      "Trave a barra ao final."
+    ],
+    "common_mistakes": [
+      "Banco desalinhado com a barra"
+    ],
+    "safety_notes": [
+      "Ajuste os batentes de segurança."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "barbell_bench_press",
+      "machine_chest_press",
+      "dumbbell_bench_press"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "push_up",
+    "name": "Flexão de braços",
+    "aliases": [
+      "flexão",
+      "apoio",
+      "push up"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "triceps",
+      "front_delts",
+      "abs"
+    ],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "WRIST": 2,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Mãos um pouco além da largura dos ombros, corpo em linha.",
+      "Desça o peito próximo ao chão, cotovelos ~45°.",
+      "Empurre mantendo o abdômen firme."
+    ],
+    "common_mistakes": [
+      "Quadril caindo",
+      "Amplitude curta",
+      "Cotovelos totalmente abertos"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "incline_push_up",
+      "dumbbell_bench_press",
+      "band_chest_press",
+      "machine_chest_press"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "incline_push_up",
+    "name": "Flexão inclinada (mãos elevadas)",
+    "aliases": [
+      "flexão inclinada"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "triceps",
+      "front_delts"
+    ],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "WRIST": 1
+    },
+    "instructions": [
+      "Mãos apoiadas em banco, mesa firme ou parede.",
+      "Corpo em linha, desça o peito até o apoio.",
+      "Empurre de volta."
+    ],
+    "common_mistakes": [
+      "Quadril fora da linha"
+    ],
+    "safety_notes": [
+      "Quanto mais alto o apoio, mais fácil."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "push_up",
+      "band_chest_press"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": "NOVICE"
+  },
+  {
+    "id": "chest_dip",
+    "name": "Paralelas (mergulho)",
+    "aliases": [
+      "paralela",
+      "dips",
+      "mergulho"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "chest",
+      "triceps"
+    ],
+    "secondary": [
+      "front_delts"
+    ],
+    "equipment": [
+      "dip_station"
+    ],
+    "difficulty": 3,
+    "min_tier": "INTERMEDIATE",
+    "stability": 3,
+    "mobility": 3,
+    "joint_demand": {
+      "SHOULDER": 3,
+      "ELBOW": 2
+    },
+    "instructions": [
+      "Braços estendidos nas barras, tronco levemente inclinado.",
+      "Desça até os ombros ficarem um pouco abaixo dos cotovelos, se confortável.",
+      "Empurre de volta."
+    ],
+    "common_mistakes": [
+      "Descer além do confortável para o ombro",
+      "Balançar"
+    ],
+    "safety_notes": [
+      "Evite se houver dor no ombro."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "dumbbell_bench_press",
+      "close_grip_bench_press",
+      "machine_chest_press"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "band_chest_press",
+    "name": "Supino com elástico (em pé)",
+    "aliases": [
+      "supino elástico"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "triceps",
+      "front_delts"
+    ],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Elástico ancorado atrás, na altura do peito.",
+      "Empurre à frente até estender os braços.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Tronco inclinando para a frente"
+    ],
+    "safety_notes": [
+      "Verifique a ancoragem do elástico."
+    ],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "push_up",
+      "incline_push_up"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "close_grip_bench_press",
+    "name": "Supino fechado",
+    "aliases": [
+      "supino pegada fechada"
+    ],
+    "pattern": "horizontal_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "triceps",
+      "chest"
+    ],
+    "secondary": [
+      "front_delts"
+    ],
+    "equipment": [
+      "barbell",
+      "flat_bench"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "ELBOW": 2,
+      "WRIST": 2
+    },
+    "instructions": [
+      "Pegada na largura dos ombros.",
+      "Desça a barra na parte baixa do peito, cotovelos próximos ao corpo.",
+      "Empurre estendendo os cotovelos."
+    ],
+    "common_mistakes": [
+      "Pegada estreita demais (punhos sofrem)"
+    ],
+    "safety_notes": [
+      "Use batentes de segurança."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "diamond_push_up",
+      "cable_triceps_pushdown",
+      "dumbbell_bench_press"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "pec_deck",
+    "name": "Peck deck (voador)",
+    "aliases": [
+      "voador",
+      "peck deck",
+      "fly máquina"
+    ],
+    "pattern": "horizontal_adduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "front_delts"
+    ],
+    "equipment": [
+      "pec_deck"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Ajuste o banco para as mãos ficarem na altura do peito.",
+      "Feche os braços em arco até à frente do peito.",
+      "Abra devagar até alongar o peitoral."
+    ],
+    "common_mistakes": [
+      "Abrir além do confortável para o ombro"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "cable_fly",
+      "dumbbell_fly"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "cable_fly",
+    "name": "Crucifixo na polia (crossover)",
+    "aliases": [
+      "crossover",
+      "crucifixo polia"
+    ],
+    "pattern": "horizontal_adduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "front_delts"
+    ],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Polias na altura dos ombros, um passo à frente.",
+      "Feche os braços em arco com cotovelos levemente flexionados.",
+      "Volte com controle."
+    ],
+    "common_mistakes": [
+      "Transformar em supino (dobrar demais os cotovelos)"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "pec_deck",
+      "dumbbell_fly"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_fly",
+    "name": "Crucifixo com halteres",
+    "aliases": [
+      "crucifixo"
+    ],
+    "pattern": "horizontal_adduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "chest"
+    ],
+    "secondary": [
+      "front_delts"
+    ],
+    "equipment": [
+      "dumbbells",
+      "flat_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 3,
+    "joint_demand": {
+      "SHOULDER": 2
+    },
+    "instructions": [
+      "Deitado, halteres acima do peito, cotovelos levemente flexionados.",
+      "Abra os braços em arco até alongar o peitoral.",
+      "Feche contraindo o peito."
+    ],
+    "common_mistakes": [
+      "Descer demais com carga alta"
+    ],
+    "safety_notes": [
+      "Use cargas moderadas; amplitude confortável para o ombro."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "pec_deck",
+      "cable_fly"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "barbell_overhead_press",
+    "name": "Desenvolvimento em pé com barra",
+    "aliases": [
+      "desenvolvimento",
+      "overhead press",
+      "militar"
+    ],
+    "pattern": "vertical_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "front_delts"
+    ],
+    "secondary": [
+      "side_delts",
+      "triceps",
+      "abs"
+    ],
+    "equipment": [
+      "barbell",
+      "squat_rack"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 4,
+    "mobility": 3,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "LOWER_BACK": 2,
+      "WRIST": 1
+    },
+    "instructions": [
+      "Barra na frente dos ombros, glúteos e abdômen contraídos.",
+      "Empurre a barra para cima passando próxima ao rosto.",
+      "Termine com a barra sobre o meio do pé."
+    ],
+    "common_mistakes": [
+      "Arquear muito a lombar",
+      "Barra longe do corpo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "dumbbell_shoulder_press",
+      "machine_shoulder_press",
+      "pike_push_up"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_shoulder_press",
+    "name": "Desenvolvimento com halteres (sentado)",
+    "aliases": [
+      "desenvolvimento halteres"
+    ],
+    "pattern": "vertical_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "front_delts"
+    ],
+    "secondary": [
+      "side_delts",
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbells",
+      "adjustable_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 3,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Banco quase vertical, halteres na altura das orelhas.",
+      "Empurre para cima sem bater os halteres.",
+      "Desça com controle."
+    ],
+    "common_mistakes": [
+      "Arquear a lombar",
+      "Amplitude curta"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "machine_shoulder_press",
+      "barbell_overhead_press",
+      "band_overhead_press"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "machine_shoulder_press",
+    "name": "Desenvolvimento máquina",
+    "aliases": [
+      "desenvolvimento na máquina"
+    ],
+    "pattern": "vertical_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "front_delts"
+    ],
+    "secondary": [
+      "side_delts",
+      "triceps"
+    ],
+    "equipment": [
+      "shoulder_press_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Ajuste o banco para as pegadas ficarem na altura dos ombros.",
+      "Empurre sem travar os cotovelos.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Banco baixo demais"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "dumbbell_shoulder_press",
+      "barbell_overhead_press"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "pike_push_up",
+    "name": "Flexão pike",
+    "aliases": [
+      "pike"
+    ],
+    "pattern": "vertical_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "front_delts"
+    ],
+    "secondary": [
+      "triceps",
+      "side_delts"
+    ],
+    "equipment": [],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 3,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "WRIST": 2
+    },
+    "instructions": [
+      "Quadril alto, corpo em V invertido.",
+      "Desça a cabeça em direção ao chão entre as mãos.",
+      "Empurre de volta."
+    ],
+    "common_mistakes": [
+      "Transformar em flexão comum (quadril baixo)"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "band_overhead_press",
+      "dumbbell_shoulder_press"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "band_overhead_press",
+    "name": "Desenvolvimento com elástico",
+    "aliases": [
+      "desenvolvimento elástico"
+    ],
+    "pattern": "vertical_push",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "front_delts"
+    ],
+    "secondary": [
+      "side_delts",
+      "triceps"
+    ],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Pise no elástico, pegadas na altura dos ombros.",
+      "Empurre para cima.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Arquear a lombar"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "dumbbell_shoulder_press",
+      "pike_push_up"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_lateral_raise",
+    "name": "Elevação lateral com halteres",
+    "aliases": [
+      "elevação lateral"
+    ],
+    "pattern": "shoulder_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "side_delts"
+    ],
+    "secondary": [
+      "traps"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Halteres ao lado do corpo, cotovelos levemente flexionados.",
+      "Eleve os braços lateralmente até a altura dos ombros.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Usar embalo do tronco",
+      "Subir os ombros (trapézio)"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "cable_lateral_raise",
+      "band_lateral_raise"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "cable_lateral_raise",
+    "name": "Elevação lateral na polia",
+    "aliases": [
+      "elevação lateral polia"
+    ],
+    "pattern": "shoulder_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "side_delts"
+    ],
+    "secondary": [],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Polia baixa, cabo passando à frente do corpo.",
+      "Eleve o braço lateralmente até a altura do ombro.",
+      "Volte com controle."
+    ],
+    "common_mistakes": [
+      "Inclinar o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "dumbbell_lateral_raise",
+      "band_lateral_raise"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "band_lateral_raise",
+    "name": "Elevação lateral com elástico",
+    "aliases": [
+      "elevação lateral elástico"
+    ],
+    "pattern": "shoulder_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "side_delts"
+    ],
+    "secondary": [],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Pise no elástico, pegadas ao lado do corpo.",
+      "Eleve os braços lateralmente.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Embalo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "dumbbell_lateral_raise",
+      "cable_lateral_raise"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "reverse_pec_deck",
+    "name": "Crucifixo inverso na máquina",
+    "aliases": [
+      "voador inverso",
+      "peck deck invertido"
+    ],
+    "pattern": "horizontal_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "rear_delts"
+    ],
+    "secondary": [
+      "mid_back"
+    ],
+    "equipment": [
+      "pec_deck"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "De frente para o encosto, pegadas na altura dos ombros.",
+      "Abra os braços para trás em arco.",
+      "Volte com controle."
+    ],
+    "common_mistakes": [
+      "Usar embalo",
+      "Juntar demais as escápulas e perder o foco no deltoide"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "face_pull",
+      "dumbbell_reverse_fly",
+      "band_pull_apart"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "face_pull",
+    "name": "Face pull na polia",
+    "aliases": [
+      "face pull"
+    ],
+    "pattern": "horizontal_abduction",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "rear_delts"
+    ],
+    "secondary": [
+      "mid_back",
+      "traps"
+    ],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Polia alta com corda.",
+      "Puxe em direção ao rosto abrindo as mãos e os cotovelos.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Puxar para o peito",
+      "Usar o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "reverse_pec_deck",
+      "band_pull_apart",
+      "dumbbell_reverse_fly"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_reverse_fly",
+    "name": "Crucifixo inverso com halteres",
+    "aliases": [
+      "crucifixo inverso"
+    ],
+    "pattern": "horizontal_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "rear_delts"
+    ],
+    "secondary": [
+      "mid_back"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Tronco inclinado à frente, coluna neutra.",
+      "Abra os braços lateralmente.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Arredondar as costas",
+      "Embalo"
+    ],
+    "safety_notes": [
+      "Pode ser feito apoiado num banco inclinado para poupar a lombar."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "reverse_pec_deck",
+      "band_pull_apart",
+      "face_pull"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "band_pull_apart",
+    "name": "Pull-apart com elástico",
+    "aliases": [
+      "pull apart"
+    ],
+    "pattern": "horizontal_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "rear_delts"
+    ],
+    "secondary": [
+      "mid_back"
+    ],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Braços estendidos à frente segurando o elástico.",
+      "Abra os braços até o elástico tocar o peito.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Dobrar os cotovelos"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "face_pull",
+      "dumbbell_reverse_fly",
+      "reverse_pec_deck"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "barbell_row",
+    "name": "Remada curvada com barra",
+    "aliases": [
+      "remada curvada",
+      "remada"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "rear_delts",
+      "biceps",
+      "lower_back"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 3,
+    "joint_demand": {
+      "LOWER_BACK": 2,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Tronco inclinado (~45°), coluna neutra, joelhos levemente flexionados.",
+      "Puxe a barra em direção ao abdômen.",
+      "Desça com controle sem perder a posição."
+    ],
+    "common_mistakes": [
+      "Usar embalo do tronco",
+      "Arredondar a lombar"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "seated_cable_row",
+      "machine_row",
+      "one_arm_dumbbell_row",
+      "chest_supported_dumbbell_row"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "one_arm_dumbbell_row",
+    "name": "Remada unilateral com halter (serrote)",
+    "aliases": [
+      "serrote",
+      "remada unilateral"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "lats",
+      "mid_back"
+    ],
+    "secondary": [
+      "rear_delts",
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbells",
+      "flat_bench"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "LOWER_BACK": 1,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Mão e joelho apoiados no banco, coluna neutra.",
+      "Puxe o halter em direção ao quadril.",
+      "Desça alongando."
+    ],
+    "common_mistakes": [
+      "Girar o tronco",
+      "Puxar com o bíceps"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "seated_cable_row",
+      "chest_supported_dumbbell_row",
+      "barbell_row",
+      "band_row"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "seated_cable_row",
+    "name": "Remada sentada na polia",
+    "aliases": [
+      "remada baixa",
+      "remada triângulo"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "rear_delts"
+    ],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "LOWER_BACK": 1,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Sentado, pés apoiados, coluna neutra.",
+      "Puxe o triângulo em direção ao abdômen.",
+      "Volte deixando as escápulas abrirem."
+    ],
+    "common_mistakes": [
+      "Balançar o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "machine_row",
+      "one_arm_dumbbell_row",
+      "barbell_row",
+      "band_row"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "machine_row",
+    "name": "Remada máquina (apoio no peito)",
+    "aliases": [
+      "remada máquina"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "rear_delts"
+    ],
+    "equipment": [
+      "seated_row_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Peito apoiado, pegadas ao alcance dos braços estendidos.",
+      "Puxe levando os cotovelos para trás.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Tirar o peito do apoio"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "seated_cable_row",
+      "chest_supported_dumbbell_row",
+      "one_arm_dumbbell_row"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "chest_supported_dumbbell_row",
+    "name": "Remada com halteres apoiada no banco inclinado",
+    "aliases": [
+      "remada apoiada"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "rear_delts",
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbells",
+      "adjustable_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Peito apoiado no banco inclinado.",
+      "Puxe os halteres levando os cotovelos para trás.",
+      "Desça alongando."
+    ],
+    "common_mistakes": [
+      "Tirar o peito do banco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "machine_row",
+      "seated_cable_row",
+      "one_arm_dumbbell_row"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "inverted_row",
+    "name": "Remada invertida no TRX",
+    "aliases": [
+      "remada invertida",
+      "remada trx"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "rear_delts"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Corpo em linha, pés no chão, segurando as alças.",
+      "Puxe o peito em direção às mãos.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Quadril caindo"
+    ],
+    "safety_notes": [
+      "Quanto mais vertical o corpo, mais fácil."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "inverted_row_bar",
+      "band_row",
+      "one_arm_dumbbell_row"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "inverted_row_bar",
+    "name": "Remada invertida na barra baixa",
+    "aliases": [
+      "remada australiana na barra"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "rear_delts"
+    ],
+    "equipment": [
+      "low_bar"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Deite sob uma barra firme na altura do quadril, pegada pronada.",
+      "Corpo em linha, puxe o peito até a barra.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Quadril caindo"
+    ],
+    "safety_notes": [
+      "Confira se a barra está firme; quanto mais alta, mais fácil."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "inverted_row",
+      "band_row",
+      "one_arm_dumbbell_row"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "band_row",
+    "name": "Remada com elástico",
+    "aliases": [
+      "remada elástico"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "rear_delts"
+    ],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Elástico ancorado à frente na altura do peito.",
+      "Puxe levando os cotovelos para trás.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Balançar o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "inverted_row",
+      "inverted_row_bar",
+      "one_arm_dumbbell_row"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "pull_up",
+    "name": "Barra fixa (pegada pronada)",
+    "aliases": [
+      "barra fixa",
+      "pull up"
+    ],
+    "pattern": "vertical_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "mid_back",
+      "forearms"
+    ],
+    "equipment": [
+      "pull_up_bar"
+    ],
+    "difficulty": 4,
+    "min_tier": "INTERMEDIATE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "ELBOW": 2
+    },
+    "instructions": [
+      "Pegada pronada um pouco além dos ombros.",
+      "Puxe até o queixo passar a barra, peito em direção à barra.",
+      "Desça até estender os braços com controle."
+    ],
+    "common_mistakes": [
+      "Balançar o corpo (kipping)",
+      "Amplitude parcial"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "lat_pulldown",
+      "assisted_pull_up_band",
+      "chin_up",
+      "band_lat_pulldown"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "chin_up",
+    "name": "Barra fixa supinada",
+    "aliases": [
+      "chin up",
+      "barra supinada"
+    ],
+    "pattern": "vertical_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "lats",
+      "biceps"
+    ],
+    "secondary": [
+      "mid_back",
+      "forearms"
+    ],
+    "equipment": [
+      "pull_up_bar"
+    ],
+    "difficulty": 3,
+    "min_tier": "INTERMEDIATE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 2,
+      "ELBOW": 2
+    },
+    "instructions": [
+      "Pegada supinada na largura dos ombros.",
+      "Puxe até o queixo passar a barra.",
+      "Desça com controle."
+    ],
+    "common_mistakes": [
+      "Balançar o corpo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "pull_up",
+      "lat_pulldown",
+      "assisted_pull_up_band"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "lat_pulldown",
+    "name": "Puxada alta (pulley)",
+    "aliases": [
+      "puxada",
+      "puxada frontal",
+      "pulley"
+    ],
+    "pattern": "vertical_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "mid_back"
+    ],
+    "equipment": [
+      "lat_pulldown"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Coxas presas sob o apoio, pegada um pouco além dos ombros.",
+      "Puxe a barra até a parte alta do peito.",
+      "Volte até estender os braços."
+    ],
+    "common_mistakes": [
+      "Puxar atrás da nuca",
+      "Jogar o tronco para trás"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "close_grip_pulldown",
+      "pull_up",
+      "assisted_pull_up_band",
+      "band_lat_pulldown"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "close_grip_pulldown",
+    "name": "Puxada com triângulo (pegada neutra)",
+    "aliases": [
+      "puxada triângulo"
+    ],
+    "pattern": "vertical_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "lats"
+    ],
+    "secondary": [
+      "mid_back",
+      "biceps"
+    ],
+    "equipment": [
+      "lat_pulldown"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Triângulo na polia alta.",
+      "Puxe até a parte alta do peito.",
+      "Volte alongando."
+    ],
+    "common_mistakes": [
+      "Jogar o tronco para trás"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "lat_pulldown",
+      "chin_up",
+      "straight_arm_pulldown"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "assisted_pull_up_band",
+    "name": "Barra fixa assistida com elástico",
+    "aliases": [
+      "barra assistida"
+    ],
+    "pattern": "vertical_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "mid_back"
+    ],
+    "equipment": [
+      "pull_up_bar",
+      "resistance_bands"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Elástico preso na barra, sob o joelho ou pé.",
+      "Puxe até o queixo passar a barra.",
+      "Desça com controle."
+    ],
+    "common_mistakes": [
+      "Balançar"
+    ],
+    "safety_notes": [
+      "Progrida para elásticos mais fracos até a barra livre."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "lat_pulldown",
+      "pull_up",
+      "band_lat_pulldown"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": "NOVICE"
+  },
+  {
+    "id": "straight_arm_pulldown",
+    "name": "Pulldown com braços estendidos (polia)",
+    "aliases": [
+      "pulldown",
+      "pullover polia"
+    ],
+    "pattern": "vertical_pull",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "lats"
+    ],
+    "secondary": [],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Polia alta, braços estendidos à frente.",
+      "Leve a barra/corda até as coxas sem dobrar os cotovelos.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Dobrar os cotovelos (vira tríceps)"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "lat_pulldown",
+      "close_grip_pulldown"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "band_lat_pulldown",
+    "name": "Puxada com elástico",
+    "aliases": [
+      "puxada elástico"
+    ],
+    "pattern": "vertical_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "lats"
+    ],
+    "secondary": [
+      "biceps"
+    ],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Elástico ancorado no alto.",
+      "Puxe levando os cotovelos para baixo e para trás.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Encolher os ombros"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "assisted_pull_up_band",
+      "lat_pulldown"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "barbell_curl",
+    "name": "Rosca direta com barra",
+    "aliases": [
+      "rosca direta",
+      "rosca barra"
+    ],
+    "pattern": "elbow_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "biceps"
+    ],
+    "secondary": [
+      "forearms"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 1,
+      "WRIST": 1
+    },
+    "instructions": [
+      "Pegada supinada na largura dos ombros.",
+      "Flexione os cotovelos sem mover os ombros.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Embalo do tronco",
+      "Cotovelos avançando"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "ez_bar_curl",
+      "dumbbell_curl",
+      "cable_curl"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "ez_bar_curl",
+    "name": "Rosca com barra W",
+    "aliases": [
+      "rosca w",
+      "rosca barra w"
+    ],
+    "pattern": "elbow_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "biceps"
+    ],
+    "secondary": [
+      "forearms"
+    ],
+    "equipment": [
+      "ez_bar"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Pegada na parte angulada da barra.",
+      "Flexione os cotovelos.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Embalo"
+    ],
+    "safety_notes": [
+      "Costuma ser mais confortável para os punhos que a barra reta."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "barbell_curl",
+      "dumbbell_curl",
+      "cable_curl"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_curl",
+    "name": "Rosca alternada com halteres",
+    "aliases": [
+      "rosca alternada",
+      "rosca halteres"
+    ],
+    "pattern": "elbow_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "biceps"
+    ],
+    "secondary": [
+      "forearms"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Halteres ao lado do corpo.",
+      "Flexione um cotovelo girando a palma para cima.",
+      "Desça e alterne."
+    ],
+    "common_mistakes": [
+      "Embalo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "hammer_curl",
+      "cable_curl",
+      "barbell_curl",
+      "band_curl"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "hammer_curl",
+    "name": "Rosca martelo",
+    "aliases": [
+      "martelo"
+    ],
+    "pattern": "elbow_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "biceps",
+      "forearms"
+    ],
+    "secondary": [],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Pegada neutra (palmas para dentro).",
+      "Flexione os cotovelos.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Embalo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "dumbbell_curl",
+      "cable_curl"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "incline_dumbbell_curl",
+    "name": "Rosca inclinada com halteres",
+    "aliases": [
+      "rosca inclinada"
+    ],
+    "pattern": "elbow_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "biceps"
+    ],
+    "secondary": [],
+    "equipment": [
+      "dumbbells",
+      "adjustable_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "ELBOW": 1,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Banco a ~45°, braços pendurados.",
+      "Flexione os cotovelos sem mover os ombros.",
+      "Desça até alongar."
+    ],
+    "common_mistakes": [
+      "Ombros avançando"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "dumbbell_curl",
+      "cable_curl"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "cable_curl",
+    "name": "Rosca na polia",
+    "aliases": [
+      "rosca polia"
+    ],
+    "pattern": "elbow_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "biceps"
+    ],
+    "secondary": [
+      "forearms"
+    ],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Polia baixa com barra ou corda.",
+      "Flexione os cotovelos mantendo-os junto ao corpo.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Embalo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "barbell_curl",
+      "dumbbell_curl",
+      "band_curl"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "band_curl",
+    "name": "Rosca com elástico",
+    "aliases": [
+      "rosca elástico"
+    ],
+    "pattern": "elbow_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "biceps"
+    ],
+    "secondary": [],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Pise no elástico, pegada supinada.",
+      "Flexione os cotovelos.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Embalo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "dumbbell_curl",
+      "cable_curl"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "cable_triceps_pushdown",
+    "name": "Tríceps na polia (pushdown)",
+    "aliases": [
+      "tríceps polia",
+      "pushdown",
+      "tríceps corda"
+    ],
+    "pattern": "elbow_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "triceps"
+    ],
+    "secondary": [],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Polia alta, cotovelos junto ao corpo.",
+      "Estenda os cotovelos até o final.",
+      "Volte sem afastar os cotovelos."
+    ],
+    "common_mistakes": [
+      "Cotovelos se movendo",
+      "Inclinar o tronco sobre a carga"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "overhead_cable_triceps_extension",
+      "dumbbell_overhead_triceps_extension",
+      "band_triceps_extension"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "overhead_cable_triceps_extension",
+    "name": "Tríceps francês na polia",
+    "aliases": [
+      "tríceps acima da cabeça",
+      "overhead polia"
+    ],
+    "pattern": "elbow_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "triceps"
+    ],
+    "secondary": [],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "ELBOW": 2,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "De costas para a polia, corda atrás da cabeça.",
+      "Estenda os cotovelos acima da cabeça.",
+      "Volte alongando."
+    ],
+    "common_mistakes": [
+      "Abrir os cotovelos"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "dumbbell_overhead_triceps_extension",
+      "cable_triceps_pushdown",
+      "skull_crusher"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dumbbell_overhead_triceps_extension",
+    "name": "Tríceps francês com halter",
+    "aliases": [
+      "tríceps francês"
+    ],
+    "pattern": "elbow_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "triceps"
+    ],
+    "secondary": [],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "ELBOW": 2,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Halter segurado com as duas mãos acima da cabeça.",
+      "Desça atrás da cabeça flexionando os cotovelos.",
+      "Estenda de volta."
+    ],
+    "common_mistakes": [
+      "Arquear a lombar"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "overhead_cable_triceps_extension",
+      "skull_crusher",
+      "band_triceps_extension"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "skull_crusher",
+    "name": "Tríceps testa com barra W",
+    "aliases": [
+      "tríceps testa"
+    ],
+    "pattern": "elbow_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "triceps"
+    ],
+    "secondary": [],
+    "equipment": [
+      "ez_bar",
+      "flat_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "ELBOW": 2
+    },
+    "instructions": [
+      "Deitado, barra acima do peito.",
+      "Desça a barra em direção à testa/atrás da cabeça.",
+      "Estenda os cotovelos."
+    ],
+    "common_mistakes": [
+      "Cotovelos abrindo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "dumbbell_overhead_triceps_extension",
+      "cable_triceps_pushdown"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "bench_dip",
+    "name": "Mergulho no banco",
+    "aliases": [
+      "tríceps banco",
+      "mergulho banco"
+    ],
+    "pattern": "elbow_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "triceps"
+    ],
+    "secondary": [
+      "chest",
+      "front_delts"
+    ],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 3,
+    "joint_demand": {
+      "SHOULDER": 3,
+      "ELBOW": 2
+    },
+    "instructions": [
+      "Mãos na borda de um banco ou cadeira firme, pernas à frente.",
+      "Desça flexionando os cotovelos.",
+      "Empurre de volta."
+    ],
+    "common_mistakes": [
+      "Descer demais"
+    ],
+    "safety_notes": [
+      "Alta demanda no ombro; evite com dor no ombro."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "diamond_push_up",
+      "band_triceps_extension"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "diamond_push_up",
+    "name": "Flexão diamante",
+    "aliases": [
+      "flexão fechada"
+    ],
+    "pattern": "elbow_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "triceps"
+    ],
+    "secondary": [
+      "chest",
+      "front_delts"
+    ],
+    "equipment": [],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 2,
+      "WRIST": 2,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Mãos próximas formando um losango.",
+      "Desça mantendo os cotovelos junto ao corpo.",
+      "Empurre de volta."
+    ],
+    "common_mistakes": [
+      "Quadril caindo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Variação mais difícil",
+      "Carga externa (colete ou mochila)",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "close_grip_bench_press",
+      "bench_dip",
+      "band_triceps_extension"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "band_triceps_extension",
+    "name": "Tríceps com elástico",
+    "aliases": [
+      "tríceps elástico"
+    ],
+    "pattern": "elbow_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "triceps"
+    ],
+    "secondary": [],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Elástico ancorado no alto.",
+      "Estenda os cotovelos para baixo.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Cotovelos se movendo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "cable_triceps_pushdown",
+      "dumbbell_overhead_triceps_extension"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "plank",
+    "name": "Prancha",
+    "aliases": [
+      "prancha frontal",
+      "plank"
+    ],
+    "pattern": "anti_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "abs"
+    ],
+    "secondary": [
+      "obliques"
+    ],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "LOWER_BACK": 1,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Antebraços no chão, corpo em linha.",
+      "Contraia abdômen e glúteos.",
+      "Mantenha a posição sem deixar o quadril cair."
+    ],
+    "common_mistakes": [
+      "Quadril alto ou caído",
+      "Prender a respiração"
+    ],
+    "safety_notes": [
+      "Conte tempo (ex.: 20–45 s) em vez de repetições."
+    ],
+    "progression_methods": [
+      "Mais tempo",
+      "Variações mais difíceis (braço/perna elevados)"
+    ],
+    "substitutes": [
+      "dead_bug",
+      "ab_wheel_rollout"
+    ],
+    "timed": true,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "dead_bug",
+    "name": "Dead bug",
+    "aliases": [
+      "inseto morto"
+    ],
+    "pattern": "anti_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "abs"
+    ],
+    "secondary": [],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {},
+    "instructions": [
+      "Deitado, braços para cima, quadril e joelhos a 90°.",
+      "Estenda braço e perna opostos sem tirar a lombar do chão.",
+      "Volte e alterne."
+    ],
+    "common_mistakes": [
+      "Lombar saindo do chão"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Pausa",
+      "Carga leve nas mãos"
+    ],
+    "substitutes": [
+      "plank",
+      "pallof_press_cable"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "ab_wheel_rollout",
+    "name": "Roda abdominal",
+    "aliases": [
+      "roda",
+      "rollout"
+    ],
+    "pattern": "anti_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "abs"
+    ],
+    "secondary": [
+      "lats"
+    ],
+    "equipment": [
+      "ab_wheel"
+    ],
+    "difficulty": 3,
+    "min_tier": "INTERMEDIATE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "LOWER_BACK": 2,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Ajoelhado, mãos na roda.",
+      "Role à frente mantendo a lombar neutra.",
+      "Volte contraindo o abdômen."
+    ],
+    "common_mistakes": [
+      "Lombar afundando"
+    ],
+    "safety_notes": [
+      "Comece com amplitude curta."
+    ],
+    "progression_methods": [
+      "Maior amplitude",
+      "Partir em pé"
+    ],
+    "substitutes": [
+      "plank",
+      "dead_bug"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "pallof_press_cable",
+    "name": "Pallof press na polia",
+    "aliases": [
+      "pallof"
+    ],
+    "pattern": "anti_rotation",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "abs",
+      "obliques"
+    ],
+    "secondary": [],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {},
+    "instructions": [
+      "De lado para a polia na altura do peito.",
+      "Empurre a pegada à frente sem deixar o tronco girar.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Girar o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "pallof_press_band",
+      "side_plank"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "pallof_press_band",
+    "name": "Pallof press com elástico",
+    "aliases": [
+      "pallof elástico"
+    ],
+    "pattern": "anti_rotation",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "abs",
+      "obliques"
+    ],
+    "secondary": [],
+    "equipment": [
+      "resistance_bands"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {},
+    "instructions": [
+      "Elástico ancorado na lateral, na altura do peito.",
+      "Empurre à frente sem girar o tronco.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Girar o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Elástico mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "pallof_press_cable",
+      "side_plank"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "side_plank",
+    "name": "Prancha lateral",
+    "aliases": [
+      "prancha de lado"
+    ],
+    "pattern": "anti_rotation",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "obliques"
+    ],
+    "secondary": [
+      "abs"
+    ],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Apoio no antebraço e na lateral do pé.",
+      "Corpo em linha, quadril elevado.",
+      "Mantenha e troque de lado."
+    ],
+    "common_mistakes": [
+      "Quadril caindo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais tempo",
+      "Perna de cima elevada"
+    ],
+    "substitutes": [
+      "pallof_press_band",
+      "suitcase_carry"
+    ],
+    "timed": true,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "cable_crunch",
+    "name": "Abdominal na polia (ajoelhado)",
+    "aliases": [
+      "abdominal polia"
+    ],
+    "pattern": "trunk_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "abs"
+    ],
+    "secondary": [],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Ajoelhado, corda atrás da cabeça.",
+      "Flexione o tronco aproximando costelas da pelve.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Puxar com os braços",
+      "Sentar sobre os calcanhares"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "crunch",
+      "hanging_knee_raise"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "crunch",
+    "name": "Abdominal (crunch)",
+    "aliases": [
+      "abdominal",
+      "crunch"
+    ],
+    "pattern": "trunk_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "abs"
+    ],
+    "secondary": [],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "NECK": 1
+    },
+    "instructions": [
+      "Deitado, joelhos flexionados.",
+      "Flexione o tronco tirando as escápulas do chão.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Puxar o pescoço"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Pausa no topo",
+      "Carga no peito"
+    ],
+    "substitutes": [
+      "cable_crunch",
+      "dead_bug"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "hanging_knee_raise",
+    "name": "Elevação de joelhos na barra",
+    "aliases": [
+      "elevação de pernas"
+    ],
+    "pattern": "trunk_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "abs"
+    ],
+    "secondary": [
+      "forearms"
+    ],
+    "equipment": [
+      "pull_up_bar"
+    ],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Pendurado na barra.",
+      "Eleve os joelhos em direção ao peito enrolando a pelve.",
+      "Desça sem balançar."
+    ],
+    "common_mistakes": [
+      "Balançar",
+      "Só flexionar o quadril sem enrolar a pelve"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Pernas estendidas"
+    ],
+    "substitutes": [
+      "cable_crunch",
+      "crunch"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "cable_woodchop",
+    "name": "Lenhador na polia",
+    "aliases": [
+      "woodchop",
+      "lenhador"
+    ],
+    "pattern": "rotation",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "obliques"
+    ],
+    "secondary": [
+      "abs"
+    ],
+    "equipment": [
+      "cable_station"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 2,
+    "joint_demand": {
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "De lado para a polia alta.",
+      "Puxe em diagonal até o quadril oposto, girando tronco e quadril juntos.",
+      "Volte devagar."
+    ],
+    "common_mistakes": [
+      "Girar só a lombar"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "pallof_press_cable",
+      "side_plank"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "farmers_walk",
+    "name": "Caminhada do fazendeiro",
+    "aliases": [
+      "farmer walk",
+      "fazendeiro"
+    ],
+    "pattern": "carry",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "forearms",
+      "traps"
+    ],
+    "secondary": [
+      "abs",
+      "obliques"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Halteres pesados ao lado do corpo.",
+      "Caminhe com passos curtos, tronco ereto.",
+      "Distância ou tempo definidos."
+    ],
+    "common_mistakes": [
+      "Inclinar o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais carga",
+      "Mais distância"
+    ],
+    "substitutes": [
+      "suitcase_carry"
+    ],
+    "timed": true,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "suitcase_carry",
+    "name": "Carregamento unilateral (mala)",
+    "aliases": [
+      "suitcase carry"
+    ],
+    "pattern": "carry",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "obliques"
+    ],
+    "secondary": [
+      "forearms",
+      "abs"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 1,
+    "joint_demand": {
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Halter em uma mão só.",
+      "Caminhe sem inclinar o tronco para o lado.",
+      "Troque de mão."
+    ],
+    "common_mistakes": [
+      "Inclinar para o lado da carga"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais carga",
+      "Mais distância"
+    ],
+    "substitutes": [
+      "farmers_walk",
+      "side_plank"
+    ],
+    "timed": true,
+    "staple": 1,
+    "max_tier": null
+  }
+]

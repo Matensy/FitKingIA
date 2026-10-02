@@ -1,0 +1,497 @@
+[
+  {
+    "id": "rt_any_dose",
+    "statement": "Comparado a não treinar, o treino resistido melhora força, massa muscular, potência e função física; qualquer quantidade regular traz benefício.",
+    "topic": "treino resistido",
+    "evidence_level": "HIGH",
+    "sources": [
+      {
+        "source_id": "acsm_2026_rt",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "who_2020_pa",
+        "stance": "CONTEXT",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "hypertrophy_volume",
+    "statement": "Mais séries semanais por grupo muscular tendem a produzir mais hipertrofia (relação dose-resposta graduada); o ACSM 2026 destaca ≥10 séries/semana, mas volumes baixos também geram ganhos.",
+    "topic": "volume",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "acsm_2026_rt",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "schoenfeld_2017_volume",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "pelland_2025_dose",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "fractional_sets",
+    "statement": "Contar séries indiretas como 0,5 série ('contagem fracionada') previu melhor os ganhos de hipertrofia e força do que contar apenas séries diretas ou todas como 1.",
+    "topic": "volume",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "pelland_2025_dose",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "strength_prescription",
+    "statement": "Para força, os maiores ganhos foram associados a cargas ≥80% de 1RM, amplitude completa, 2–3 séries, exercícios no início da sessão e ≥2 sessões/semana; a força mostra retornos decrescentes com volume mais cedo que a hipertrofia.",
+    "topic": "força",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "acsm_2026_rt",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "pelland_2025_dose",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "acsm_2009_progression",
+        "stance": "CONTEXT",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "frequency_hypertrophy",
+    "statement": "Para hipertrofia, distribuir o volume semanal em 2 ou mais sessões por músculo pode ser vantajoso em relação a 1 sessão.",
+    "topic": "frequência",
+    "evidence_level": "LIMITED",
+    "sources": [
+      {
+        "source_id": "schoenfeld_2016_frequency",
+        "stance": "SUPPORTS",
+        "note": "Meta-análise de 2016: 2×/semana > 1×/semana com volume equalizado."
+      },
+      {
+        "source_id": "pelland_2025_dose",
+        "stance": "CONTRADICTS",
+        "note": "Meta-regressão de 2025: efeito consistente de frequência apenas para força, não para hipertrofia."
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "failure_not_required",
+    "statement": "Treinar até a falha momentânea não mostrou superioridade clara para hipertrofia ou força em relação a terminar as séries com algumas repetições em reserva.",
+    "topic": "proximidade da falha",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "refalo_2023_failure",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "grgic_2022_failure",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "rir_scale",
+    "statement": "A escala de RPE baseada em repetições em reserva (RIR) é uma forma prática de estimar a proximidade da falha e autorregular a carga.",
+    "topic": "RIR/RPE",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "zourdos_2016_rir",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "helms_2016_rir",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "rest_interval",
+    "statement": "Descansos acima de ~60 s parecem ter pequena vantagem para hipertrofia; acima de ~90 s, diferenças não foram detectadas.",
+    "topic": "descanso",
+    "evidence_level": "LIMITED",
+    "sources": [
+      {
+        "source_id": "singer_2024_rest",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "progressive_overload",
+    "statement": "Para continuar gerando adaptações, o programa precisa progredir ao longo do tempo (carga, repetições ou volume).",
+    "topic": "progressão",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "acsm_2009_progression",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "acsm_2026_rt",
+        "stance": "CONTEXT",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "power_prescription",
+    "statement": "Para potência, cargas moderadas (30–70% de 1RM), volume baixo a moderado e intenção de velocidade foram associados a maiores ganhos.",
+    "topic": "potência",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "acsm_2026_rt",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "deload_evidence",
+    "statement": "Num ensaio controlado, uma semana de deload no meio de 9 semanas não melhorou hipertrofia e reduziu levemente a força de membros inferiores; a evidência sobre deloads programados ainda é limitada.",
+    "topic": "deload",
+    "evidence_level": "LIMITED",
+    "sources": [
+      {
+        "source_id": "coleman_2024_deload",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "e1rm_equations",
+    "statement": "Equações de 1RM a partir de repetições até a falha correlacionam-se fortemente com o 1RM real, mas a precisão absoluta varia por exercício e piora com muitas repetições.",
+    "topic": "1RM",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "lesuer_1997_1rm",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "brzycki_1993",
+        "stance": "CONTEXT",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "spot_reduction",
+    "statement": "Exercícios localizados (ex.: abdominais) não reduzem de forma relevante a gordura da região trabalhada; perda de gordura depende do balanço energético e do gasto total.",
+    "topic": "perda localizada",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "vispute_2011_abs",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "ramirez_campillo_2022_spot",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "brobakken_2023_spot",
+        "stance": "CONTRADICTS",
+        "note": "ECR de 2023 relatou redução localizada no tronco com protocolo abdominal de resistência aeróbica."
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "who_activity",
+    "statement": "Adultos: 150–300 min/semana de atividade aeróbica moderada ou 75–150 min vigorosa (ou combinação), fortalecimento muscular regular e menos tempo sedentário.",
+    "topic": "atividade física",
+    "evidence_level": "HIGH",
+    "sources": [
+      {
+        "source_id": "who_2020_pa",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "ms_guia_af_2021",
+        "stance": "CONTEXT",
+        "note": "Guia oficial brasileiro para a população."
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "protein_intake",
+    "statement": "Ingestão total de proteína em torno de 1,6 g/kg/dia parece suficiente, na média, para maximizar ganhos de massa magra com treino resistido; 1,4–2,0 g/kg/dia atende a maioria dos praticantes.",
+    "topic": "proteína",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "morton_2018_protein",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "jager_2017_protein",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "mifflin_equation",
+    "statement": "A equação de Mifflin-St Jeor estima o gasto energético de repouso a partir de peso, altura, idade e sexo, derivada de adultos saudáveis.",
+    "topic": "gasto energético",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "mifflin_1990",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "weight_loss_rate",
+    "statement": "Ritmos de perda de ~0,5–1% do peso corporal por semana são recomendados para preservar massa magra (contexto: atletas de fisiculturismo natural).",
+    "topic": "nutrição",
+    "evidence_level": "LIMITED",
+    "sources": [
+      {
+        "source_id": "helms_2014_contest",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "dietary_guidelines_br",
+    "statement": "O Guia Alimentar brasileiro orienta basear a alimentação em alimentos in natura ou minimamente processados e evitar ultraprocessados.",
+    "topic": "alimentação",
+    "evidence_level": "HIGH",
+    "sources": [
+      {
+        "source_id": "ms_guia_alimentar_2014",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "sweat_variability",
+    "statement": "Taxas de suor variam muito entre pessoas; a reposição de líquidos deve ser individualizada, e a variação de peso antes/depois do exercício ajuda a estimá-la.",
+    "topic": "hidratação",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "sawka_2007_fluids",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "water_adequate_intake",
+    "statement": "A EFSA define ingestão adequada de água total (bebidas + alimentos) de 2,0 L/dia para mulheres e 2,5 L/dia para homens adultos.",
+    "topic": "hidratação",
+    "evidence_level": "HIGH",
+    "sources": [
+      {
+        "source_id": "efsa_2010_water",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "sleep_duration",
+    "statement": "Adultos devem dormir 7 horas ou mais por noite regularmente para promover a saúde.",
+    "topic": "sono",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "watson_2015_sleep",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "bmi_classification",
+    "statement": "Pela OMS, em adultos, IMC ≥ 25 indica sobrepeso e IMC ≥ 30 obesidade; o IMC não distingue músculo de gordura.",
+    "topic": "composição corporal",
+    "evidence_level": "HIGH",
+    "sources": [
+      {
+        "source_id": "who_obesity_factsheet",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "whtr_screening",
+    "statement": "A relação cintura/altura discrimina risco cardiometabólico melhor que IMC ou cintura isolados; ≥ 0,5 indica risco aumentado e ≥ 0,6 risco alto.",
+    "topic": "composição corporal",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "ashwell_2012_whtr",
+        "stance": "SUPPORTS",
+        "note": null
+      },
+      {
+        "source_id": "nice_2022_whtr",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "glycogen_water",
+    "statement": "Glicogênio é armazenado com água (3–4 partes); mudanças de glicogênio alteram o peso corporal sem mudança equivalente de gordura.",
+    "topic": "variação de peso",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "kreitzman_1992_glycogen",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "preparticipation_screening",
+    "statement": "A triagem pré-participação da ACSM considera atividade física atual, sinais/sintomas ou doença cardiovascular, metabólica ou renal conhecida, e a intensidade pretendida.",
+    "topic": "segurança",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "riebe_2015_screening",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "creatine",
+    "statement": "A creatina monoidratada é um dos suplementos ergogênicos mais estudados, com evidência de aumento da capacidade de exercício de alta intensidade e de massa magra com treino, e bom perfil de segurança nos estudos em adultos saudáveis.",
+    "topic": "suplementos",
+    "evidence_level": "HIGH",
+    "sources": [
+      {
+        "source_id": "kreider_2017_creatine",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "caffeine",
+    "statement": "Cafeína em doses de 3–6 mg/kg melhora agudamente diversos aspectos do desempenho físico.",
+    "topic": "suplementos",
+    "evidence_level": "HIGH",
+    "sources": [
+      {
+        "source_id": "guest_2021_caffeine",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  },
+  {
+    "id": "beta_alanine",
+    "statement": "Beta-alanina aumenta a carnosina muscular e pode melhorar desempenho em esforços de alta intensidade de cerca de 1 a 4 minutos; parestesia (formigamento) é o efeito colateral mais relatado.",
+    "topic": "suplementos",
+    "evidence_level": "MODERATE",
+    "sources": [
+      {
+        "source_id": "trexler_2015_betaalanine",
+        "stance": "SUPPORTS",
+        "note": null
+      }
+    ],
+    "last_reviewed": "2026-10-02",
+    "review_status": "CURRENT"
+  }
+]

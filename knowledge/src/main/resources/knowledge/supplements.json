@@ -1,0 +1,78 @@
+[
+  {
+    "id": "creatine",
+    "name": "Creatina monoidratada",
+    "what_is": "Composto presente naturalmente nos músculos (estoques de fosfocreatina), também obtido de carnes e peixes.",
+    "purpose": "Aumentar estoques musculares de creatina para esforços curtos e intensos.",
+    "evidence_summary": "Um dos suplementos mais estudados; evidência de aumento da capacidade de exercício de alta intensidade e de massa magra quando combinada a treino.",
+    "how_studied": "Ensaios com protocolos de saturação (dose maior por poucos dias) ou dose diária constante, em geral combinados a treino resistido.",
+    "known_effects": "Aumento de peso corporal por retenção de água intramuscular é comum no início.",
+    "limitations": "Resposta varia entre pessoas; a maior parte dos estudos é com adultos saudáveis.",
+    "cautions": "Pessoas com doença renal ou em uso de medicações devem consultar um profissional. Esta é informação baseada em evidência, não recomendação individual: uso de suplementos deve ser avaliado com médico ou nutricionista.",
+    "evidence_level": "HIGH",
+    "sources": [
+      "kreider_2017_creatine"
+    ]
+  },
+  {
+    "id": "caffeine",
+    "name": "Cafeína",
+    "what_is": "Estimulante presente em café, chás, energéticos e cápsulas.",
+    "purpose": "Melhora aguda de desempenho e redução da percepção de esforço.",
+    "evidence_summary": "Doses de 3–6 mg/kg melhoram agudamente diversos aspectos do desempenho.",
+    "how_studied": "Ensaios agudos com ingestão antes do exercício, comparados a placebo.",
+    "known_effects": "Pode causar insônia, ansiedade, taquicardia e desconforto gastrointestinal, sobretudo em doses altas.",
+    "limitations": "Resposta individual varia; tolerância ao uso habitual.",
+    "cautions": "Evite perto do horário de dormir; atenção a gestantes, hipertensos e pessoas com arritmia. Esta é informação baseada em evidência, não recomendação individual: uso de suplementos deve ser avaliado com médico ou nutricionista.",
+    "evidence_level": "HIGH",
+    "sources": [
+      "guest_2021_caffeine"
+    ]
+  },
+  {
+    "id": "beta_alanine",
+    "name": "Beta-alanina",
+    "what_is": "Aminoácido precursor da carnosina muscular.",
+    "purpose": "Aumentar a capacidade de tamponamento em esforços intensos de curta duração.",
+    "evidence_summary": "Aumenta carnosina muscular; benefícios mais claros em esforços de alta intensidade de cerca de 1 a 4 minutos.",
+    "how_studied": "Suplementação diária por semanas, comparada a placebo.",
+    "known_effects": "Parestesia (formigamento) é o efeito colateral mais relatado.",
+    "limitations": "Benefício pequeno e dependente do tipo de esforço; menos relevante para séries curtas de musculação.",
+    "cautions": "Consulte um profissional antes de usar. Esta é informação baseada em evidência, não recomendação individual: uso de suplementos deve ser avaliado com médico ou nutricionista.",
+    "evidence_level": "MODERATE",
+    "sources": [
+      "trexler_2015_betaalanine"
+    ]
+  },
+  {
+    "id": "whey",
+    "name": "Whey protein (proteína do soro do leite)",
+    "what_is": "Proteína láctea concentrada, isolada ou hidrolisada.",
+    "purpose": "Facilitar atingir a meta diária de proteína.",
+    "evidence_summary": "O que importa é a ingestão total diária de proteína: em torno de 1,6 g/kg/dia parece suficiente na média; whey é uma forma prática, não obrigatória.",
+    "how_studied": "Meta-análises de suplementação proteica combinada a treino resistido.",
+    "known_effects": "Equivale a outras fontes proteicas de qualidade quando a ingestão total é a mesma.",
+    "limitations": "Alimentos como carnes, ovos, laticínios e leguminosas cumprem a mesma função.",
+    "cautions": "Intolerância à lactose (prefira isolado ou outra fonte); doença renal exige orientação profissional. Esta é informação baseada em evidência, não recomendação individual: uso de suplementos deve ser avaliado com médico ou nutricionista.",
+    "evidence_level": "MODERATE",
+    "sources": [
+      "morton_2018_protein",
+      "jager_2017_protein"
+    ]
+  },
+  {
+    "id": "electrolytes",
+    "name": "Eletrólitos (bebidas com sódio/potássio)",
+    "what_is": "Bebidas ou sais com sódio, potássio e às vezes carboidratos.",
+    "purpose": "Repor perdas de suor em treinos longos, quentes ou com muito suor.",
+    "evidence_summary": "Em situações específicas (exercício prolongado, calor, sudorese intensa), bebidas com eletrólitos e carboidratos podem ser vantajosas em relação à água.",
+    "how_studied": "Estudos de reposição hídrica durante e após exercício.",
+    "known_effects": "Ajudam a repor sódio perdido no suor.",
+    "limitations": "Para a maioria dos treinos de academia de ~1 h, água e alimentação habitual costumam bastar.",
+    "cautions": "Hipertensos e pessoas com doença renal ou cardíaca devem seguir orientação médica. Esta é informação baseada em evidência, não recomendação individual: uso de suplementos deve ser avaliado com médico ou nutricionista.",
+    "evidence_level": "MODERATE",
+    "sources": [
+      "sawka_2007_fluids"
+    ]
+  }
+]

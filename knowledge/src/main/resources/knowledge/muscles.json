@@ -1,0 +1,146 @@
+[
+  {
+    "id": "chest",
+    "name": "Peitoral",
+    "region": "upper",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "horizontal_push"
+  },
+  {
+    "id": "lats",
+    "name": "Latíssimo do dorso",
+    "region": "upper",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "vertical_pull"
+  },
+  {
+    "id": "mid_back",
+    "name": "Dorsal média (romboides e trapézio médio)",
+    "region": "upper",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "horizontal_pull"
+  },
+  {
+    "id": "traps",
+    "name": "Trapézio superior",
+    "region": "upper",
+    "volume_tracked": false,
+    "volume_factor": 1.0,
+    "fill_pattern": null
+  },
+  {
+    "id": "front_delts",
+    "name": "Deltoide anterior",
+    "region": "upper",
+    "volume_tracked": false,
+    "volume_factor": 1.0,
+    "fill_pattern": null
+  },
+  {
+    "id": "side_delts",
+    "name": "Deltoide lateral",
+    "region": "upper",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "shoulder_abduction"
+  },
+  {
+    "id": "rear_delts",
+    "name": "Deltoide posterior",
+    "region": "upper",
+    "volume_tracked": true,
+    "volume_factor": 0.8,
+    "fill_pattern": "horizontal_abduction"
+  },
+  {
+    "id": "biceps",
+    "name": "Bíceps",
+    "region": "upper",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "elbow_flexion"
+  },
+  {
+    "id": "triceps",
+    "name": "Tríceps",
+    "region": "upper",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "elbow_extension"
+  },
+  {
+    "id": "forearms",
+    "name": "Antebraço",
+    "region": "upper",
+    "volume_tracked": false,
+    "volume_factor": 1.0,
+    "fill_pattern": null
+  },
+  {
+    "id": "quads",
+    "name": "Quadríceps",
+    "region": "lower",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "squat"
+  },
+  {
+    "id": "hamstrings",
+    "name": "Posterior de coxa",
+    "region": "lower",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "knee_flexion"
+  },
+  {
+    "id": "glutes",
+    "name": "Glúteos",
+    "region": "lower",
+    "volume_tracked": true,
+    "volume_factor": 1.0,
+    "fill_pattern": "hip_extension"
+  },
+  {
+    "id": "adductors",
+    "name": "Adutores",
+    "region": "lower",
+    "volume_tracked": false,
+    "volume_factor": 1.0,
+    "fill_pattern": null
+  },
+  {
+    "id": "calves",
+    "name": "Panturrilha",
+    "region": "lower",
+    "volume_tracked": true,
+    "volume_factor": 0.8,
+    "fill_pattern": "calf_raise"
+  },
+  {
+    "id": "abs",
+    "name": "Abdômen",
+    "region": "core",
+    "volume_tracked": true,
+    "volume_factor": 0.8,
+    "fill_pattern": "anti_extension"
+  },
+  {
+    "id": "obliques",
+    "name": "Oblíquos",
+    "region": "core",
+    "volume_tracked": false,
+    "volume_factor": 1.0,
+    "fill_pattern": null
+  },
+  {
+    "id": "lower_back",
+    "name": "Eretores da espinha (lombar)",
+    "region": "core",
+    "volume_tracked": false,
+    "volume_factor": 1.0,
+    "fill_pattern": null
+  }
+]

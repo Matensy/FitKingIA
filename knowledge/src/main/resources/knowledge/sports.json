@@ -1,0 +1,90 @@
+[
+  {
+    "id": "kickboxing",
+    "name": "Kickboxing",
+    "lower_body_load": 3,
+    "upper_body_load": 2,
+    "cardio_demand": 3,
+    "recovery_demand": 3
+  },
+  {
+    "id": "muay_thai",
+    "name": "Muay thai",
+    "lower_body_load": 3,
+    "upper_body_load": 2,
+    "cardio_demand": 3,
+    "recovery_demand": 3
+  },
+  {
+    "id": "boxing",
+    "name": "Boxe",
+    "lower_body_load": 1,
+    "upper_body_load": 2,
+    "cardio_demand": 3,
+    "recovery_demand": 2
+  },
+  {
+    "id": "bjj",
+    "name": "Jiu-jitsu",
+    "lower_body_load": 2,
+    "upper_body_load": 3,
+    "cardio_demand": 2,
+    "recovery_demand": 3
+  },
+  {
+    "id": "judo",
+    "name": "Judô",
+    "lower_body_load": 2,
+    "upper_body_load": 3,
+    "cardio_demand": 3,
+    "recovery_demand": 3
+  },
+  {
+    "id": "running",
+    "name": "Corrida",
+    "lower_body_load": 3,
+    "upper_body_load": 0,
+    "cardio_demand": 3,
+    "recovery_demand": 2
+  },
+  {
+    "id": "cycling",
+    "name": "Ciclismo",
+    "lower_body_load": 2,
+    "upper_body_load": 0,
+    "cardio_demand": 3,
+    "recovery_demand": 1
+  },
+  {
+    "id": "football",
+    "name": "Futebol",
+    "lower_body_load": 3,
+    "upper_body_load": 0,
+    "cardio_demand": 3,
+    "recovery_demand": 2
+  },
+  {
+    "id": "swimming",
+    "name": "Natação",
+    "lower_body_load": 1,
+    "upper_body_load": 2,
+    "cardio_demand": 3,
+    "recovery_demand": 1
+  },
+  {
+    "id": "volleyball",
+    "name": "Vôlei",
+    "lower_body_load": 2,
+    "upper_body_load": 2,
+    "cardio_demand": 2,
+    "recovery_demand": 2
+  },
+  {
+    "id": "basketball",
+    "name": "Basquete",
+    "lower_body_load": 3,
+    "upper_body_load": 1,
+    "cardio_demand": 3,
+    "recovery_demand": 2
+  }
+]

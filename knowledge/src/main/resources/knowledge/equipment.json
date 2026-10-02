@@ -1,0 +1,147 @@
+[
+  {
+    "id": "barbell",
+    "name": "Barra olímpica e anilhas",
+    "category": "free_weight"
+  },
+  {
+    "id": "ez_bar",
+    "name": "Barra W",
+    "category": "free_weight"
+  },
+  {
+    "id": "dumbbells",
+    "name": "Halteres",
+    "category": "free_weight"
+  },
+  {
+    "id": "kettlebell",
+    "name": "Kettlebell",
+    "category": "free_weight"
+  },
+  {
+    "id": "flat_bench",
+    "name": "Banco reto",
+    "category": "accessory"
+  },
+  {
+    "id": "adjustable_bench",
+    "name": "Banco ajustável (inclinado)",
+    "category": "accessory"
+  },
+  {
+    "id": "squat_rack",
+    "name": "Rack / gaiola",
+    "category": "rack"
+  },
+  {
+    "id": "smith_machine",
+    "name": "Smith",
+    "category": "machine"
+  },
+  {
+    "id": "cable_station",
+    "name": "Polia / crossover",
+    "category": "machine"
+  },
+  {
+    "id": "lat_pulldown",
+    "name": "Puxada (pulley alto)",
+    "category": "machine"
+  },
+  {
+    "id": "seated_row_machine",
+    "name": "Remada (máquina)",
+    "category": "machine"
+  },
+  {
+    "id": "leg_press",
+    "name": "Leg press",
+    "category": "machine"
+  },
+  {
+    "id": "hack_squat",
+    "name": "Hack squat",
+    "category": "machine"
+  },
+  {
+    "id": "leg_extension",
+    "name": "Cadeira extensora",
+    "category": "machine"
+  },
+  {
+    "id": "leg_curl",
+    "name": "Flexora (mesa ou cadeira)",
+    "category": "machine"
+  },
+  {
+    "id": "pec_deck",
+    "name": "Peck deck / voador",
+    "category": "machine"
+  },
+  {
+    "id": "chest_press_machine",
+    "name": "Supino máquina",
+    "category": "machine"
+  },
+  {
+    "id": "shoulder_press_machine",
+    "name": "Desenvolvimento máquina",
+    "category": "machine"
+  },
+  {
+    "id": "calf_machine",
+    "name": "Panturrilha (máquina)",
+    "category": "machine"
+  },
+  {
+    "id": "hip_abduction_machine",
+    "name": "Cadeira abdutora",
+    "category": "machine"
+  },
+  {
+    "id": "hip_adduction_machine",
+    "name": "Cadeira adutora",
+    "category": "machine"
+  },
+  {
+    "id": "back_extension_bench",
+    "name": "Banco de extensão lombar (45°)",
+    "category": "machine"
+  },
+  {
+    "id": "dip_station",
+    "name": "Paralelas",
+    "category": "station"
+  },
+  {
+    "id": "pull_up_bar",
+    "name": "Barra fixa",
+    "category": "accessory"
+  },
+  {
+    "id": "resistance_bands",
+    "name": "Elásticos",
+    "category": "accessory"
+  },
+  {
+    "id": "ab_wheel",
+    "name": "Roda abdominal",
+    "category": "accessory"
+  },
+  {
+    "id": "step_box",
+    "name": "Step / caixa",
+    "category": "accessory"
+  },
+  {
+    "id": "trx",
+    "name": "Fita de suspensão (TRX)",
+    "category": "accessory"
+  },
+  {
+    "id": "low_bar",
+    "name": "Barra baixa (parque ou rack)",
+    "category": "station"
+  }
+]

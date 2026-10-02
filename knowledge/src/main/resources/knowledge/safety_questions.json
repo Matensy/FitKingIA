@@ -1,0 +1,90 @@
+[
+  {
+    "id": "chest_pain",
+    "question": "Você sente dor, pressão ou desconforto no peito durante esforço físico (ou em repouso)?",
+    "category": "sintomas",
+    "outcome_if_yes": "BLOCK",
+    "message": "Dor ou desconforto no peito é sinal de alerta. Procure avaliação médica antes de iniciar ou continuar treinos.",
+    "applies_to": null
+  },
+  {
+    "id": "fainting",
+    "question": "Você já desmaiou ou teve tontura forte durante ou logo após exercício?",
+    "category": "sintomas",
+    "outcome_if_yes": "BLOCK",
+    "message": "Desmaio ou tontura forte ligados ao exercício exigem avaliação médica antes de treinar.",
+    "applies_to": null
+  },
+  {
+    "id": "breathlessness",
+    "question": "Você sente falta de ar desproporcional ao esforço, palpitações ou batimentos irregulares?",
+    "category": "sintomas",
+    "outcome_if_yes": "BLOCK",
+    "message": "Falta de ar desproporcional ou palpitações precisam de avaliação médica antes de treinar.",
+    "applies_to": null
+  },
+  {
+    "id": "medical_restriction",
+    "question": "Algum profissional de saúde já restringiu ou contraindicou atividade física para você?",
+    "category": "histórico",
+    "outcome_if_yes": "BLOCK",
+    "message": "Há uma restrição profissional registrada. Siga essa orientação; o app não substitui a avaliação de quem conhece seu caso.",
+    "applies_to": null
+  },
+  {
+    "id": "recent_surgery",
+    "question": "Você passou por cirurgia nos últimos 3 meses?",
+    "category": "histórico",
+    "outcome_if_yes": "BLOCK",
+    "message": "Após cirurgia recente, a volta ao treino deve ser liberada e orientada pelo profissional responsável.",
+    "applies_to": null
+  },
+  {
+    "id": "known_disease",
+    "question": "Você tem diagnóstico de doença cardíaca, metabólica (ex.: diabetes) ou renal?",
+    "category": "histórico",
+    "outcome_if_yes": "CAUTION",
+    "message": "Com doença cardiovascular, metabólica ou renal conhecida, a recomendação é ter liberação médica — especialmente antes de treinos intensos.",
+    "applies_to": null
+  },
+  {
+    "id": "blood_pressure",
+    "question": "Você tem pressão alta sem controle ou não sabe se ela está controlada?",
+    "category": "histórico",
+    "outcome_if_yes": "CAUTION",
+    "message": "Verifique sua pressão com um profissional. Evite prender a respiração por muito tempo durante esforços pesados.",
+    "applies_to": null
+  },
+  {
+    "id": "medication",
+    "question": "Você usa medicação que afeta frequência cardíaca, pressão ou equilíbrio?",
+    "category": "histórico",
+    "outcome_if_yes": "CAUTION",
+    "message": "Algumas medicações alteram a resposta ao esforço. Confirme com seu médico se há cuidados específicos.",
+    "applies_to": null
+  },
+  {
+    "id": "current_pain",
+    "question": "Você tem dor atual em articulações, coluna ou músculos?",
+    "category": "dor",
+    "outcome_if_yes": "CAUTION",
+    "message": "Registre a região e a intensidade da dor para que o motor evite exercícios que exijam essa articulação. Se a dor for intensa ou persistente, procure avaliação profissional.",
+    "applies_to": null
+  },
+  {
+    "id": "mobility_limit",
+    "question": "Alguma limitação de mobilidade impede movimentos como levantar os braços acima da cabeça ou agachar?",
+    "category": "mobilidade",
+    "outcome_if_yes": "INFO",
+    "message": "Registre a limitação: o motor reduz exercícios com alta demanda de mobilidade nessa região.",
+    "applies_to": null
+  },
+  {
+    "id": "pregnancy",
+    "question": "Você está gestante ou teve parto há menos de 6 meses?",
+    "category": "gestação",
+    "outcome_if_yes": "BLOCK",
+    "message": "Atividade física costuma ser recomendada na gestação e no pós-parto, mas a prescrição deve ser individualizada com acompanhamento do pré-natal. O app não gera um programa padrão nesse período.",
+    "applies_to": "FEMALE"
+  }
+]

@@ -1,0 +1,188 @@
+[
+  {
+    "id": "arroz_branco_cozido",
+    "name": "Arroz, tipo 1, cozido",
+    "aliases": [
+      "arroz",
+      "arroz branco"
+    ],
+    "kcal": 128,
+    "protein_g": 2.5,
+    "carbs_g": 28.1,
+    "fat_g": 0.2,
+    "fiber_g": 1.6,
+    "sodium_mg": null,
+    "default_serving_g": 125,
+    "serving_label": "4 colheres de sopa",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente."
+  },
+  {
+    "id": "feijao_carioca_cozido",
+    "name": "Feijão, carioca, cozido",
+    "aliases": [
+      "feijao",
+      "feijao carioca"
+    ],
+    "kcal": 76,
+    "protein_g": 4.8,
+    "carbs_g": 13.6,
+    "fat_g": 0.5,
+    "fiber_g": 8.5,
+    "sodium_mg": null,
+    "default_serving_g": 86,
+    "serving_label": "1 concha média",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente."
+  },
+  {
+    "id": "frango_peito_grelhado",
+    "name": "Frango, peito, sem pele, grelhado",
+    "aliases": [
+      "frango",
+      "peito de frango",
+      "frango grelhado"
+    ],
+    "kcal": 159,
+    "protein_g": 32.0,
+    "carbs_g": 0.0,
+    "fat_g": 2.5,
+    "fiber_g": 0.0,
+    "sodium_mg": null,
+    "default_serving_g": 100,
+    "serving_label": "1 filé médio",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente. Fibra = 0 por ser alimento de origem animal."
+  },
+  {
+    "id": "patinho_grelhado",
+    "name": "Carne, bovina, patinho, sem gordura, grelhado",
+    "aliases": [
+      "carne",
+      "patinho",
+      "bife",
+      "carne bovina"
+    ],
+    "kcal": 219,
+    "protein_g": 35.9,
+    "carbs_g": 0.0,
+    "fat_g": 7.3,
+    "fiber_g": 0.0,
+    "sodium_mg": null,
+    "default_serving_g": 100,
+    "serving_label": "1 bife médio",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente. Fibra = 0 por ser alimento de origem animal."
+  },
+  {
+    "id": "ovo_cozido",
+    "name": "Ovo, de galinha, inteiro, cozido (10 minutos)",
+    "aliases": [
+      "ovo",
+      "ovos",
+      "ovo cozido"
+    ],
+    "kcal": 146,
+    "protein_g": 13.3,
+    "carbs_g": 0.6,
+    "fat_g": 9.5,
+    "fiber_g": 0.0,
+    "sodium_mg": null,
+    "default_serving_g": 50,
+    "serving_label": "1 unidade",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente. Fibra = 0 por ser alimento de origem animal."
+  },
+  {
+    "id": "banana_prata",
+    "name": "Banana, prata, crua",
+    "aliases": [
+      "banana",
+      "bananas"
+    ],
+    "kcal": 98,
+    "protein_g": 1.3,
+    "carbs_g": 26.0,
+    "fat_g": 0.1,
+    "fiber_g": 2.0,
+    "sodium_mg": null,
+    "default_serving_g": 70,
+    "serving_label": "1 unidade média",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente."
+  },
+  {
+    "id": "pao_frances",
+    "name": "Pão, trigo, francês",
+    "aliases": [
+      "pao",
+      "pao frances",
+      "paozinho",
+      "paes"
+    ],
+    "kcal": 300,
+    "protein_g": 8.0,
+    "carbs_g": 58.6,
+    "fat_g": 3.1,
+    "fiber_g": 2.3,
+    "sodium_mg": 648,
+    "default_serving_g": 50,
+    "serving_label": "1 unidade",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente."
+  },
+  {
+    "id": "aveia_flocos",
+    "name": "Aveia, flocos, crua",
+    "aliases": [
+      "aveia"
+    ],
+    "kcal": 394,
+    "protein_g": 13.9,
+    "carbs_g": 66.6,
+    "fat_g": 8.5,
+    "fiber_g": 9.1,
+    "sodium_mg": null,
+    "default_serving_g": 30,
+    "serving_label": "3 colheres de sopa",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente."
+  },
+  {
+    "id": "batata_cozida",
+    "name": "Batata, inglesa, cozida",
+    "aliases": [
+      "batata",
+      "batatas"
+    ],
+    "kcal": 52,
+    "protein_g": 1.2,
+    "carbs_g": 11.9,
+    "fat_g": 0.0,
+    "fiber_g": 1.3,
+    "sodium_mg": null,
+    "default_serving_g": 135,
+    "serving_label": "1 unidade média",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente."
+  },
+  {
+    "id": "mandioca_cozida",
+    "name": "Mandioca, cozida",
+    "aliases": [
+      "mandioca",
+      "aipim",
+      "macaxeira"
+    ],
+    "kcal": 125,
+    "protein_g": 0.6,
+    "carbs_g": 30.1,
+    "fat_g": 0.3,
+    "fiber_g": 1.6,
+    "sodium_mg": null,
+    "default_serving_g": 100,
+    "serving_label": "1 pedaço médio",
+    "source_id": "taco_2011",
+    "verification": "Valores por 100 g conferidos em fontes secundárias que reproduzem a TACO (2026-10-02); conferência no PDF original pendente."
+  }
+]

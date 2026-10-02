@@ -1,0 +1,664 @@
+[
+  {
+    "id": "volume.weekly_sets",
+    "category": "treino",
+    "description": "Metas de séries semanais por músculo, por foco e nível, com contagem fracionada.",
+    "basis": "EVIDENCE",
+    "rationale": "Faixas ancoradas na relação dose-resposta (mais volume → mais hipertrofia, com retornos decrescentes) e na referência de ~10 séries/semana do ACSM 2026; metas de força/potência menores porque a força satura mais cedo. As faixas exatas por nível são escolha do sistema dentro dessa evidência.",
+    "claims": [
+      "hypertrophy_volume",
+      "fractional_sets",
+      "strength_prescription",
+      "who_activity"
+    ],
+    "params": {
+      "primary_credit": 1.0,
+      "secondary_credit": 0.5,
+      "min_sets_per_exercise": 2,
+      "max_sets_per_exercise": {
+        "COMPOUND": 5,
+        "ISOLATION": 4
+      },
+      "targets": {
+        "HYPERTROPHY": {
+          "NOVICE": [
+            6,
+            9,
+            12
+          ],
+          "INTERMEDIATE": [
+            8,
+            12,
+            16
+          ],
+          "ADVANCED": [
+            10,
+            14,
+            20
+          ]
+        },
+        "STRENGTH": {
+          "NOVICE": [
+            4,
+            6,
+            10
+          ],
+          "INTERMEDIATE": [
+            6,
+            8,
+            12
+          ],
+          "ADVANCED": [
+            6,
+            10,
+            14
+          ]
+        },
+        "POWER": {
+          "NOVICE": [
+            4,
+            6,
+            8
+          ],
+          "INTERMEDIATE": [
+            4,
+            6,
+            10
+          ],
+          "ADVANCED": [
+            4,
+            8,
+            12
+          ]
+        },
+        "MUSCULAR_ENDURANCE": {
+          "NOVICE": [
+            4,
+            6,
+            10
+          ],
+          "INTERMEDIATE": [
+            6,
+            8,
+            12
+          ],
+          "ADVANCED": [
+            6,
+            10,
+            14
+          ]
+        },
+        "GENERAL_FITNESS": {
+          "NOVICE": [
+            4,
+            6,
+            10
+          ],
+          "INTERMEDIATE": [
+            4,
+            8,
+            12
+          ],
+          "ADVANCED": [
+            6,
+            8,
+            12
+          ]
+        }
+      }
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "prescription.reps_rir_rest",
+    "category": "treino",
+    "description": "Faixa de repetições, RIR alvo, descanso e cadência por foco e papel do exercício.",
+    "basis": "EVIDENCE",
+    "rationale": "Força: cargas altas (faixas baixas de repetição) e descanso longo; hipertrofia: ampla faixa de cargas funciona, então principais em 6–10 e acessórios em 10–15; RIR 1–3 porque a falha não é necessária; descanso ≥ 60–90 s. Iniciantes recebem +1 RIR enquanto aprendem a técnica (escolha do sistema).",
+    "claims": [
+      "strength_prescription",
+      "power_prescription",
+      "failure_not_required",
+      "rir_scale",
+      "rest_interval"
+    ],
+    "params": {
+      "novice_extra_rir": 1,
+      "timed_hold_seconds": [
+        20,
+        45
+      ],
+      "by_focus": {
+        "HYPERTROPHY": {
+          "MAIN": {
+            "reps": [
+              6,
+              10
+            ],
+            "rir": 2,
+            "rest": [
+              120,
+              180
+            ],
+            "tempo": "descida controlada (~2 s)"
+          },
+          "SECONDARY": {
+            "reps": [
+              8,
+              12
+            ],
+            "rir": 2,
+            "rest": [
+              90,
+              150
+            ],
+            "tempo": "descida controlada (~2 s)"
+          },
+          "ACCESSORY": {
+            "reps": [
+              10,
+              15
+            ],
+            "rir": 1,
+            "rest": [
+              60,
+              90
+            ],
+            "tempo": "controlado, sem embalo"
+          }
+        },
+        "STRENGTH": {
+          "MAIN": {
+            "reps": [
+              3,
+              6
+            ],
+            "rir": 2,
+            "rest": [
+              180,
+              300
+            ],
+            "tempo": "descida controlada, subida com intenção de velocidade"
+          },
+          "SECONDARY": {
+            "reps": [
+              5,
+              8
+            ],
+            "rir": 2,
+            "rest": [
+              120,
+              180
+            ],
+            "tempo": "descida controlada"
+          },
+          "ACCESSORY": {
+            "reps": [
+              8,
+              12
+            ],
+            "rir": 2,
+            "rest": [
+              60,
+              120
+            ],
+            "tempo": "controlado"
+          }
+        },
+        "POWER": {
+          "MAIN": {
+            "reps": [
+              3,
+              5
+            ],
+            "rir": 3,
+            "rest": [
+              180,
+              300
+            ],
+            "tempo": "subida explosiva (30–70% 1RM)"
+          },
+          "SECONDARY": {
+            "reps": [
+              4,
+              6
+            ],
+            "rir": 3,
+            "rest": [
+              120,
+              180
+            ],
+            "tempo": "subida explosiva"
+          },
+          "ACCESSORY": {
+            "reps": [
+              8,
+              12
+            ],
+            "rir": 2,
+            "rest": [
+              60,
+              90
+            ],
+            "tempo": "controlado"
+          }
+        },
+        "MUSCULAR_ENDURANCE": {
+          "MAIN": {
+            "reps": [
+              12,
+              20
+            ],
+            "rir": 2,
+            "rest": [
+              45,
+              90
+            ],
+            "tempo": "contínuo e controlado"
+          },
+          "SECONDARY": {
+            "reps": [
+              15,
+              20
+            ],
+            "rir": 2,
+            "rest": [
+              45,
+              75
+            ],
+            "tempo": "contínuo e controlado"
+          },
+          "ACCESSORY": {
+            "reps": [
+              15,
+              25
+            ],
+            "rir": 1,
+            "rest": [
+              30,
+              60
+            ],
+            "tempo": "contínuo"
+          }
+        },
+        "GENERAL_FITNESS": {
+          "MAIN": {
+            "reps": [
+              8,
+              12
+            ],
+            "rir": 3,
+            "rest": [
+              90,
+              120
+            ],
+            "tempo": "controlado"
+          },
+          "SECONDARY": {
+            "reps": [
+              10,
+              12
+            ],
+            "rir": 3,
+            "rest": [
+              60,
+              120
+            ],
+            "tempo": "controlado"
+          },
+          "ACCESSORY": {
+            "reps": [
+              12,
+              15
+            ],
+            "rir": 2,
+            "rest": [
+              60,
+              90
+            ],
+            "tempo": "controlado"
+          }
+        }
+      }
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "frequency.days",
+    "category": "treino",
+    "description": "Número máximo de dias de musculação por nível e tempo mínimo útil por sessão.",
+    "basis": "HEURISTIC",
+    "rationale": "Iniciantes obtêm adaptação com poucas sessões e precisam de recuperação e hábito; o limite cresce com a experiência. Sessões abaixo de 25 min são pouco úteis para um treino completo.",
+    "claims": [
+      "frequency_hypertrophy",
+      "who_activity"
+    ],
+    "params": {
+      "max_days_by_tier": {
+        "NOVICE": 4,
+        "INTERMEDIATE": 5,
+        "ADVANCED": 6
+      },
+      "min_session_minutes": 25
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "timing.session_clock",
+    "category": "treino",
+    "description": "Modelo de duração da sessão (aquecimento, séries, descanso, preparação de equipamento) e cortes para caber no tempo.",
+    "basis": "HEURISTIC",
+    "rationale": "Estimativa simples e auditável: aquecimento geral + séries × (trabalho + descanso) + preparação por tipo de equipamento. Cortes priorizam remover redundância antes de reduzir exercícios principais.",
+    "claims": [
+      "rest_interval"
+    ],
+    "params": {
+      "general_warmup_minutes": 5,
+      "ramp_up_seconds": 180,
+      "work_seconds_per_set": 40,
+      "setup_seconds": {
+        "BARBELL": 90,
+        "SMITH": 60,
+        "DUMBBELL": 45,
+        "MACHINE": 45,
+        "CABLE": 45,
+        "KETTLEBELL": 30,
+        "BODYWEIGHT": 20,
+        "BAND": 20
+      }
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "progression.double",
+    "category": "progressão",
+    "description": "Dupla progressão por repetições e carga, guiada por RIR, com redução após sessões seguidas abaixo da faixa.",
+    "basis": "CONVENTION",
+    "rationale": "Dupla progressão é uma convenção prática amplamente usada para aplicar sobrecarga progressiva. Incrementos refletem anilhas/halteres comuns no Brasil.",
+    "claims": [
+      "progressive_overload",
+      "rir_scale",
+      "e1rm_equations"
+    ],
+    "params": {
+      "increments": {
+        "BARBELL": 2.5,
+        "SMITH": 2.5,
+        "DUMBBELL": 2.0,
+        "MACHINE": 5.0,
+        "CABLE": 2.5,
+        "KETTLEBELL": 4.0,
+        "BODYWEIGHT": 2.5,
+        "BAND": 1.0
+      },
+      "failed_sessions_before_reduction": 2,
+      "reduction_fraction": 0.05,
+      "easy_rir_margin": 3,
+      "max_reps_for_e1rm": 10
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "recovery.readiness_score",
+    "category": "recuperação",
+    "description": "Recovery Score 0–100 a partir do check-in (sono, energia, dor muscular, estresse, motivação) e faixas de ajuste do treino.",
+    "basis": "HEURISTIC",
+    "rationale": "Média ponderada transparente para autorregulação; não é índice fisiológico validado. Sono tem peso alto por sua relação com saúde e desempenho.",
+    "claims": [
+      "sleep_duration",
+      "rir_scale"
+    ],
+    "params": {
+      "weights": {
+        "sleep": 0.25,
+        "energy": 0.25,
+        "soreness": 0.2,
+        "stress": 0.15,
+        "motivation": 0.15
+      },
+      "sleep_scores": {
+        "POOR": 0.2,
+        "NORMAL": 0.65,
+        "EXCELLENT": 1.0
+      },
+      "thresholds": {
+        "normal": 75,
+        "reduced": 55,
+        "low": 35
+      }
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "fatigue.model",
+    "category": "recuperação",
+    "description": "Fadiga estimada por músculo com decaimento exponencial (séries e esportes).",
+    "basis": "HEURISTIC",
+    "rationale": "Modelo simples para ordenar prioridades e evitar empilhar estímulos no mesmo músculo; os parâmetros são do sistema e devem ser recalibrados com dados do usuário.",
+    "claims": [],
+    "params": {
+      "half_life_hours": 36,
+      "points_per_hard_set": 8,
+      "hard_set_max_rir": 3,
+      "easy_set_factor": 0.5,
+      "sport_points_per_level": 10
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "scheduling.week",
+    "category": "treino",
+    "description": "Custo de distribuição das sessões na semana (sobreposição muscular, esportes, tempo do dia, ordem do template).",
+    "basis": "HEURISTIC",
+    "rationale": "Evitar o mesmo grupo muscular em dias consecutivos e perna pesada colada a esportes com alta demanda de membros inferiores. As cargas por esporte (0–3) são estimativas do sistema.",
+    "claims": [],
+    "params": {
+      "consecutive_overlap_weight": 1.0,
+      "sport_same_day_weight": 1.5,
+      "sport_adjacent_weight": 1.0,
+      "over_time_weight": 5.0,
+      "order_deviation_weight": 0.5
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "hydration.target",
+    "category": "hidratação",
+    "description": "Meta diária de água: ml/kg + perda estimada no treino por nível de suor e calor.",
+    "basis": "HEURISTIC",
+    "rationale": "35 ml/kg resulta em valores próximos às ingestões adequadas da EFSA para adultos; a parcela do treino usa taxas de suor típicas e incentiva medir a própria taxa (ACSM).",
+    "claims": [
+      "water_adequate_intake",
+      "sweat_variability"
+    ],
+    "params": {
+      "ml_per_kg": 35,
+      "sweat_ml_per_hour": {
+        "LOW": 400,
+        "MODERATE": 700,
+        "HIGH": 1000
+      },
+      "hot_multiplier": 1.25,
+      "round_to_ml": 50
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "nutrition.targets",
+    "category": "nutrição",
+    "description": "Estimativa de energia (Mifflin-St Jeor × fator de atividade, ajuste por objetivo) e faixa de proteína.",
+    "basis": "EVIDENCE",
+    "rationale": "Equação preditiva validada + fatores de atividade convencionais; faixa de proteína das evidências; ritmo de perda moderado. Piso na TMB é regra de segurança do app.",
+    "claims": [
+      "mifflin_equation",
+      "protein_intake",
+      "weight_loss_rate",
+      "dietary_guidelines_br"
+    ],
+    "params": {
+      "activity_factors": {
+        "SEDENTARY": 1.2,
+        "LIGHT": 1.375,
+        "MODERATE": 1.55,
+        "VERY_ACTIVE": 1.725,
+        "EXTREMELY_ACTIVE": 1.9
+      },
+      "energy_adjustment": {
+        "DEFICIT": -0.15,
+        "MAINTENANCE": 0.0,
+        "SURPLUS": 0.08,
+        "RECOMPOSITION": -0.05
+      },
+      "protein_g_per_kg": {
+        "min": 1.4,
+        "target": 1.6,
+        "max": 2.0
+      },
+      "weekly_loss_pct": {
+        "min": 0.5,
+        "max": 1.0
+      }
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "deload.advisor",
+    "category": "progressão",
+    "description": "Sugere revisão do ciclo quando há queda persistente de desempenho em vários exercícios principais.",
+    "basis": "HEURISTIC",
+    "rationale": "Deload como resposta a sinais (queda de e1RM + prontidão baixa), não como obrigação de calendário — a evidência sobre deloads programados é limitada.",
+    "claims": [
+      "deload_evidence",
+      "e1rm_equations"
+    ],
+    "params": {
+      "declining_sessions": 3,
+      "min_share_of_main_lifts": 0.5,
+      "low_readiness_threshold": 55,
+      "volume_reduction": 0.4
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "body.weight_trend",
+    "category": "corpo",
+    "description": "Separa oscilação diária de tendência (média móvel de 7 dias).",
+    "basis": "HEURISTIC",
+    "rationale": "Peso diário oscila por água, glicogênio e conteúdo intestinal; médias móveis reduzem esse ruído.",
+    "claims": [
+      "glycogen_water"
+    ],
+    "params": {
+      "moving_average_days": 7,
+      "notable_daily_change_kg": 0.5
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "body.metrics",
+    "category": "corpo",
+    "description": "Classificação de IMC (OMS) e pontos de atenção da relação cintura/altura.",
+    "basis": "EVIDENCE",
+    "rationale": "Faixas oficiais, sempre exibidas como triagem e não como diagnóstico.",
+    "claims": [
+      "bmi_classification",
+      "whtr_screening"
+    ],
+    "params": {
+      "bmi_bands": [
+        [
+          18.5,
+          "abaixo do peso"
+        ],
+        [
+          25,
+          "faixa considerada adequada"
+        ],
+        [
+          30,
+          "sobrepeso"
+        ],
+        [
+          35,
+          "obesidade grau I"
+        ],
+        [
+          40,
+          "obesidade grau II"
+        ],
+        [
+          1000,
+          "obesidade grau III"
+        ]
+      ],
+      "whtr_increased": 0.5,
+      "whtr_high": 0.6
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "gamification.xp",
+    "category": "engajamento",
+    "description": "Pontos de XP por evento e XP por nível.",
+    "basis": "CONVENTION",
+    "rationale": "Gamificação discreta para reforçar consistência; sem impacto na prescrição.",
+    "claims": [],
+    "params": {
+      "points": {
+        "workout_completed": 100,
+        "meal_logged": 20,
+        "personal_record": 200,
+        "hydration_goal": 50,
+        "week_completed": 500,
+        "check_in": 10
+      },
+      "xp_per_level": 1000
+    },
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "split.selection",
+    "category": "treino",
+    "description": "Escolha da divisão semanal pelo número de dias, nível e foco (templates do banco).",
+    "basis": "HEURISTIC",
+    "rationale": "Com poucos dias, Full Body permite frequência ≥2× por músculo; com mais dias, divisões distribuem o volume. A vantagem de frequência para hipertrofia é incerta, por isso o usuário pode escolher outra divisão e comparar no simulador.",
+    "claims": [
+      "frequency_hypertrophy",
+      "hypertrophy_volume"
+    ],
+    "params": {},
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "selection.scoring",
+    "category": "treino",
+    "description": "Pontuação de seleção de exercícios por slot (papel, nível, variedade, preferências, histórico, dor relatada).",
+    "basis": "HEURISTIC",
+    "rationale": "Compostos nos slots principais, exercícios mais simples e estáveis para iniciantes, variedade entre sessões, continuidade com o histórico e menor demanda em articulações com dor.",
+    "claims": [],
+    "params": {},
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "substitution.scoring",
+    "category": "treino",
+    "description": "Similaridade para substituição (padrão, músculos, mecânica, estabilidade, dificuldade, equipamento, dor, curadoria, histórico).",
+    "basis": "HEURISTIC",
+    "rationale": "Um substituto deve preservar o estímulo (padrão e músculos) e respeitar restrições; curadoria humana desempata.",
+    "claims": [],
+    "params": {},
+    "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "safety.screening",
+    "category": "segurança",
+    "description": "Triagem de segurança antes do primeiro treino; red flags bloqueiam a prescrição normal.",
+    "basis": "EVIDENCE",
+    "rationale": "Inspirada nos componentes da triagem ACSM. O app não diagnostica: diante de sinais de alerta, orienta procurar um profissional.",
+    "claims": [
+      "preparticipation_screening"
+    ],
+    "params": {},
+    "last_reviewed": "2026-10-02"
+  }
+]
