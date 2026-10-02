@@ -52,7 +52,7 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         val tierMax = freq.params.maxDaysByTier[tier] ?: 6
         val maxTemplateDays = kb.splits.maxOf { it.daysPerWeek }
         val maxDays = minOf(profile.maxTrainingDays ?: 7, tierMax, maxTemplateDays)
-        val days = scheduler.pickDays(usable, maxDays)
+        var days = scheduler.pickDays(usable, maxDays)
         explanations += Explanation.rule(
             "Dias de treino: ${days.sortedBy { it.day }.joinToString { it.day.pt() }} " +
                 "(${days.size} de ${usable.size} dias com tempo suficiente; limite para ${tier.label.lowercase()}: $tierMax)." +
@@ -68,7 +68,7 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         // 3. Exercícios por slot
         val prescriptionFor = { role: SlotRole, ex: Exercise -> prescription(focus, role, tier, ex) }
         val usedInWeek = mutableMapOf<ExerciseId, Int>()
-        val baseSessions = split.sessions.map { tpl ->
+        var baseSessions = split.sessions.map { tpl ->
             val used = mutableSetOf<ExerciseId>()
             val items = tpl.slots.mapNotNull { slot ->
                 val ex = selector.select(slot, constraints, used, usedInWeek)
@@ -87,6 +87,22 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
                 }
             }
             PlannedSession(tpl.key, tpl.name, items)
+        }
+
+        // Sessão sem nenhum exercício compatível (ex.: "puxar" sem nenhum equipamento) não vai para a semana.
+        val empty = baseSessions.filter { it.exercises.isEmpty() }
+        if (empty.isNotEmpty()) {
+            empty.forEach {
+                warnings += Explanation.rule(
+                    "${it.name}: nenhum exercício compatível com seu equipamento e restrições — sessão retirada da semana e o dia fica livre. " +
+                        "Adicionar equipamento (ex.: elástico ou barra fixa) permite incluí-la.", SELECTION_RULE,
+                )
+            }
+            baseSessions = baseSessions - empty.toSet()
+            if (baseSessions.isEmpty()) return ProgramResult.Refused(listOf(Explanation.rule(
+                "Nenhum exercício compatível com seu equipamento e restrições.", SELECTION_RULE,
+            )))
+            days = scheduler.pickDays(days, baseSessions.size)
         }
 
         // 4. Distribuição na semana

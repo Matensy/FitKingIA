@@ -5269,5 +5269,167 @@
     "timed": true,
     "staple": 1,
     "max_tier": null
+  },
+  {
+    "id": "towel_door_row",
+    "name": "Remada com toalha na porta",
+    "aliases": [
+      "remada na porta",
+      "remada com toalha",
+      "door row"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "rear_delts"
+    ],
+    "equipment": [],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Passe uma toalha resistente pela maçaneta dos dois lados de uma porta fechada e segure uma ponta em cada mão.",
+      "Pés perto da porta, corpo inclinado para trás com braços estendidos e tronco firme.",
+      "Puxe o peito em direção às mãos aproximando as escápulas.",
+      "Volte devagar até estender os braços."
+    ],
+    "common_mistakes": [
+      "Puxar só com os braços, sem mexer as escápulas",
+      "Quadril cedendo"
+    ],
+    "safety_notes": [
+      "Use uma porta sólida, fechada e trancada, com a dobradiça do lado oposto ao seu; teste a firmeza antes.",
+      "Quanto mais em pé, mais fácil."
+    ],
+    "progression_methods": [
+      "Afastar os pés da porta (corpo mais inclinado)",
+      "Mais repetições",
+      "Pausa de 2 s no fim da puxada",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "inverted_row_bar",
+      "inverted_row",
+      "band_row"
+    ],
+    "timed": false,
+    "staple": 0,
+    "max_tier": null
+  },
+  {
+    "id": "towel_door_row_single",
+    "name": "Remada unilateral com toalha na porta",
+    "aliases": [
+      "remada unilateral na porta"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "UNILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "mid_back",
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "rear_delts",
+      "obliques"
+    ],
+    "equipment": [],
+    "difficulty": 3,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 1,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Mesma montagem da remada na porta, segurando a toalha com uma mão só.",
+      "Corpo inclinado e firme, sem girar o tronco.",
+      "Puxe até a mão chegar ao lado do peito e volte devagar. Repita do outro lado."
+    ],
+    "common_mistakes": [
+      "Girar o tronco para ajudar a puxada"
+    ],
+    "safety_notes": [
+      "Use uma porta sólida, fechada e trancada; teste a firmeza antes."
+    ],
+    "progression_methods": [
+      "Afastar os pés da porta",
+      "Mais repetições",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "towel_door_row",
+      "one_arm_dumbbell_row",
+      "band_row"
+    ],
+    "timed": false,
+    "staple": 0,
+    "max_tier": null
+  },
+  {
+    "id": "prone_t_raise",
+    "name": "Elevação em T deitado de bruços",
+    "aliases": [
+      "prone t",
+      "t raise",
+      "elevação em t"
+    ],
+    "pattern": "horizontal_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "rear_delts",
+      "mid_back"
+    ],
+    "secondary": [
+      "traps"
+    ],
+    "equipment": [],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Deite de bruços com a testa apoiada numa toalha e os braços abertos em T, polegares para cima.",
+      "Eleve os braços do chão aproximando as escápulas, sem levantar o tronco.",
+      "Segure 1–2 s e desça devagar."
+    ],
+    "common_mistakes": [
+      "Hiperestender o pescoço",
+      "Encolher os ombros em direção às orelhas"
+    ],
+    "safety_notes": [
+      "Movimento curto e controlado; não force a amplitude se houver dor no ombro."
+    ],
+    "progression_methods": [
+      "Mais repetições",
+      "Pausa maior no topo",
+      "Garrafas de água como carga"
+    ],
+    "substitutes": [
+      "band_pull_apart"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
   }
 ]

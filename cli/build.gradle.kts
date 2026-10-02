@@ -4,15 +4,15 @@ plugins {
     application
 }
 
-// Bytecode Java 17: mesmo alvo que o futuro app Android consumirá.
+// Bytecode Java 11: o maior que o ProGuard consegue rebaixar para o dx do APK (ver app/build.gradle.kts).
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
     }
 }
 

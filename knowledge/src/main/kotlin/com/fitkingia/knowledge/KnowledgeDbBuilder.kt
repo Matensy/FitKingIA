@@ -5,6 +5,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.time.Instant
+import com.fitkingia.knowledge.sql.SqlScript
 
 /** Gera o fitness.db (SQLite) a partir dos seeds. Falha se qualquer restrição do schema for violada. */
 object KnowledgeDbBuilder {
@@ -35,10 +36,7 @@ object KnowledgeDbBuilder {
 
     /** Executa um script SQL com múltiplos comandos (sem triggers com ';' internos). */
     fun runScript(c: Connection, sql: String) {
-        val stripped = sql.lines().filterNot { it.trimStart().startsWith("--") }.joinToString("\n")
-        c.createStatement().use { st ->
-            stripped.split(";").map { it.trim() }.filter { it.isNotEmpty() }.forEach { st.execute(it) }
-        }
+        c.createStatement().use { st -> SqlScript.statements(sql).forEach { st.execute(it) } }
     }
 
     private fun insertAll(c: Connection, s: Seeds) {

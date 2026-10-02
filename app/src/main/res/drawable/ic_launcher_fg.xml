@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Coroa (King) sobre uma barra (Fit). Área segura do ícone adaptativo: 21..87. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M32,66 L32,40 L43,51 L54,33 L65,51 L76,40 L76,66 Z" />
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M30,70 L78,70 L78,76 L30,76 Z" />
+    <path android:fillColor="#FF111418"
+        android:pathData="M24,68 L30,68 L30,78 L24,78 Z M78,68 L84,68 L84,78 L78,78 Z" />
+</vector>

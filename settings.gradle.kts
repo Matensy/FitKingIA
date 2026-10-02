@@ -17,4 +17,6 @@ dependencyResolutionManagement {
 // knowledge → banco de conhecimento: seeds JSON → fitness.db (SQLite) → KnowledgeBase.
 // coach     → IA local (offline, sem LLM pago): entende português, conversa e chama o motor.
 // cli       → ferramenta de linha de comando para exercitar os motores.
-include(":core", ":knowledge", ":coach", ":cli")
+// appcore   → lógica do app sem Android: questionário só de toque, user.db, casos de uso.
+// app       → aplicativo Android (APK) com questionário só de toque; build sem Android Gradle Plugin.
+include(":core", ":knowledge", ":coach", ":cli", ":appcore", ":app")

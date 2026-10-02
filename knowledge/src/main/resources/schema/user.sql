@@ -123,7 +123,8 @@ CREATE TABLE programs (
     created_at           TEXT NOT NULL DEFAULT (datetime('now')),
     kb_content_version   TEXT NOT NULL,
     active               INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0, 1)),
-    explanations_json    TEXT CHECK (explanations_json IS NULL OR json_valid(explanations_json))
+    -- {"explanations": [...], "warnings": [...]} (JSON validado pelo app; o SQLite do Android pode não ter JSON1)
+    explanations_json    TEXT
 );
 
 CREATE TABLE program_sessions (
@@ -148,7 +149,24 @@ CREATE TABLE program_exercises (
     reps_max     INTEGER NOT NULL CHECK (reps_max >= reps_min),
     rir          INTEGER NOT NULL,
     rest_seconds INTEGER NOT NULL,
-    tempo        TEXT
+    rest_min     INTEGER NOT NULL,
+    rest_max     INTEGER NOT NULL,
+    hold_min     INTEGER,
+    hold_max     INTEGER,
+    tempo        TEXT NOT NULL,
+    note         TEXT
+);
+
+-- Replanejamento de uma semana específica (ex.: "faltei um treino" → opção A, B ou D).
+-- Vale só para aquela semana; o programa base não muda.
+CREATE TABLE week_plans (
+    user_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    week_start    TEXT NOT NULL,
+    from_day      INTEGER NOT NULL CHECK (from_day BETWEEN 1 AND 7),
+    reason        TEXT NOT NULL,
+    sessions_json TEXT NOT NULL,
+    created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (user_id, week_start)
 );
 
 CREATE TABLE readiness_checks (
@@ -171,7 +189,9 @@ CREATE TABLE workouts (
     started_at         TEXT NOT NULL,
     finished_at        TEXT,
     perceived          TEXT CHECK (perceived IN ('VERY_EASY','ADEQUATE','HARD','EXTREMELY_HARD')),
-    note               TEXT
+    note               TEXT,
+    -- sessão como foi planejada no dia (após ajustes de tempo/prontidão), para retomar e comparar
+    plan_json          TEXT
 );
 
 -- O que realmente aconteceu (carga, reps, RIR) — base do Progressive Overload Engine.
@@ -298,7 +318,7 @@ CREATE TABLE recommendation_log (
     provenance         TEXT NOT NULL CHECK (provenance IN ('FACT','SYSTEM_RULE','AI_SUGGESTION')),
     rule_ids           TEXT,
     kb_content_version TEXT NOT NULL,
-    payload_json       TEXT NOT NULL CHECK (json_valid(payload_json))
+    payload_json       TEXT NOT NULL
 );
 
 -- Conversas com o AI Coach: só existem com consentimento 'ai_coach'.
@@ -308,7 +328,7 @@ CREATE TABLE ai_messages (
     at                  TEXT NOT NULL DEFAULT (datetime('now')),
     role                TEXT NOT NULL CHECK (role IN ('user','assistant','tool')),
     content             TEXT NOT NULL,
-    shared_context_json TEXT CHECK (shared_context_json IS NULL OR json_valid(shared_context_json))
+    shared_context_json TEXT
 );
 
 CREATE TABLE user_events (
@@ -316,7 +336,7 @@ CREATE TABLE user_events (
     user_id      INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     at           TEXT NOT NULL DEFAULT (datetime('now')),
     kind         TEXT NOT NULL,
-    payload_json TEXT CHECK (payload_json IS NULL OR json_valid(payload_json))
+    payload_json TEXT
 );
 
 CREATE INDEX idx_workout_sets_exercise ON workout_sets(exercise_id, completed_at);

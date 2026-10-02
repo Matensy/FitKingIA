@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 // Bytecode Java 11: o maior que o ProGuard consegue rebaixar para o dx do APK (ver app/build.gradle.kts).
@@ -15,15 +14,15 @@ kotlin {
     }
 }
 
-// IA local: só depende do core (domínio puro) — roda no celular, offline, sem custo por token.
+// Lógica do aplicativo sem Android: questionário, user.db e casos de uso. Testável na JVM.
 dependencies {
-    api(project(":core"))
+    api(project(":knowledge"))
     implementation(libs.kotlinx.serialization.json)
 
-    testImplementation(project(":knowledge"))
     testImplementation(kotlin("test"))
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.params)
     testRuntimeOnly(libs.junit.launcher)
 }
 
