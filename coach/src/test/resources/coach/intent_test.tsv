@@ -1,0 +1,51 @@
+# frase<TAB>intenção — conjunto de TESTE: escrito depois do ajuste e nunca usado para mudar o modelo
+o que caiu pra mim hoje no treino	TODAY_WORKOUT
+quais são os exercícios da sexta-feira	TODAY_WORKOUT
+me mostra o que treino no sábado	TODAY_WORKOUT
+hoje tenho uns 15 minutos livres pra treinar	SHORT_ON_TIME
+consegue apertar o treino em 30 min	SHORT_ON_TIME
+meu tempo hoje é curtíssimo	SHORT_ON_TIME
+não tem hack squat livre, o que coloco no lugar	SUBSTITUTE
+detesto búlgaro, me dá outra opção	SUBSTITUTE
+o crossover tá lotado	SUBSTITUTE
+dói meu ombro no supino inclinado	PAIN
+torci o tornozelo ontem	PAIN
+estou com uma dor chata no cotovelo	PAIN
+dormi supermal essa noite	TIRED
+estou esgotado do trabalho	TIRED
+hoje estou um bagaço	TIRED
+por que faço remada curvada	EXPLAIN_EXERCISE
+qual o motivo de descansar tanto no agachamento	EXPLAIN_EXERCISE
+como é a execução do stiff	EXERCISE_HOWTO
+como faço panturrilha no leg press	EXERCISE_HOWTO
+por que segunda é treino de superiores	EXPLAIN_DAY
+qual a lógica de treinar upper lower	EXPLAIN_DAY
+quanto de carga pro supino na próxima	PROGRESSION
+estou travado no agachamento faz um mês	PROGRESSION
+exercício pra posterior de coxa em casa	FIND_EXERCISE
+o que posso fazer de ombro só com elástico	FIND_EXERCISE
+e se eu tiver só 2 dias por semana	SIMULATE
+simula pra mim treinar 6 dias	SIMULATE
+furei o treino de sexta	MISSED
+não consegui ir na academia ontem	MISSED
+quanto coloco de cada lado pra 110 kg	PLATES
+fiz 120 kg por 3 no terra, quanto é meu 1rm	ONE_RM
+almocei 150 g de arroz e frango	MEAL
+no café comi 2 pães franceses	MEAL
+bebi uma garrafa de água	WATER
+qual minha meta de água hoje	WATER
+quanto de proteína devo comer	NUTRITION
+creatina dá retenção	SUPPLEMENT
+qual a melhor hora de tomar whey	SUPPLEMENT
+como queimar a gordura da barriga	SPOT_REDUCTION
+quero diminuir a pança	SPOT_REDUCTION
+precisa ir até a falha pra ter hipertrofia	EVIDENCE
+dormir mal atrapalha a hipertrofia	EVIDENCE
+quantas vezes por semana treinar cada músculo	EVIDENCE
+quero ver meu imc	BODY
+meu peso caiu 1 kg de ontem pra hoje	WEIGHT_CHANGE
+fiquei inchado depois da pizza	WEIGHT_CHANGE
+quantas séries de costas eu fiz até agora	VOLUME
+fala comigo coach	GREETING
+me explica o que dá pra fazer aqui	HELP
+show, obrigado	THANKS

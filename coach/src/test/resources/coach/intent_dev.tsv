@@ -1,0 +1,82 @@
+# frase<TAB>intenção — conjunto de DESENVOLVIMENTO: usado na análise de erros durante o ajuste do modelo
+o que é pra fazer hoje na academia	TODAY_WORKOUT
+qual vai ser o treino de sexta	TODAY_WORKOUT
+me fala os exercícios de amanhã	TODAY_WORKOUT
+quero saber minha divisão da semana inteira	TODAY_WORKOUT
+hoje só consigo ficar 30 minutos na academia	SHORT_ON_TIME
+tô atrasado, tenho uns 20 min	SHORT_ON_TIME
+faz uma versão de 40 minutos do treino	SHORT_ON_TIME
+não vou conseguir fazer o treino completo hoje, pouco tempo	SHORT_ON_TIME
+o leg press está ocupado, o que eu faço	SUBSTITUTE
+não quero fazer stiff, tem outro	SUBSTITUTE
+me dá uma alternativa ao supino reto	SUBSTITUTE
+a academia não tem hack, troca	SUBSTITUTE
+meu ombro dói quando faço desenvolvimento	PAIN
+estou sentindo o joelho no agachamento	PAIN
+dor na lombar no levantamento terra	PAIN
+travou minhas costas	PAIN
+acordei acabado hoje	TIRED
+dormi umas 3 horas só	TIRED
+to sem forças hoje	TIRED
+ansioso e cansado, como fica o treino	TIRED
+por que tenho que fazer leg press	EXPLAIN_EXERCISE
+qual a justificativa de descansar 3 minutos	EXPLAIN_EXERCISE
+por que esse número de séries	EXPLAIN_EXERCISE
+de onde tiraram essa prescrição	EXPLAIN_EXERCISE
+qual a forma correta de fazer agachamento	EXERCISE_HOWTO
+como executo a remada curvada	EXERCISE_HOWTO
+me ensina o levantamento terra	EXERCISE_HOWTO
+como faz a elevação pélvica	EXERCISE_HOWTO
+por que minha quarta é de perna	EXPLAIN_DAY
+por que meu programa é full body	EXPLAIN_DAY
+explica a lógica da minha semana de treino	EXPLAIN_DAY
+devo subir o peso no leg press	PROGRESSION
+quantos quilos boto no agachamento hoje	PROGRESSION
+estou parado no mesmo peso há semanas	PROGRESSION
+quando aumentar a carga da remada	PROGRESSION
+exercício de glúteo sem equipamento	FIND_EXERCISE
+o que fazer pra panturrilha	FIND_EXERCISE
+me dá opções de exercício pra peitoral	FIND_EXERCISE
+treino de costas em casa com elástico	FIND_EXERCISE
+e se eu treinasse 4 vezes na semana	SIMULATE
+comparar treinar 3 ou 5 dias	SIMULATE
+e se eu mudar pra treino em casa	SIMULATE
+não deu pra ir treinar quarta	MISSED
+perdi o treino de segunda, o que faço	MISSED
+fiquei sem treinar ontem	MISSED
+quanto de anilha pra 80 kg	PLATES
+como coloco 102,5 kg na barra	PLATES
+fiz 90 kg x 6, quanto é meu máximo	ONE_RM
+qual minha carga máxima estimada com 70kg por 10	ONE_RM
+almocei arroz feijão e bife	MEAL
+no jantar comi batata e frango	MEAL
+comi uma banana e aveia	MEAL
+quanta água eu bebo por dia	WATER
+tomei 1 litro de água	WATER
+quantas calorias comer pra secar	NUTRITION
+preciso de quanta proteína por dia	NUTRITION
+qual a minha meta calórica	NUTRITION
+vale a pena tomar creatina	SUPPLEMENT
+whey é necessário pra crescer	SUPPLEMENT
+cafeína antes do treino ajuda	SUPPLEMENT
+como secar a barriga rápido	SPOT_REDUCTION
+quero perder a gordura do abdômen	SPOT_REDUCTION
+abdominal todo dia tira barriga	SPOT_REDUCTION
+quantas séries semanais preciso pra crescer	EVIDENCE
+ir até a falha é necessário	EVIDENCE
+quanto tempo de descanso entre as séries	EVIDENCE
+quantas horas de sono preciso	EVIDENCE
+quanto devo fazer de exercício aeróbico por semana	EVIDENCE
+calcula meu índice de massa corporal	BODY
+como está minha cintura	BODY
+por que meu peso subiu de um dia pro outro	WEIGHT_CHANGE
+estou retendo líquido	WEIGHT_CHANGE
+o peso aumentou do nada	WEIGHT_CHANGE
+quantas séries de perna fiz essa semana	VOLUME
+meu volume de peito está bom	VOLUME
+oi coach	GREETING
+bom dia!	GREETING
+o que você consegue fazer	HELP
+como te uso	HELP
+valeu pela ajuda	THANKS
+obrigado coach	THANKS

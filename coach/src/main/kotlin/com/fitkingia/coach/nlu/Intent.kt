@@ -1,0 +1,31 @@
+package com.fitkingia.coach.nlu
+
+/** O que o usuário quer. Cada intenção é atendida por um motor determinístico do core. */
+enum class Intent(val label: String) {
+    TODAY_WORKOUT("ver o treino do dia"),
+    SHORT_ON_TIME("adaptar o treino ao tempo disponível"),
+    SUBSTITUTE("trocar um exercício"),
+    PAIN("relatar dor"),
+    TIRED("ajustar o treino pelo cansaço"),
+    EXPLAIN_EXERCISE("entender por que um exercício está no treino"),
+    EXERCISE_HOWTO("aprender a executar um exercício"),
+    EXPLAIN_DAY("entender a divisão da semana"),
+    PROGRESSION("saber a carga da próxima sessão"),
+    FIND_EXERCISE("encontrar um exercício"),
+    SIMULATE("simular outra rotina"),
+    MISSED("reorganizar um treino perdido"),
+    PLATES("calcular anilhas"),
+    ONE_RM("estimar 1RM"),
+    MEAL("registrar uma refeição"),
+    WATER("ver a meta de água"),
+    NUTRITION("ver metas de calorias e proteína"),
+    SUPPLEMENT("saber sobre suplementos"),
+    SPOT_REDUCTION("perder gordura localizada"),
+    EVIDENCE("tirar uma dúvida sobre treino"),
+    BODY("ver IMC e medidas"),
+    WEIGHT_CHANGE("entender variação de peso"),
+    VOLUME("ver o volume da semana"),
+    GREETING("cumprimentar"),
+    HELP("saber o que posso fazer"),
+    THANKS("agradecer"),
+}

@@ -1,0 +1,26 @@
+package com.fitkingia.cli
+
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
+import kotlin.test.Test
+import kotlin.test.assertTrue
+
+class CliSmokeTest {
+    private fun run(vararg args: String): String {
+        val buf = ByteArrayOutputStream()
+        val old = System.out
+        System.setOut(PrintStream(buf, true, Charsets.UTF_8))
+        try { main(arrayOf(*args)) } finally { System.setOut(old) }
+        return buf.toString(Charsets.UTF_8)
+    }
+
+    @Test fun demoRunsEndToEnd() {
+        val out = run("demo")
+        listOf("PROGRAMA", "QUICK SESSION", "Por que", "Substituições", "Recovery Score", "PROGRAM SIMULATOR",
+            "PROGRESSIVE OVERLOAD", "Refeição registrada", "IA LOCAL").forEach { assertTrue(it in out, "faltou '$it'") }
+    }
+
+    @Test fun localCoachAnswersAQuestion() {
+        assertTrue("Recovery Score" in run("pergunta", "hoje", "estou", "cansado"))
+    }
+}

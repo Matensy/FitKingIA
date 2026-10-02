@@ -22,6 +22,9 @@ import com.fitkingia.core.session.SessionAdapter
 import com.fitkingia.core.substitution.SubstitutionEngine
 import com.fitkingia.core.tools.PlateCalculator
 import com.fitkingia.core.tools.WarmupGenerator
+import com.fitkingia.coach.CoachContext
+import com.fitkingia.coach.ConversationState
+import com.fitkingia.coach.LocalCoach
 import com.fitkingia.knowledge.BundledKnowledge
 import com.fitkingia.knowledge.KnowledgeValidator
 import java.io.File
@@ -56,6 +59,8 @@ Uso: fitking [--perfil arquivo.json] <comando> [argumentos]
   suplementos                    banco de suplementos (informação, não prescrição)
   fontes                         fontes científicas do banco
   validar                        relatório de integridade do banco de conhecimento
+  coach                          💬 conversa com a IA local (offline, sem custo): digite e tecle Enter
+  pergunta "<texto>"             uma pergunta para a IA local
   demo                           passeio por todas as funções
 """
 
@@ -115,8 +120,44 @@ class App(private val kb: KnowledgeBase, private val pf: ProfileFile) {
             "suplementos" -> supplements()
             "fontes" -> sources()
             "validar" -> validate()
+            "coach" -> chat()
+            "pergunta" -> ask(a.joinToString(" "))
             "demo" -> demo()
             else -> { println(HELP); exitProcess(1) }
+        }
+    }
+
+    private val coach by lazy { LocalCoach(kb) }
+    private val chatState = ConversationState()
+    private val coachContext by lazy {
+        val bench = ExerciseId("barbell_bench_press")
+        val today = LocalDate.now()
+        // Histórico de exemplo para a demonstração (o app real lê do user.db).
+        val history = listOf(
+            ExerciseLog(bench, today.minusWeeks(3), List(3) { SetLog(60.0, 10, 2) }),
+            ExerciseLog(bench, today.minusWeeks(2), List(3) { SetLog(60.0, 12, 2) }),
+            ExerciseLog(bench, today.minusWeeks(1), List(3) { SetLog(62.5, 11, 2) }),
+        )
+        CoachContext(profile, screening, if (screening.allowsProgram) program else null, today, history)
+    }
+
+    private fun ask(text: String) {
+        val r = coach.reply(text, coachContext, chatState)
+        println(r.text)
+        if (r.quickReplies.isNotEmpty()) println("   ↳ sugestões: " + r.quickReplies.joinToString(" | "))
+        r.actions.forEach { println("   ↳ ação proposta ao app: $it") }
+    }
+
+    private fun chat() {
+        println("💬 FitKingIA Coach — IA local, offline. Digite sua mensagem (\"sair\" para encerrar).")
+        ask("oi")
+        while (true) {
+            print("\nvocê › ")
+            val line = readlnOrNull() ?: break
+            if (line.trim().lowercase() in setOf("sair", "exit", "tchau")) break
+            if (line.isBlank()) continue
+            println()
+            ask(line)
         }
     }
 
@@ -294,6 +335,11 @@ class App(private val kb: KnowledgeBase, private val pf: ProfileFile) {
         water(listOf("60"))
         nutrition()
         body(82.0)
+        out.rule("💬 IA LOCAL — conversa de exemplo (offline, sem custo)")
+        for (m in listOf("oi", "hoje estou sem tempo", "uns 35 minutos", "posso trocar o agachamento?", "meu joelho está doendo",
+            "treinar até a falha é melhor?", "como perder barriga?", "bebi 500 ml de água")) {
+            println("\nvocê › $m"); ask(m)
+        }
     }
 
     private fun exercise(q: String) = kb.findExercise(q) ?: throw IllegalArgumentException("Exercício não encontrado: $q")
