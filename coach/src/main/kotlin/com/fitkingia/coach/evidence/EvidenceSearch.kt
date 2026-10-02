@@ -39,14 +39,16 @@ class EvidenceSearch(private val kb: KnowledgeBase) {
         docs = raw.map { (c, t) -> c to normalize(t.mapValues { (k, v) -> v * (idf[k] ?: 0.0) }) }
     }
 
-    fun search(query: String, limit: Int = 3, minScore: Double = 0.12): List<EvidenceHit> {
+    /** Resultados acima de [minScore] e com relevância de pelo menos [relativeToTop] da melhor resposta. */
+    fun search(query: String, limit: Int = 3, minScore: Double = 0.12, relativeToTop: Double = 0.75): List<EvidenceHit> {
         val expanded = PtText.tokens(query).joinToString(" ") { t -> synonyms[t]?.let { "$t $it" } ?: t }
         val q = normalize(tf(PtText.contentStems(expanded)).mapValues { (k, v) -> v * (idf[k] ?: 0.0) })
         if (q.isEmpty()) return emptyList()
-        return docs.map { (c, d) -> EvidenceHit(c, q.entries.sumOf { (k, v) -> v * (d[k] ?: 0.0) }) }
+        val ranked = docs.map { (c, d) -> EvidenceHit(c, q.entries.sumOf { (k, v) -> v * (d[k] ?: 0.0) }) }
             .filter { it.score >= minScore }
             .sortedByDescending { it.score }
-            .take(limit)
+        val top = ranked.firstOrNull()?.score ?: return emptyList()
+        return ranked.filter { it.score >= top * relativeToTop }.take(limit)
     }
 
     private fun tf(stems: List<String>): Map<String, Double> = stems.groupingBy { it }.eachCount().mapValues { 1.0 + ln(it.value.toDouble()) }
