@@ -2,9 +2,9 @@ package com.fitkingia.knowledge
 
 import java.io.File
 import java.sql.Connection
-import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.time.Instant
+import com.fitkingia.knowledge.sql.JdbcSqlDatabase
 import com.fitkingia.knowledge.sql.SqlScript
 
 /** Gera o fitness.db (SQLite) a partir dos seeds. Falha se qualquer restrição do schema for violada. */
@@ -13,7 +13,7 @@ object KnowledgeDbBuilder {
     fun build(seeds: Seeds, target: File): File {
         target.parentFile?.mkdirs()
         if (target.exists()) check(target.delete()) { "Não foi possível sobrescrever $target" }
-        DriverManager.getConnection("jdbc:sqlite:${target.absolutePath}").use { c ->
+        JdbcSqlDatabase.connect(target.absolutePath).use { c ->
             c.createStatement().use { it.execute("PRAGMA foreign_keys = ON") }
             runScript(c, schema("knowledge.sql"))
             c.autoCommit = false

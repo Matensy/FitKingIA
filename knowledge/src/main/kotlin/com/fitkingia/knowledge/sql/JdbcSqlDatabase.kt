@@ -53,7 +53,17 @@ class JdbcSqlDatabase(private val connection: Connection) : SqlDatabase, AutoClo
     }
 
     companion object {
-        fun open(file: File): JdbcSqlDatabase = JdbcSqlDatabase(DriverManager.getConnection("jdbc:sqlite:${file.absolutePath}"))
-        fun inMemory(): JdbcSqlDatabase = JdbcSqlDatabase(DriverManager.getConnection("jdbc:sqlite::memory:"))
+        fun open(file: File): JdbcSqlDatabase = JdbcSqlDatabase(connect(file.absolutePath))
+        fun inMemory(): JdbcSqlDatabase = JdbcSqlDatabase(connect(":memory:"))
+
+        /**
+         * Carrega o driver no classloader de quem chama antes de conectar: com vários
+         * classloaders (ex.: sandboxes do Robolectric) o DriverManager só enxerga o driver
+         * registrado pelo mesmo classloader.
+         */
+        fun connect(path: String): Connection {
+            Class.forName("org.sqlite.JDBC")
+            return DriverManager.getConnection("jdbc:sqlite:$path")
+        }
     }
 }

@@ -1,3 +1,7 @@
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
+import java.io.ByteArrayOutputStream
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 // ---------------------------------------------------------------------------------------------
@@ -53,8 +57,11 @@ dependencies {
     }
     proguard(libs.proguard.base)
 
-    testCompileOnly(files(androidJar))
-    testImplementation(libs.robolectric)
+    testImplementation(files(androidJar)) // como no AGP: stubs no classpath; o Robolectric troca pelo framework real
+    testImplementation(libs.robolectric) {
+        exclude(group = "androidx.test") // só existe no Maven do Google
+        exclude(group = "androidx.test.espresso")
+    }
     testImplementation(libs.junit4)
     testImplementation(libs.sqlite.jdbc)
 }
@@ -62,6 +69,12 @@ dependencies {
 tasks.test {
     useJUnit()
     systemProperty("robolectric.logging", "stderr")
+    // ./gradlew :app:test -Pscreenshots → capturas das telas em app/build/screenshots
+    if (project.hasProperty("screenshots")) {
+        systemProperty("screenshots", "true")
+        systemProperty("screenshotDir", layout.buildDirectory.dir("screenshots").get().asFile.absolutePath)
+        outputs.upToDateWhen { false }
+    }
 }
 
 val apkDir = layout.buildDirectory.dir("apk")
@@ -96,8 +109,10 @@ val backport by tasks.registering(JavaExec::class) {
             if (jmod.exists()) { add("-libraryjars"); add("${jmod.absolutePath}(!**.jar;!module-info.class)") }
         }
         args(listOf("-injars", input.get().asFile.absolutePath, "-outjars", output.get().asFile.absolutePath) + libs + listOf(
-            "-dontshrink", "-dontoptimize", "-dontobfuscate", "-dontpreverify",
-            "-target", "1.7", "-keepattributes", "*", "-dontwarn", "**", "-dontnote", "**", "-ignorewarnings",
+            // "Manter tudo" em vez de -dontshrink: força o ProGuard a resolver todas as referências,
+            // senão o backport move métodos estáticos de interface sem corrigir quem os chama.
+            "-keep", "class ** { *; }", "-dontoptimize", "-dontobfuscate", "-dontpreverify",
+            "-target", "1.7", "-keepattributes", "*", "-dontwarn", "**", "-dontnote", "**", "-ignorewarnings", "-forceprocessing",
         ))
     }
 }
@@ -176,3 +191,62 @@ val apk by tasks.registering {
         println("APK: ${target.absolutePath} (${target.length() / 1024} KB)")
     }
 }
+
+// Confere se o código do app (e do core) só chama classes/métodos que existem no Android 8.0.
+// A biblioteca de referência é android.jar (API 23) para android.* e a API Java 8 (ct.sym do
+// JDK) para java.* — o libcore do Android 8 segue o OpenJDK 8. Assim, um método de Java 9+
+// (ex.: List.of, Optional.isEmpty) usado por engano quebra o build em vez de travar o celular.
+val java8Api by tasks.registering {
+    group = "apk"
+    val out = apkDir.map { it.file("java8-api.jar") }
+    outputs.file(out)
+    doLast {
+        val ct = File(System.getProperty("java.home"), "lib/ct.sym")
+        ZipFile(ct).use { zip ->
+            ZipOutputStream(out.get().asFile.outputStream()).use { jar ->
+                val seen = HashSet<String>()
+                for (e in zip.entries().asSequence()) {
+                    val parts = e.name.split("/", limit = 3)
+                    if (parts.size < 3 || '8' !in parts[0] || !e.name.endsWith(".sig")) continue
+                    val path = parts[2].removeSuffix(".sig") + ".class"
+                    if (!path.startsWith("java/") || !seen.add(path)) continue
+                    jar.putNextEntry(ZipEntry(path))
+                    zip.getInputStream(e).use { it.copyTo(jar) }
+                    jar.closeEntry()
+                }
+            }
+        }
+    }
+}
+
+val checkAndroidApi by tasks.registering(JavaExec::class) {
+    group = "apk"
+    description = "Falha se o código do FitKingIA referenciar APIs ausentes no Android 8.0 (API 26)."
+    val input = backport.map { it.outputs.files.singleFile }
+    val report = apkDir.map { it.file("api-check.txt") }
+    inputs.files(backport, java8Api)
+    outputs.file(report)
+    classpath = proguard
+    mainClass.set("proguard.ProGuard")
+    val out = ByteArrayOutputStream()
+    standardOutput = out
+    errorOutput = out
+    isIgnoreExitValue = true
+    doFirst {
+        args("-injars", input.get().absolutePath, "-outjars", apkDir.get().file("api-check.jar").asFile.absolutePath,
+            "-libraryjars", "${androidJar.absolutePath}(!java/**)",
+            "-libraryjars", apkDir.get().file("java8-api.jar").asFile.absolutePath,
+            "-keep", "class ** { *; }", "-dontoptimize", "-dontobfuscate", "-dontpreverify", "-dontnote", "**",
+            "-ignorewarnings", "-forceprocessing")
+    }
+    doLast {
+        val text = out.toString()
+        report.get().asFile.writeText(text)
+        val warnings = text.lines().filter { it.startsWith("Warning: ") && "can't find" in it }
+        val ours = warnings.filter { it.startsWith("Warning: com.fitkingia") }
+        if (ours.isNotEmpty()) throw GradleException("APIs ausentes no Android 8.0:\n" + ours.distinct().joinToString("\n"))
+        println("API 26: nenhuma referência ausente no código do FitKingIA (${warnings.size} avisos em bibliotecas de terceiros; ver ${report.get().asFile})")
+    }
+}
+
+tasks.named("apk") { dependsOn(checkAndroidApi) }

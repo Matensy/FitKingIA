@@ -105,7 +105,14 @@ data class WorkoutSummary(
     val perExercise: List<Pair<String, String>>,
 )
 
-data class ConsistencyView(val weekDone: Int, val weekPlanned: Int, val last4WeeksPct: Int, val streak: Int, val xp: XpStatus)
+data class ConsistencyView(
+    val weekDone: Int,
+    val weekPlanned: Int,
+    /** Null enquanto o programa não tem semanas anteriores completas. */
+    val last4WeeksPct: Int?,
+    val streak: Int,
+    val xp: XpStatus,
+)
 
 data class BodyView(
     val latest: BodyMeasurement?,
@@ -383,6 +390,30 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
 
     fun setExercisePreference(id: ExerciseId, preference: String?) = repo.setExercisePreference(id, preference)
 
+    /** Troca só no treino em andamento (ex.: aparelho ocupado). */
+    fun swapInWorkout(workoutId: Long, from: ExerciseId, to: ExerciseId) {
+        val w = repo.workout(workoutId) ?: return
+        val plan = w.plan ?: return
+        val stored = program()
+        val newEx = kb.exercise(to)
+        val items = plan.exercises.map { pe ->
+            if (pe.exercise.id != from) pe else {
+                val p = generator.prescription(stored?.program?.focus ?: TrainingFocus.HYPERTROPHY, pe.role, stored?.program?.tier ?: TrainingTier.NOVICE, newEx)
+                PlannedExercise(newEx, pe.role, pe.sets, p, note = "Substitui ${pe.exercise.name}")
+            }
+        }
+        repo.updateWorkoutPlan(workoutId, plan.copy(exercises = items, estimatedMinutes = sessionClock.estimateMinutes(items)))
+    }
+
+    /** Carga inicial sugerida quando não há histórico (o usuário ajusta pelo RIR). */
+    fun defaultLoad(ex: Exercise): Double = when (ex.loadType) {
+        LoadType.BARBELL -> barKg()
+        LoadType.SMITH, LoadType.MACHINE, LoadType.CABLE -> 20.0
+        LoadType.DUMBBELL -> 8.0
+        LoadType.KETTLEBELL -> 12.0
+        LoadType.BODYWEIGHT, LoadType.BAND -> 0.0
+    }
+
     // =====================================================================================
     // Execução do treino
     // =====================================================================================
@@ -502,7 +533,7 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
                 planned += view.planned; done += view.done
             }
         }
-        return ConsistencyView(week?.done ?: 0, week?.planned ?: 0, Consistency.pct(planned, done), streak(), xpStatus())
+        return ConsistencyView(week?.done ?: 0, week?.planned ?: 0, if (planned == 0) null else Consistency.pct(planned, done), streak(), xpStatus())
     }
 
     private fun award(e: XpEvent, oncePerDay: Boolean = false): Int {

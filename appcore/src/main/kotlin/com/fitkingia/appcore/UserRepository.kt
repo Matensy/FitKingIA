@@ -290,6 +290,9 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
         db.insert("INSERT INTO workouts(user_id, program_session_id, readiness_check_id, started_at, plan_json) VALUES ($USER,?,?,?,?)",
             listOf(programSessionId, readinessId, now.toString(), Codec.session(plan).toString()))
 
+    fun updateWorkoutPlan(workoutId: Long, plan: PlannedSession) =
+        db.execute("UPDATE workouts SET plan_json=? WHERE id=?", listOf(Codec.session(plan).toString(), workoutId))
+
     fun logSet(workoutId: Long, exerciseId: ExerciseId, setIndex: Int, loadKg: Double, reps: Int, rir: Int?, warmup: Boolean, now: LocalDateTime): Long =
         db.insert("INSERT INTO workout_sets(workout_id, exercise_id, set_index, load_kg, reps, rir, is_warmup, completed_at) VALUES (?,?,?,?,?,?,?,?)",
             listOf(workoutId, exerciseId.value, setIndex, loadKg, reps, rir, warmup, now.toString()))
