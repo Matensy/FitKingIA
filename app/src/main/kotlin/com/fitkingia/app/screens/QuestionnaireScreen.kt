@@ -126,9 +126,10 @@ class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean 
                 }
             }
             Step.SPLIT -> {
-                val n = a.trainingDays.size
+                val n = Questionnaire.expectedTrainingDays(a, kb)
                 root.option("O motor escolhe (recomendado)", "Pela frequência, nível e objetivo", a.preferredSplit == null) { a.preferredSplit = null; next() }
-                kb.splits.filter { it.daysPerWeek <= n }.forEach { s ->
+                if (n > 0) root.muted("Opções para $n treino(s) por semana:")
+                kb.splits.filter { it.daysPerWeek == n && (a.experience?.tier ?: TrainingTier.NOVICE) >= it.minTier }.forEach { s ->
                     root.option(s.name, "${s.daysPerWeek} dia(s) por semana · a partir de ${s.minTier.label.lowercase()}", a.preferredSplit == s.id) { a.preferredSplit = s.id; next() }
                 }
             }
@@ -271,24 +272,36 @@ class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean 
     private fun summary(root: LinearLayout) {
         val kb = fit.kb
         root.card {
-            kv("Sexo", if (a.sex == Sex.MALE) "Masculino" else "Feminino")
-            kv("Idade", "${a.age} anos")
-            kv("Altura / peso", "${a.heightCm} cm · ${Fmt.num(a.weightKg)} kg")
-            a.waistCm?.let { kv("Cintura", "$it cm") }
-            kv("Objetivo", a.primaryGoal?.label ?: "—")
-            a.secondaryGoal?.let { kv("Secundário", it.label) }
-            kv("Experiência", a.experience?.label ?: "—")
-            kv("Local", a.environment?.let { kb.environment(it).name } ?: "—")
-            kv("Equipamentos", "${a.equipment.size}")
-            kv("Dias", a.trainingDays.joinToString { "${it.day.pt().take(3)} ${it.minutes}′" }.ifEmpty { "—" })
-            kv("Máx. de dias", a.maxDays?.toString() ?: "motor decide")
-            if (a.sports.isNotEmpty()) kv("Esportes", a.sports.groupBy { it.sportId }.keys.joinToString { kb.sport(it).name })
-            kv("Atividade", a.activity?.label ?: "—")
+            fun item(k: String, v: String, step: Step, color: Int = C.text) {
+                val r = kv(k, "$v  ›", color)
+                r.isClickable = true
+                r.setOnClickListener { goTo(step) }
+                r.setPadding(0, dp(4), 0, dp(4))
+            }
+            item("Sexo", if (a.sex == Sex.MALE) "Masculino" else "Feminino", Step.SEX)
+            item("Idade", "${a.age} anos", Step.AGE)
+            item("Altura / peso", "${a.heightCm} cm · ${Fmt.num(a.weightKg)} kg", Step.WEIGHT)
+            item("Cintura", a.waistCm?.let { "$it cm" } ?: "não informada", Step.WAIST)
+            item("Objetivo", a.primaryGoal?.label ?: "—", Step.GOAL)
+            item("Secundário", a.secondaryGoal?.label ?: "nenhum", Step.SECONDARY_GOAL)
+            item("Experiência", a.experience?.label ?: "—", Step.EXPERIENCE)
+            item("Local", a.environment?.let { kb.environment(it).name } ?: "—", Step.ENVIRONMENT)
+            item("Equipamentos", "${a.equipment.size}", Step.EQUIPMENT)
+            item("Dias", a.trainingDays.joinToString { "${it.day.pt().take(3)} ${it.minutes}′" }.ifEmpty { "—" }, Step.DAYS)
+            item("Máx. de dias", a.maxDays?.toString() ?: "motor decide", Step.MAX_DAYS)
+            item("Esportes", a.sports.groupBy { it.sportId }.keys.joinToString { kb.sport(it).name }.ifEmpty { "nenhum" }, Step.SPORTS)
+            item("Atividade", a.activity?.label ?: "—", Step.ACTIVITY)
             val flagged = Questionnaire.safetyQuestions(kb, a).count { a.safety[it.id] == true }
-            kv("Triagem", if (flagged == 0) "sem alertas" else "$flagged resposta(s) \"sim\"", if (flagged == 0) C.success else C.warning)
-            if (a.pains.isNotEmpty()) kv("Dor", a.pains.entries.joinToString { "${it.key.label} ${it.value}/10" })
+            item("Triagem", if (flagged == 0) "sem alertas" else "$flagged resposta(s) \"sim\"", Step.SAFETY, if (flagged == 0) C.success else C.warning)
+            if (a.pains.isNotEmpty()) item("Dor", a.pains.entries.joinToString { "${it.key.label} ${it.value}/10" }, Step.PAIN)
         }
-        root.muted("Toque em \"Gerar meu programa\". O mesmo conjunto de respostas sempre gera o mesmo programa.")
+        root.muted("Toque numa linha para mudar a resposta. O mesmo conjunto de respostas sempre gera o mesmo programa.")
+    }
+
+    /** Volta direto a uma pergunta (ex.: a partir do resumo). */
+    fun goTo(step: Step) {
+        val i = steps.indexOf(step)
+        if (i >= 0) { index = i; hint = null; main.refreshTop(this) }
     }
 
     private fun submit() {

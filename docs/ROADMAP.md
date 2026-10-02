@@ -1,27 +1,26 @@
 # Roadmap
 
 ## ✅ Fase 1 — Fundação (concluída)
-Motor determinístico (`core`), banco de conhecimento com evidências (`knowledge`), IA local offline (`coach`), CLI e 325 testes. Detalhe em [VISAO.md](VISAO.md).
+Motor determinístico (`core`), banco de conhecimento com evidências (`knowledge`), IA local offline (`coach`), CLI. Detalhe em [VISAO.md](VISAO.md).
 
-## Fase 2 — App Android
-- Módulo `app` com Kotlin + Jetpack Compose; arquitetura UI → ViewModel → Use Cases (`core`/`coach`) → Repositórios → Room.
-- `fitness.db` empacotado em `assets/` (gerado pelo Gradle) e lido via Room (`createFromAsset`); `user.db` com Room + SQLCipher.
-- Telas: splash, onboarding, avaliação inicial e triagem, objetivos, equipamentos, disponibilidade, dashboard, treino de hoje, execução (timer de descanso, registro de séries com RIR), histórico, progressão/PRs, corpo e fotos, nutrição, água, sono, cardio, mobilidade, suplementos, evidências, coach, configurações (consentimentos, exportar/apagar dados).
-- Persistência das `CoachAction` (água, refeição) e do aprendizado do classificador por usuário.
+## ✅ Fase 2 — App Android (concluída, v0.1.0)
+- `appcore` (lógica testável na JVM) + `app` (telas em código), APK montado sem AGP — [ADR 0004](adr/0004-apk-sem-agp.md).
+- Questionário só de toque, programa gerado pelo motor, Hoje (pouco tempo, check-in, treino perdido A–D, água, sono), execução do treino (carga sugerida, aquecimento, anilhas, RIR, cronômetro, PRs, XP), Semana, Progresso (volume, 1RM, deload, recordes, peso/cintura, fotos), nutrição, cardio, mobilidade, suplementos, evidências, simulador, ferramentas, perfil, exportar e apagar dados.
+- `user.db` no aparelho com o schema de `user.sql`; `fitness.db` empacotado nos assets e renovado a cada atualização do APK.
+- Testes de UI com Robolectric, capturas de tela e checagem de API do Android 8 no build.
 
-## Fase 3 — Módulos que hoje têm só schema
-- **Sono**: registro e correlação com desempenho do próprio usuário (sem diagnóstico).
-- **Cardio**: minutos semanais vs. OMS (150–300 min), PRs de distância/tempo, zona 2/HIIT.
-- **Mobilidade**: testes simples e exercícios de mobilidade no banco.
-- **Progresso visual**: fotos frente/costas/lado com guia de iluminação/distância/pose e linha do tempo.
-- **Calendário** mensal e linha do tempo de PRs.
+## Fase 3 — Próximos passos do app
+- Criptografia do `user.db` (SQLCipher) e das fotos.
+- Lembretes locais opcionais (água, treino do dia) com notificações.
+- Calendário mensal e linha do tempo de PRs; mapa muscular desenhado.
+- Exercícios de mobilidade guiados no banco (hoje a mobilidade é só registro).
+- Correlações pessoais: sono × desempenho, prontidão × volume (sem diagnóstico).
+- Chave de release e publicação.
 
 ## Fase 4 — Conhecimento
-- Importar a TACO completa (conferindo contra o PDF original) e porções caseiras.
+- Importar a TACO completa (conferindo contra o PDF original) e porções caseiras — hoje são 10 alimentos verificados.
 - Ampliar exercícios (alvo: 300+), afirmações e regras.
 - **Evidence Update Engine**: busca periódica de publicações → fila `evidence_updates` → revisão humana → nova `content_version`.
 
-## Fase 5 — IA local
-- Mais frases reais no corpus a partir do uso (com consentimento) e novo conjunto de teste a cada versão.
-- Múltiplas intenções por mensagem.
-- Opcional e configurável: modelo de linguagem pequeno rodando no aparelho só para reescrever respostas, mantendo motor e evidências como fonte da verdade.
+## Fase 5 — IA local (opcional)
+- O `coach` segue disponível na CLI. Se um dia entrar no app, será como tela opcional, nunca no fluxo principal (o app é guiado por alternativas).

@@ -60,23 +60,21 @@ class ScreenshotTest {
         }
         idle()
         shot("01_boas_vindas")
-        val q = a.current as QuestionnaireScreen
         val fit = a.fit
         val ans = fit.currentAnswers()
         a.setRoot(QuestionnaireScreen(ans.apply { consent = true; Questionnaire.selectSex(this, Sex.MALE); primaryGoal = Goal.WAIST_REDUCTION }))
-        // Mostra a página de objetivo e a de dias.
-        repeat(6) { (a.current as QuestionnaireScreen).let { s -> s.javaClass.getDeclaredMethod("next").apply { isAccessible = true }.invoke(s) } }
-        shot("02_objetivo")
+        val qs = a.current as QuestionnaireScreen
+        qs.goTo(com.fitkingia.appcore.Step.GOAL); shot("02_objetivo")
         ans.experience = ExperienceLevel.YEARS_1_TO_2
         Questionnaire.selectEnvironment(ans, fit.kb, EnvironmentId("full_gym"))
-        repeat(4) { (a.current as QuestionnaireScreen).let { s -> s.javaClass.getDeclaredMethod("next").apply { isAccessible = true }.invoke(s) } }
         Questionnaire.applyPreset(ans, mapOf(DayOfWeek.MONDAY to 60, DayOfWeek.TUESDAY to 45, DayOfWeek.THURSDAY to 60, DayOfWeek.FRIDAY to 60))
-        a.refresh(a.current!!)
-        shot("03_dias")
+        qs.goTo(com.fitkingia.appcore.Step.DAYS); shot("03_dias")
+        qs.goTo(com.fitkingia.appcore.Step.SAFETY); shot("03b_triagem")
         ans.activity = ActivityLevel.MODERATE
         ans.sports.add(SportCommitment(SportId("kickboxing"), DayOfWeek.WEDNESDAY, 3))
         Questionnaire.safetyQuestions(fit.kb, ans).forEach { ans.safety[it.id] = false }
         ans.waistCm = 94
+        qs.goTo(com.fitkingia.appcore.Step.SUMMARY); shot("03c_resumo")
         val outcome = fit.submit(ans)
         a.setRoot(ProgramReadyScreen(outcome)); shot("04_programa_pronto")
         now = LocalDateTime.of(2026, 10, 1, 18, 0) // quinta

@@ -8,6 +8,9 @@ import com.fitkingia.core.safety.ScreeningStatus
 import org.junit.jupiter.api.Test
 import java.time.DayOfWeek
 import kotlin.test.*
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 class AppFlowTest {
 
@@ -199,6 +202,17 @@ class AppFlowTest {
         assertTrue(env.app.streak() >= 1)
         val c = env.app.consistency()
         assertEquals(3, c.weekPlanned)
+    }
+
+    @Test fun `exportar meus dados inclui todas as tabelas`() {
+        val env = TestEnv()
+        env.app.submit(TestEnv.answers(kb = env.kb))
+        env.app.addWater(500)
+        val json = kotlinx.serialization.json.Json.parseToJsonElement(env.app.exportJson()).jsonObject
+        assertEquals("FitKingIA", json["app"]!!.jsonPrimitive.content)
+        assertEquals(1, json["users"]!!.jsonArray.size)
+        assertEquals("500", json["water_logs"]!!.jsonArray[0].jsonObject["ml"]!!.jsonPrimitive.content)
+        assertTrue(json["program_exercises"]!!.jsonArray.isNotEmpty())
     }
 
     @Test fun `apagar meus dados remove tudo`() {

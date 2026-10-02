@@ -23,6 +23,7 @@ object Graph {
         override?.let { return it(context).also { f -> fit = f } }
         val kb = loadKnowledge(context)
         val userDb = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath("user.db").also { it.parentFile?.mkdirs() }, null)
+        userDb.setForeignKeyConstraintsEnabled(true) // "apagar meus dados" depende do ON DELETE CASCADE
         val sql = AndroidSqlDatabase(userDb)
         UserDb.migrate(sql, context.assets.open("user.sql").bufferedReader().use { it.readText() })
         return FitKing(kb, sql).also { fit = it }

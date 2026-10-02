@@ -1,5 +1,7 @@
 # IA local (coach offline)
 
+> **Onde roda:** na CLI (`fitking coach`, `fitking pergunta`). O app Android é guiado só por alternativas e não usa o chat — decisão de produto (o usuário preferiu responder tocando, sem digitar).
+
 O assistente do FitKingIA **não usa LLM pago nem internet**. Ele roda no aparelho, em Kotlin puro (`coach`), e funciona em quatro camadas:
 
 ```

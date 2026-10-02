@@ -14,10 +14,19 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: gradle
-      - name: Build e testes (core, knowledge, coach, cli)
+      # Ferramentas Android livres do Ubuntu (o app é montado sem o Android Gradle Plugin).
+      - name: Ferramentas Android (apt)
+        run: sudo apt-get update && sudo apt-get install -y aapt dalvik-exchange libandroid-23-java zipalign apksigner zip
+      - name: Build e testes (core, knowledge, coach, cli, appcore, app)
         run: ./gradlew build --no-daemon
+      - name: APK assinado + checagem de API do Android 8
+        run: ./gradlew :app:apk --no-daemon
       - name: Gera fitness.db e relatório de integridade
         run: ./gradlew :knowledge:buildKnowledgeDb --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fitkingia-apk
+          path: app/build/outputs/*.apk
       - uses: actions/upload-artifact@v4
         with:
           name: fitness-db

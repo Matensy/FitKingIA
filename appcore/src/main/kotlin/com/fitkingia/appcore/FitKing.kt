@@ -638,6 +638,8 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
 
     fun deleteEverything() = repo.deleteEverything()
 
+    fun exportJson(): String = repo.exportJson(now())
+
     companion object {
         const val MAX_MEAL_XP_PER_DAY = 5
     }

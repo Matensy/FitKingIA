@@ -311,10 +311,21 @@ class MainActivity : Activity() {
         }
     }
 
-    @Deprecated("API antiga, suficiente para o seletor de imagens")
+    /** Salvar arquivo onde o usuário escolher (Storage Access Framework, sem permissões). */
+    fun createDocument(fileName: String, mime: String, callback: (Uri) -> Unit) {
+        pickerCallback = callback
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType(mime).putExtra(Intent.EXTRA_TITLE, fileName)
+        try {
+            startActivityForResult(intent, REQ_DOCUMENT)
+        } catch (e: Exception) {
+            toast("Nenhum app de arquivos disponível")
+        }
+    }
+
+    @Deprecated("API antiga, suficiente para o seletor de imagens e de arquivos")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQ_IMAGE && resultCode == RESULT_OK) data?.data?.let { uri -> pickerCallback?.invoke(uri) }
+        if ((requestCode == REQ_IMAGE || requestCode == REQ_DOCUMENT) && resultCode == RESULT_OK) data?.data?.let { uri -> pickerCallback?.invoke(uri) }
         pickerCallback = null
     }
 
@@ -324,6 +335,7 @@ class MainActivity : Activity() {
 
     companion object {
         private const val REQ_IMAGE = 41
+        private const val REQ_DOCUMENT = 42
 
         /** Testes rodam o trabalho de fundo na mesma thread. */
         @Volatile var synchronous = false

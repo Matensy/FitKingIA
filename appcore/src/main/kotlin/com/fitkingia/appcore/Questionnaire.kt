@@ -140,6 +140,15 @@ object Questionnaire {
         else -> null
     }
 
+    /** Quantos dias o motor vai usar (dias com tempo suficiente, limite escolhido e limite do nível). */
+    fun expectedTrainingDays(a: Answers, kb: KnowledgeBase): Int {
+        val f = kb.ruleSet.frequency.params
+        val usable = a.minutesByDay.values.count { it >= f.minSessionMinutes }
+        val tierMax = a.experience?.tier?.let { f.maxDaysByTier[it] } ?: 7
+        val templateMax = kb.splits.maxOfOrNull { it.daysPerWeek } ?: 7
+        return minOf(usable, a.maxDays ?: 7, tierMax, templateMax)
+    }
+
     /** Equipamento padrão do ambiente escolhido. */
     fun selectEnvironment(a: Answers, kb: KnowledgeBase, env: EnvironmentId) {
         a.environment = env

@@ -454,6 +454,17 @@ class ProfileScreen : Screen() {
             }
         }
         root.space(16)
+        root.button("Exportar meus dados (JSON)", Btn.SECONDARY) {
+            val name = "fitkingia-dados-${fit.clock.now().toLocalDate()}.json"
+            main.createDocument(name, "application/json") { uri ->
+                try {
+                    main.contentResolver.openOutputStream(uri)?.use { it.write(fit.exportJson().toByteArray(Charsets.UTF_8)) }
+                    main.toast("Dados exportados")
+                } catch (e: Exception) {
+                    main.toast("Não foi possível exportar")
+                }
+            }
+        }
         root.button("Apagar todos os meus dados", Btn.DANGER) {
             main.confirm("Apagar tudo?", "Perfil, treinos, medidas, fotos e registros serão apagados deste aparelho. Não dá para desfazer.", "Apagar tudo", danger = true) {
                 fit.photos().forEach { File(it.uri).delete() }
@@ -462,7 +473,7 @@ class ProfileScreen : Screen() {
                 main.setRoot(QuestionnaireScreen(fit.currentAnswers(), firstRun = true))
             }
         }
-        root.muted("Seus dados ficam só neste aparelho (user.db). O app não usa internet.", 12f)
+        root.muted("Seus dados ficam só neste aparelho (user.db). O app não usa internet. A exportação gera um arquivo JSON com tudo o que está guardado, no lugar que você escolher.", 12f)
     }
 }
 

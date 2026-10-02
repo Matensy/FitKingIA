@@ -493,6 +493,25 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
     fun logEvent(kind: String, payloadJson: String?, at: LocalDateTime) =
         db.execute("INSERT INTO user_events(user_id, at, kind, payload_json) VALUES ($USER,?,?,?)", listOf(at.toString(), kind, payloadJson))
 
+    /**
+     * "Exportar meus dados": todas as tabelas do user.db em JSON (portabilidade, LGPD).
+     * Genérico de propósito — tabela nova no schema entra na exportação sem código novo.
+     */
+    fun exportJson(exportedAt: LocalDateTime): String {
+        val tables = db.query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name") { it.str("name") }
+        return buildJsonObject {
+            put("app", JsonPrimitive("FitKingIA"))
+            put("exported_at", JsonPrimitive(exportedAt.toString()))
+            put("kb_content_version", JsonPrimitive(kb.meta["content_version"] ?: "?"))
+            for (t in tables) {
+                val cols = db.query("PRAGMA table_info($t)") { it.str("name") }
+                put(t, kotlinx.serialization.json.JsonArray(db.query("SELECT * FROM $t") { r ->
+                    buildJsonObject { cols.forEach { c -> put(c, r.strOrNull(c)?.let(::JsonPrimitive) ?: kotlinx.serialization.json.JsonNull) } }
+                }))
+            }
+        }.toString()
+    }
+
     /** "Apagar meus dados": a cascata do schema remove tudo que pertence ao usuário. */
     fun deleteEverything() = db.transaction {
         db.execute("DELETE FROM users WHERE id=$USER")
