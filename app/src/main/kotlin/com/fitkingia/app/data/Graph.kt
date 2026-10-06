@@ -18,6 +18,8 @@ object Graph {
     /** Testes trocam o carregamento por um banco JDBC; no app real é null. */
     @Volatile var override: ((Context) -> FitKing)? = null
 
+    /** Sincronizado: a tela e um lembrete (BroadcastReceiver) podem abrir o app ao mesmo tempo. */
+    @Synchronized
     fun load(context: Context): FitKing {
         fit?.let { return it }
         override?.let { return it(context).also { f -> fit = f } }

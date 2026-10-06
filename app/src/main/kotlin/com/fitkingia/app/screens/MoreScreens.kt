@@ -39,6 +39,7 @@ class MoreScreen : Screen() {
         item("😴", "Sono", "Registro e média da semana") { SleepScreen() }
         item("🚴", "Cardio", "Caminhada, corrida, bike… e minutos da semana") { CardioScreen() }
         item("🧘", "Mobilidade", "Registrar sessões por região") { MobilityScreen() }
+        item("🔔", "Lembretes", "Água, treino do dia e sequência, no seu horário") { NotificationsScreen() }
         root.label("Ferramentas")
         item("🧮", "Anilhas, 1RM e aquecimento", "Calculadoras rápidas") { ToolsScreen() }
         item("🧪", "Simulador \"e se?\"", "Compare 3×5 dias, 45×60 min, casa × academia") { SimulatorScreen() }

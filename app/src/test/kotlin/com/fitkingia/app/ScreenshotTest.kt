@@ -150,6 +150,13 @@ class ScreenshotTest {
         a.setRoot(gq); shot("30_prioridade")
         a.setRoot(ProgramReadyScreen(fit.submit(g))); shot("31_programa_gluteos")
         a.setRoot(ProgramWhyScreen()); shot("32_por_que_programa")
+        // Lembretes: água a cada 2 h e treino às 18h ligados, motivação desligada (permissão já concedida).
+        shadowOf(a.application).grantPermissions(com.fitkingia.app.notify.Notifier.PERMISSION)
+        com.fitkingia.appcore.Reminders.save(fit, com.fitkingia.appcore.ReminderSettings(waterEnabled = true, workoutEnabled = true))
+        a.setRoot(NotificationsScreen()); shot("33_lembretes")
+        fun scrollView(v: View): android.widget.ScrollView? = v as? android.widget.ScrollView
+            ?: (v as? android.view.ViewGroup)?.let { g -> (0 until g.childCount).asSequence().mapNotNull { scrollView(g.getChildAt(it)) }.firstOrNull() }
+        scrollView(a.window.decorView)!!.scrollTo(0, 100_000); shot("33b_lembretes_fim")
         controller.pause().stop().destroy()
         Graph.override = null; Graph.fit = null
     }

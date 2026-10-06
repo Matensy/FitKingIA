@@ -291,7 +291,7 @@ class AppUiTest {
         tap("Trocar o treino de hoje")
         val dialog = texts(org.robolectric.shadows.ShadowDialog.getLatestDialog().window!!.decorView).joinToString("\n") { it.text }
         assertTrue(dialog, dialog.contains("${mon.name}, de hoje, vai para quarta"))
-        tapInDialog("${wed.name} — quarta")
+        tapInDialog("${wed.name} · quarta")
         assertTrue(activity.current is HomeScreen)
         assertShows("Semana reorganizada")
         val after = activity.fit.week()!!.days

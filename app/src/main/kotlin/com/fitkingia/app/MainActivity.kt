@@ -3,6 +3,7 @@ package com.fitkingia.app
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -19,6 +20,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import com.fitkingia.app.data.Graph
+import com.fitkingia.app.notify.ReminderScheduler
 import com.fitkingia.app.screens.HomeScreen
 import com.fitkingia.app.screens.MoreScreen
 import com.fitkingia.app.screens.ProgressScreen
@@ -69,6 +71,7 @@ class MainActivity : Activity() {
     private lateinit var nav: LinearLayout
     private val handler = Handler(Looper.getMainLooper())
     private var pickerCallback: ((Uri) -> Unit)? = null
+    private var permissionCallback: ((Boolean) -> Unit)? = null
 
     val current: Screen? get() = stack.lastOrNull()
 
@@ -82,6 +85,8 @@ class MainActivity : Activity() {
         background({ Graph.load(applicationContext) }) { r ->
             r.onSuccess { f ->
                 fit = f
+                // Alarmes somem se o app for forçado a parar: abrir o app deixa os lembretes em dia.
+                runCatching { ReminderScheduler.schedule(applicationContext, fit) }
                 if (fit.hasProfile()) setRoot(HomeScreen()) else setRoot(QuestionnaireScreen(fit.currentAnswers(), firstRun = true))
             }.onFailure { e -> showFatal(e) }
         }
@@ -329,6 +334,21 @@ class MainActivity : Activity() {
         pickerCallback = null
     }
 
+    /** Pede uma permissão em tempo de execução; [done] recebe true se ela foi (ou já estava) concedida. */
+    fun requestPermission(permission: String, done: (Boolean) -> Unit) {
+        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) { done(true); return }
+        permissionCallback = done
+        requestPermissions(arrayOf(permission), REQ_PERMISSION)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != REQ_PERMISSION) return
+        val callback = permissionCallback
+        permissionCallback = null
+        callback?.invoke(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+    }
+
     fun postDelayed(ms: Long, r: () -> Unit) = handler.postDelayed(r, ms)
     fun removeCallbacks(r: Runnable) = handler.removeCallbacks(r)
     val mainHandler: Handler get() = handler
@@ -336,6 +356,7 @@ class MainActivity : Activity() {
     companion object {
         private const val REQ_IMAGE = 41
         private const val REQ_DOCUMENT = 42
+        private const val REQ_PERMISSION = 43
 
         /** Testes rodam o trabalho de fundo na mesma thread. */
         @Volatile var synchronous = false

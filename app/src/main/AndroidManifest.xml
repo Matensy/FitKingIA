@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fitkingia.app">
 
-    <!-- Sem internet: tudo funciona offline e os dados ficam só no aparelho. Só vibração (fim do descanso). -->
+    <!-- Sem internet: tudo funciona offline e os dados ficam só no aparelho. Vibração (fim do descanso)
+         e lembretes locais (notificação + reagendar depois de reiniciar o aparelho). -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
@@ -21,5 +24,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Lembretes: o alarme (PendingIntent explícito do próprio app) chega aqui. -->
+        <receiver
+            android:name=".notify.ReminderReceiver"
+            android:exported="false" />
+
+        <!-- Reagendar os lembretes. Exportado para receber broadcasts do sistema; são todos protegidos
+             (só o sistema envia) e o receiver ignora qualquer outra ação. -->
+        <receiver
+            android:name=".notify.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
