@@ -8,7 +8,7 @@ import java.time.LocalDate
 enum class XpEvent(val key: String, val label: String) {
     WORKOUT_COMPLETED("workout_completed", "Treino concluído"),
     MEAL_LOGGED("meal_logged", "Alimentação registrada"),
-    PERSONAL_RECORD("personal_record", "Novo PR"),
+    PERSONAL_RECORD("personal_record", "Novo recorde"),
     HYDRATION_GOAL("hydration_goal", "Meta de hidratação"),
     WEEK_COMPLETED("week_completed", "Semana completa"),
     CHECK_IN("check_in", "Check-in de prontidão"),

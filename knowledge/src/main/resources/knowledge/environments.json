@@ -31,7 +31,18 @@
       "ab_wheel",
       "step_box",
       "trx",
-      "low_bar"
+      "low_bar",
+      "hip_thrust_machine",
+      "glute_machine",
+      "seated_calf_machine",
+      "t_bar_row",
+      "assisted_pull_up_machine",
+      "preacher_bench",
+      "ab_bench",
+      "ankle_strap",
+      "ankle_weights",
+      "mini_band",
+      "swiss_ball"
     ]
   },
   {
@@ -51,12 +62,17 @@
       "leg_curl",
       "pull_up_bar",
       "dip_station",
-      "step_box"
+      "step_box",
+      "ankle_strap",
+      "ankle_weights",
+      "mini_band",
+      "swiss_ball",
+      "ab_bench"
     ]
   },
   {
     "id": "home_gym",
-    "name": "Home gym",
+    "name": "Academia em casa",
     "equipment": [
       "barbell",
       "ez_bar",
@@ -69,7 +85,10 @@
       "resistance_bands",
       "ab_wheel",
       "step_box",
-      "low_bar"
+      "low_bar",
+      "mini_band",
+      "ankle_weights",
+      "swiss_ball"
     ]
   },
   {
@@ -78,7 +97,9 @@
     "equipment": [
       "dumbbells",
       "resistance_bands",
-      "step_box"
+      "step_box",
+      "mini_band",
+      "ankle_weights"
     ]
   },
   {

@@ -41,7 +41,7 @@ Uso: fitking [--perfil arquivo.json] <comando> [argumentos]
   hoje <dia>                     mostra a sessão de um dia (ex.: hoje segunda)
   rapido <minutos> <dia>         ⚡ adapta a sessão do dia ao tempo disponível
   prontidao <sono> <energia> <dor> <estresse> <motivação> <dia>
-                                 ajusta a sessão pelo Recovery Score (sono: ruim|normal|excelente)
+                                 ajusta a sessão pelo Índice de recuperação (sono: ruim|normal|excelente)
   substituir <exercício> [articulação-com-dor] [dor 0–10]
                                  substituições ranqueadas com motivos
   porque <exercício>             🔬 "Por que isso?" com regra → evidência → fonte
@@ -183,7 +183,7 @@ class App(private val kb: KnowledgeBase, private val pf: ProfileFile) {
         val check = ReadinessCheck(sleep, a.int(1), a.int(2), a.int(3), a.int(4))
         val result = RecoveryScorer(kb.ruleSet.recovery).score(check)
         val adapted = SessionAdapter(kb).forReadiness(sessionOn(day(a, 5)), result, UserConstraints.of(profile))
-        out.rule("🔥 Recovery Score: ${result.score}/100 — ${result.band.label}")
+        out.rule("🔥 Índice de recuperação: ${result.score}/100 — ${result.band.label}")
         out.explanations(adapted.explanations)
         out.session(adapted.session)
         adapted.changes.forEach { out.line("  • $it") }
@@ -211,7 +211,7 @@ class App(private val kb: KnowledgeBase, private val pf: ProfileFile) {
 
     private fun simulate() {
         val sim = ProgramSimulator(kb).compare(profile, screening, listOf(3, 4, 5).map { ProgramSimulator.days(it) })
-        out.rule("🤯 PROGRAM SIMULATOR")
+        out.rule("🤯 SIMULADOR \"E SE?\"")
         out.line("".padEnd(42) + sim.rows.joinToString("") { it.scenario.padStart(8) })
         for (m in kb.trackedMuscles) out.line(m.name.padEnd(42) + sim.rows.joinToString("") { ProgramGenerator.fmt(it.setsByMuscle[m.id] ?: 0.0).padStart(8) })
         out.line("Tempo/semana".padEnd(42) + sim.rows.joinToString("") { "${it.weeklyMinutes}m".padStart(8) })
@@ -285,7 +285,7 @@ class App(private val kb: KnowledgeBase, private val pf: ProfileFile) {
         out.line(bm.waistToHeight(waist, profile.heightCm).explanation.toString())
         val today = LocalDate.of(2026, 10, 2)
         val trend = WeightTrend(kb.ruleSet.weightTrend).analyze(listOf(WeightEntry(today.minusDays(1), 70.2), WeightEntry(today, 71.0)))
-        out.line(""); out.line("Exemplo do Body Fluctuation Tracker:"); out.explanations(trend.messages)
+        out.line(""); out.line("Exemplo do acompanhamento de oscilação do peso:"); out.explanations(trend.messages)
     }
 
     private fun supplements() {

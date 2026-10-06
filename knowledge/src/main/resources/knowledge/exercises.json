@@ -172,7 +172,8 @@
       "leg_press",
       "bodyweight_squat",
       "dumbbell_split_squat",
-      "barbell_back_squat"
+      "barbell_back_squat",
+      "dumbbell_sumo_squat"
     ],
     "timed": false,
     "staple": 3,
@@ -183,10 +184,11 @@
   },
   {
     "id": "hack_squat",
-    "name": "Agachamento hack (máquina)",
+    "name": "Agachamento na máquina hack",
     "aliases": [
       "hack",
-      "hack squat"
+      "hack squat",
+      "agachamento hack (máquina)"
     ],
     "pattern": "squat",
     "mechanic": "COMPOUND",
@@ -241,9 +243,10 @@
   },
   {
     "id": "smith_squat",
-    "name": "Agachamento no Smith",
+    "name": "Agachamento na barra guiada (Smith)",
     "aliases": [
-      "agachamento smith"
+      "agachamento smith",
+      "agachamento no smith"
     ],
     "pattern": "squat",
     "mechanic": "COMPOUND",
@@ -298,10 +301,11 @@
   },
   {
     "id": "leg_press",
-    "name": "Leg press 45°",
+    "name": "Prensa de pernas 45° (leg press)",
     "aliases": [
       "leg press",
-      "legpress"
+      "legpress",
+      "leg press 45°"
     ],
     "pattern": "squat",
     "mechanic": "COMPOUND",
@@ -801,9 +805,10 @@
   },
   {
     "id": "sissy_squat",
-    "name": "Sissy squat",
+    "name": "Agachamento sissy (joelhos à frente)",
     "aliases": [
-      "sissy"
+      "sissy",
+      "sissy squat"
     ],
     "pattern": "knee_extension",
     "mechanic": "ISOLATION",
@@ -914,11 +919,11 @@
   },
   {
     "id": "romanian_deadlift",
-    "name": "Levantamento terra romeno (stiff) com barra",
+    "name": "Levantamento terra romeno com barra (stiff)",
     "aliases": [
       "stiff",
       "rdl",
-      "terra romeno"
+      "levantamento terra romeno (stiff) com barra"
     ],
     "pattern": "hinge",
     "mechanic": "COMPOUND",
@@ -973,10 +978,11 @@
   },
   {
     "id": "dumbbell_romanian_deadlift",
-    "name": "Stiff com halteres",
+    "name": "Levantamento terra romeno com halteres (stiff)",
     "aliases": [
       "stiff halteres",
-      "rdl halteres"
+      "rdl halteres",
+      "stiff com halteres"
     ],
     "pattern": "hinge",
     "mechanic": "COMPOUND",
@@ -1031,9 +1037,10 @@
   },
   {
     "id": "single_leg_rdl",
-    "name": "Stiff unilateral com halter",
+    "name": "Levantamento terra romeno unilateral com halter",
     "aliases": [
-      "stiff unilateral"
+      "stiff unilateral",
+      "stiff unilateral com halter"
     ],
     "pattern": "hinge",
     "mechanic": "COMPOUND",
@@ -1089,9 +1096,10 @@
   },
   {
     "id": "single_leg_rdl_bodyweight",
-    "name": "Stiff unilateral (peso corporal)",
+    "name": "Levantamento terra romeno unilateral (peso corporal)",
     "aliases": [
-      "stiff unilateral sem peso"
+      "stiff unilateral sem peso",
+      "stiff unilateral (peso corporal)"
     ],
     "pattern": "hinge",
     "mechanic": "COMPOUND",
@@ -1142,10 +1150,11 @@
   },
   {
     "id": "kettlebell_swing",
-    "name": "Swing com kettlebell",
+    "name": "Balanço com kettlebell (swing)",
     "aliases": [
       "swing",
-      "kb swing"
+      "kb swing",
+      "swing com kettlebell"
     ],
     "pattern": "hinge",
     "mechanic": "COMPOUND",
@@ -1256,9 +1265,11 @@
   },
   {
     "id": "cable_pull_through",
-    "name": "Pull-through na polia",
+    "name": "Extensão de quadril na polia entre as pernas",
     "aliases": [
-      "pull through"
+      "pull through",
+      "pull-through na polia",
+      "pull-through"
     ],
     "pattern": "hinge",
     "mechanic": "COMPOUND",
@@ -1309,10 +1320,11 @@
   },
   {
     "id": "barbell_hip_thrust",
-    "name": "Elevação pélvica com barra (hip thrust)",
+    "name": "Elevação pélvica com barra",
     "aliases": [
       "hip thrust",
-      "elevação pélvica"
+      "elevação pélvica",
+      "elevação pélvica com barra (hip thrust)"
     ],
     "pattern": "hip_extension",
     "mechanic": "COMPOUND",
@@ -1354,7 +1366,9 @@
       "dumbbell_hip_thrust",
       "glute_bridge",
       "cable_pull_through",
-      "kettlebell_swing"
+      "kettlebell_swing",
+      "machine_hip_thrust",
+      "smith_hip_thrust"
     ],
     "timed": false,
     "staple": 3,
@@ -1404,7 +1418,8 @@
     "substitutes": [
       "barbell_hip_thrust",
       "glute_bridge",
-      "single_leg_glute_bridge"
+      "single_leg_glute_bridge",
+      "machine_hip_thrust"
     ],
     "timed": false,
     "staple": 3,
@@ -1453,7 +1468,8 @@
     "substitutes": [
       "single_leg_glute_bridge",
       "dumbbell_hip_thrust",
-      "barbell_hip_thrust"
+      "barbell_hip_thrust",
+      "mini_band_glute_bridge"
     ],
     "timed": false,
     "staple": 2,
@@ -1552,7 +1568,8 @@
       "slider_leg_curl",
       "nordic_curl",
       "band_leg_curl",
-      "romanian_deadlift"
+      "romanian_deadlift",
+      "swiss_ball_leg_curl"
     ],
     "timed": false,
     "staple": 3,
@@ -1746,7 +1763,8 @@
     "substitutes": [
       "leg_press_calf_raise",
       "dumbbell_calf_raise",
-      "bodyweight_calf_raise"
+      "bodyweight_calf_raise",
+      "seated_calf_raise"
     ],
     "timed": false,
     "staple": 3,
@@ -1754,9 +1772,10 @@
   },
   {
     "id": "leg_press_calf_raise",
-    "name": "Panturrilha no leg press",
+    "name": "Panturrilha na prensa de pernas",
     "aliases": [
-      "panturrilha leg press"
+      "panturrilha leg press",
+      "panturrilha no leg press"
     ],
     "pattern": "calf_raise",
     "mechanic": "ISOLATION",
@@ -1927,7 +1946,10 @@
       "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
     ],
     "substitutes": [
-      "band_lateral_walk"
+      "band_lateral_walk",
+      "cable_hip_abduction",
+      "side_lying_hip_abduction",
+      "mini_band_clamshell"
     ],
     "timed": false,
     "staple": 2,
@@ -1974,7 +1996,9 @@
       "Pausa de 1–2 s na contração"
     ],
     "substitutes": [
-      "hip_abduction_machine"
+      "hip_abduction_machine",
+      "mini_band_clamshell",
+      "side_lying_hip_abduction"
     ],
     "timed": false,
     "staple": 1,
@@ -2289,9 +2313,10 @@
   },
   {
     "id": "smith_bench_press",
-    "name": "Supino no Smith",
+    "name": "Supino na barra guiada (Smith)",
     "aliases": [
-      "supino smith"
+      "supino smith",
+      "supino no smith"
     ],
     "pattern": "horizontal_push",
     "mechanic": "COMPOUND",
@@ -2610,11 +2635,12 @@
   },
   {
     "id": "pec_deck",
-    "name": "Peck deck (voador)",
+    "name": "Voador (peck deck)",
     "aliases": [
       "voador",
       "peck deck",
-      "fly máquina"
+      "fly máquina",
+      "peck deck (voador)"
     ],
     "pattern": "horizontal_adduction",
     "mechanic": "ISOLATION",
@@ -2658,10 +2684,11 @@
   },
   {
     "id": "cable_fly",
-    "name": "Crucifixo na polia (crossover)",
+    "name": "Crucifixo na polia",
     "aliases": [
       "crossover",
-      "crucifixo polia"
+      "crucifixo polia",
+      "crucifixo na polia (crossover)"
     ],
     "pattern": "horizontal_adduction",
     "mechanic": "ISOLATION",
@@ -3142,10 +3169,11 @@
   },
   {
     "id": "reverse_pec_deck",
-    "name": "Crucifixo inverso na máquina",
+    "name": "Voador invertido (crucifixo inverso na máquina)",
     "aliases": [
       "voador inverso",
-      "peck deck invertido"
+      "peck deck invertido",
+      "crucifixo inverso na máquina"
     ],
     "pattern": "horizontal_abduction",
     "mechanic": "ISOLATION",
@@ -3191,9 +3219,10 @@
   },
   {
     "id": "face_pull",
-    "name": "Face pull na polia",
+    "name": "Puxada alta para o rosto na polia",
     "aliases": [
-      "face pull"
+      "face pull",
+      "face pull na polia"
     ],
     "pattern": "horizontal_abduction",
     "mechanic": "COMPOUND",
@@ -3291,9 +3320,11 @@
   },
   {
     "id": "band_pull_apart",
-    "name": "Pull-apart com elástico",
+    "name": "Abertura de braços com elástico",
     "aliases": [
-      "pull apart"
+      "pull apart",
+      "pull-apart com elástico",
+      "pull-apart"
     ],
     "pattern": "horizontal_abduction",
     "mechanic": "ISOLATION",
@@ -3386,7 +3417,8 @@
       "seated_cable_row",
       "machine_row",
       "one_arm_dumbbell_row",
-      "chest_supported_dumbbell_row"
+      "chest_supported_dumbbell_row",
+      "t_bar_row"
     ],
     "timed": false,
     "staple": 3,
@@ -3599,10 +3631,11 @@
   },
   {
     "id": "inverted_row",
-    "name": "Remada invertida no TRX",
+    "name": "Remada invertida na fita de suspensão",
     "aliases": [
       "remada invertida",
-      "remada trx"
+      "remada trx",
+      "remada invertida no trx"
     ],
     "pattern": "horizontal_pull",
     "mechanic": "COMPOUND",
@@ -3807,7 +3840,8 @@
       "lat_pulldown",
       "assisted_pull_up_band",
       "chin_up",
-      "band_lat_pulldown"
+      "band_lat_pulldown",
+      "machine_assisted_pull_up"
     ],
     "timed": false,
     "staple": 3,
@@ -3869,11 +3903,12 @@
   },
   {
     "id": "lat_pulldown",
-    "name": "Puxada alta (pulley)",
+    "name": "Puxada alta na polia",
     "aliases": [
       "puxada",
       "puxada frontal",
-      "pulley"
+      "pulley",
+      "puxada alta (pulley)"
     ],
     "pattern": "vertical_pull",
     "mechanic": "COMPOUND",
@@ -3914,7 +3949,8 @@
       "close_grip_pulldown",
       "pull_up",
       "assisted_pull_up_band",
-      "band_lat_pulldown"
+      "band_lat_pulldown",
+      "machine_assisted_pull_up"
     ],
     "timed": false,
     "staple": 3,
@@ -4026,10 +4062,12 @@
   },
   {
     "id": "straight_arm_pulldown",
-    "name": "Pulldown com braços estendidos (polia)",
+    "name": "Puxada com braços estendidos na polia",
     "aliases": [
       "pulldown",
-      "pullover polia"
+      "pullover polia",
+      "pulldown com braços estendidos (polia)",
+      "pulldown braços estendidos"
     ],
     "pattern": "vertical_pull",
     "mechanic": "ISOLATION",
@@ -4211,7 +4249,8 @@
     "substitutes": [
       "barbell_curl",
       "dumbbell_curl",
-      "cable_curl"
+      "cable_curl",
+      "preacher_curl"
     ],
     "timed": false,
     "staple": 3,
@@ -4452,11 +4491,12 @@
   },
   {
     "id": "cable_triceps_pushdown",
-    "name": "Tríceps na polia (pushdown)",
+    "name": "Tríceps na polia",
     "aliases": [
       "tríceps polia",
       "pushdown",
-      "tríceps corda"
+      "tríceps corda",
+      "tríceps na polia (pushdown)"
     ],
     "pattern": "elbow_extension",
     "mechanic": "ISOLATION",
@@ -4837,9 +4877,10 @@
   },
   {
     "id": "dead_bug",
-    "name": "Dead bug",
+    "name": "Inseto morto (dead bug)",
     "aliases": [
-      "inseto morto"
+      "inseto morto",
+      "dead bug"
     ],
     "pattern": "anti_extension",
     "mechanic": "ISOLATION",
@@ -4930,9 +4971,10 @@
   },
   {
     "id": "pallof_press_cable",
-    "name": "Pallof press na polia",
+    "name": "Antirrotação na polia (Pallof)",
     "aliases": [
-      "pallof"
+      "pallof",
+      "pallof press na polia"
     ],
     "pattern": "anti_rotation",
     "mechanic": "ISOLATION",
@@ -4973,9 +5015,10 @@
   },
   {
     "id": "pallof_press_band",
-    "name": "Pallof press com elástico",
+    "name": "Antirrotação com elástico (Pallof)",
     "aliases": [
-      "pallof elástico"
+      "pallof elástico",
+      "pallof press com elástico"
     ],
     "pattern": "anti_rotation",
     "mechanic": "ISOLATION",
@@ -5108,10 +5151,11 @@
   },
   {
     "id": "crunch",
-    "name": "Abdominal (crunch)",
+    "name": "Abdominal curto",
     "aliases": [
       "abdominal",
-      "crunch"
+      "crunch",
+      "abdominal (crunch)"
     ],
     "pattern": "trunk_flexion",
     "mechanic": "ISOLATION",
@@ -5145,7 +5189,9 @@
     ],
     "substitutes": [
       "cable_crunch",
-      "dead_bug"
+      "dead_bug",
+      "decline_crunch",
+      "swiss_ball_crunch"
     ],
     "timed": false,
     "staple": 2,
@@ -5500,6 +5546,889 @@
     ],
     "substitutes": [
       "band_pull_apart"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "machine_hip_thrust",
+    "name": "Elevação pélvica na máquina",
+    "aliases": [
+      "hip thrust máquina",
+      "elevação pélvica máquina",
+      "glute drive"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "hip_thrust_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1,
+      "KNEE": 1
+    },
+    "instructions": [
+      "Costas apoiadas no encosto e o cinto/almofada sobre o quadril.",
+      "Pés firmes na plataforma, na largura do quadril, canelas quase na vertical no topo.",
+      "Suba o quadril até alinhar tronco e coxas, pause contraindo os glúteos e desça com controle."
+    ],
+    "common_mistakes": [
+      "Hiperestender a lombar no topo",
+      "Empurrar com a ponta dos pés"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "barbell_hip_thrust",
+      "smith_hip_thrust",
+      "dumbbell_hip_thrust",
+      "glute_bridge"
+    ],
+    "timed": false,
+    "staple": 3,
+    "max_tier": null
+  },
+  {
+    "id": "smith_hip_thrust",
+    "name": "Elevação pélvica no Smith",
+    "aliases": [
+      "hip thrust no smith",
+      "elevação pélvica smith"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "SMITH",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "smith_machine",
+      "flat_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "HIP": 1,
+      "LOWER_BACK": 1,
+      "KNEE": 1
+    },
+    "instructions": [
+      "Banco atrás de você, perpendicular à barra; escápulas apoiadas na borda.",
+      "Barra guiada sobre o quadril, com proteção acolchoada.",
+      "Destrave, eleve o quadril até alinhar tronco e coxas, pause e desça com controle."
+    ],
+    "common_mistakes": [
+      "Hiperestender a lombar no topo",
+      "Pés longe demais (vira exercício de posterior)"
+    ],
+    "safety_notes": [
+      "Ajuste as travas do Smith para segurar a barra se precisar parar."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "barbell_hip_thrust",
+      "machine_hip_thrust",
+      "dumbbell_hip_thrust"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "machine_glute_kickback",
+    "name": "Coice na máquina de glúteo",
+    "aliases": [
+      "glúteo máquina",
+      "kickback máquina",
+      "coice máquina"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "glute_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Apoie antebraços e tronco na máquina, abdômen firme.",
+      "Empurre a plataforma/rolo para trás e para cima estendendo o quadril.",
+      "Volte devagar sem deixar o peso bater; faça todas as repetições de um lado e depois troque."
+    ],
+    "common_mistakes": [
+      "Arquear a lombar para subir mais",
+      "Girar o quadril para o lado"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "cable_glute_kickback",
+      "ankle_weight_kickback",
+      "single_leg_glute_bridge"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "cable_glute_kickback",
+    "name": "Coice na polia",
+    "aliases": [
+      "glúteo na polia",
+      "kickback na polia",
+      "coice polia"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "cable_station",
+      "ankle_strap"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Tornozeleira presa na polia baixa; segure na estrutura e incline levemente o tronco.",
+      "Leve a perna para trás estendendo o quadril, joelho quase estendido.",
+      "Pause atrás contraindo o glúteo e volte com controle."
+    ],
+    "common_mistakes": [
+      "Compensar arqueando a lombar",
+      "Balançar o corpo para ganhar impulso"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "machine_glute_kickback",
+      "ankle_weight_kickback",
+      "cable_pull_through"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "ankle_weight_kickback",
+    "name": "Coice em quatro apoios com caneleira",
+    "aliases": [
+      "coice com caneleira",
+      "glúteo quatro apoios",
+      "extensão de quadril em quatro apoios"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "ankle_weights"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1,
+      "WRIST": 1
+    },
+    "instructions": [
+      "Em quatro apoios, mãos sob os ombros e joelhos sob o quadril.",
+      "Leve uma perna para trás e para cima até alinhar a coxa com o tronco.",
+      "Volte devagar sem apoiar o joelho; complete um lado e troque."
+    ],
+    "common_mistakes": [
+      "Arquear a lombar no topo",
+      "Fazer rápido, sem controle"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Caneleira mais pesada",
+      "Pausa de 1–2 s na contração"
+    ],
+    "substitutes": [
+      "cable_glute_kickback",
+      "machine_glute_kickback",
+      "single_leg_glute_bridge"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "cable_hip_abduction",
+    "name": "Abdução de quadril na polia (em pé)",
+    "aliases": [
+      "abdução na polia",
+      "glúteo médio polia"
+    ],
+    "pattern": "hip_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "CABLE",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [],
+    "equipment": [
+      "cable_station",
+      "ankle_strap"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1
+    },
+    "instructions": [
+      "Tornozeleira na polia baixa, presa na perna mais distante do aparelho.",
+      "Segure na estrutura, tronco ereto, e afaste a perna para o lado.",
+      "Volte devagar cruzando levemente à frente da outra perna."
+    ],
+    "common_mistakes": [
+      "Inclinar o tronco para o lado para subir mais",
+      "Girar o pé para cima"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "hip_abduction_machine",
+      "side_lying_hip_abduction",
+      "band_lateral_walk"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "side_lying_hip_abduction",
+    "name": "Abdução de quadril deitado de lado",
+    "aliases": [
+      "abdução deitada",
+      "abdução com caneleira",
+      "elevação lateral de perna"
+    ],
+    "pattern": "hip_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [],
+    "equipment": [
+      "ankle_weights"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1
+    },
+    "instructions": [
+      "Deitado de lado, pernas estendidas e quadril alinhado (sem rolar para trás).",
+      "Eleve a perna de cima um pouco atrás da linha do corpo.",
+      "Desça devagar sem encostar na outra perna."
+    ],
+    "common_mistakes": [
+      "Girar o quadril e levantar com a frente da coxa",
+      "Subir alto demais e perder o alinhamento"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Caneleira mais pesada",
+      "Pausa de 1–2 s no topo"
+    ],
+    "substitutes": [
+      "cable_hip_abduction",
+      "mini_band_clamshell",
+      "hip_abduction_machine"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "mini_band_clamshell",
+    "name": "Concha com mini band",
+    "aliases": [
+      "clamshell",
+      "concha",
+      "abertura de joelhos deitado"
+    ],
+    "pattern": "hip_abduction",
+    "mechanic": "ISOLATION",
+    "laterality": "UNILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [],
+    "equipment": [
+      "mini_band"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1
+    },
+    "instructions": [
+      "Deitado de lado, quadris e joelhos flexionados, mini band acima dos joelhos.",
+      "Pés juntos, abra o joelho de cima sem girar o quadril para trás.",
+      "Pause aberto e feche devagar."
+    ],
+    "common_mistakes": [
+      "Rolar o quadril para trás",
+      "Fazer rápido, sem pausa"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mini band mais forte",
+      "Mais repetições",
+      "Pausa de 1–2 s"
+    ],
+    "substitutes": [
+      "side_lying_hip_abduction",
+      "band_lateral_walk",
+      "hip_abduction_machine"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "mini_band_glute_bridge",
+    "name": "Ponte de glúteo com mini band",
+    "aliases": [
+      "ponte com mini band",
+      "ponte com elástico"
+    ],
+    "pattern": "hip_extension",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "BAND",
+    "primary": [
+      "glutes"
+    ],
+    "secondary": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "mini_band"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "HIP": 1
+    },
+    "instructions": [
+      "Deitado, joelhos flexionados, mini band logo acima dos joelhos.",
+      "Empurre os joelhos para fora contra o elástico e eleve o quadril.",
+      "Pause no topo e desça devagar."
+    ],
+    "common_mistakes": [
+      "Deixar os joelhos fecharem",
+      "Empurrar com a lombar em vez dos glúteos"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mini band mais forte",
+      "Mais repetições",
+      "Unilateral"
+    ],
+    "substitutes": [
+      "glute_bridge",
+      "dumbbell_hip_thrust",
+      "single_leg_glute_bridge"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": "INTERMEDIATE"
+  },
+  {
+    "id": "dumbbell_sumo_squat",
+    "name": "Agachamento sumô com halter",
+    "aliases": [
+      "agachamento sumô",
+      "sumô com halter",
+      "sumo squat"
+    ],
+    "pattern": "squat",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "DUMBBELL",
+    "primary": [
+      "quads",
+      "glutes",
+      "adductors"
+    ],
+    "secondary": [
+      "lower_back"
+    ],
+    "equipment": [
+      "dumbbells"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "KNEE": 1,
+      "HIP": 2
+    },
+    "instructions": [
+      "Pés bem afastados e apontados para fora; segure um halter pela cabeça entre as pernas.",
+      "Desça com o tronco ereto levando os joelhos na direção dos pés.",
+      "Suba empurrando o chão e contraindo os glúteos no topo."
+    ],
+    "common_mistakes": [
+      "Joelhos fechando para dentro",
+      "Inclinar demais o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então use o próximo halter"
+    ],
+    "substitutes": [
+      "goblet_squat",
+      "leg_press",
+      "barbell_back_squat"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null,
+    "focus": [
+      "quads",
+      "adductors"
+    ]
+  },
+  {
+    "id": "seated_calf_raise",
+    "name": "Panturrilha sentado (máquina)",
+    "aliases": [
+      "panturrilha sentado",
+      "sóleo",
+      "gêmeos sentado"
+    ],
+    "pattern": "calf_raise",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "calves"
+    ],
+    "secondary": [],
+    "equipment": [
+      "seated_calf_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "ANKLE": 1
+    },
+    "instructions": [
+      "Sente-se com a almofada sobre as coxas, perto dos joelhos, e a ponta dos pés na plataforma.",
+      "Desça o calcanhar alongando bem.",
+      "Suba o máximo possível e pause."
+    ],
+    "common_mistakes": [
+      "Amplitude curta",
+      "Quicar no fundo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente uma placa"
+    ],
+    "substitutes": [
+      "standing_calf_raise_machine",
+      "leg_press_calf_raise",
+      "dumbbell_calf_raise"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "t_bar_row",
+    "name": "Remada cavalinho",
+    "aliases": [
+      "remada cavalinho",
+      "remada barra T",
+      "t-bar row"
+    ],
+    "pattern": "horizontal_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "lats",
+      "mid_back"
+    ],
+    "secondary": [
+      "rear_delts",
+      "biceps",
+      "lower_back"
+    ],
+    "equipment": [
+      "t_bar_row"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 2,
+    "joint_demand": {
+      "LOWER_BACK": 2,
+      "SHOULDER": 1
+    },
+    "instructions": [
+      "Pés firmes, quadril para trás e tronco inclinado com a coluna neutra (ou peito no apoio, se houver).",
+      "Puxe as pegadas em direção ao abdômen levando os cotovelos para trás.",
+      "Desça com controle até estender os braços."
+    ],
+    "common_mistakes": [
+      "Arredondar a lombar",
+      "Levantar o tronco para ajudar a puxar"
+    ],
+    "safety_notes": [
+      "Prefira a versão com apoio no peito se a lombar incomodar."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "barbell_row",
+      "machine_row",
+      "seated_cable_row",
+      "chest_supported_dumbbell_row"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "machine_assisted_pull_up",
+    "name": "Barra fixa assistida na máquina",
+    "aliases": [
+      "gravitron",
+      "barra assistida",
+      "graviton"
+    ],
+    "pattern": "vertical_pull",
+    "mechanic": "COMPOUND",
+    "laterality": "BILATERAL",
+    "load_type": "MACHINE",
+    "primary": [
+      "lats"
+    ],
+    "secondary": [
+      "biceps",
+      "mid_back"
+    ],
+    "equipment": [
+      "assisted_pull_up_machine"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 2,
+    "joint_demand": {
+      "SHOULDER": 1,
+      "ELBOW": 1
+    },
+    "instructions": [
+      "Ajoelhe ou fique em pé na plataforma; quanto mais peso no pino, mais ajuda.",
+      "Pegada um pouco além dos ombros; puxe até o queixo passar a barra.",
+      "Desça devagar até estender os braços."
+    ],
+    "common_mistakes": [
+      "Encurtar a amplitude",
+      "Balançar o corpo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Diminua a ajuda (menos peso no pino) ao chegar no topo da faixa"
+    ],
+    "substitutes": [
+      "lat_pulldown",
+      "assisted_pull_up_band",
+      "pull_up"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": "INTERMEDIATE"
+  },
+  {
+    "id": "preacher_curl",
+    "name": "Rosca Scott com barra W",
+    "aliases": [
+      "rosca scott",
+      "scott",
+      "preacher curl"
+    ],
+    "pattern": "elbow_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BARBELL",
+    "primary": [
+      "biceps"
+    ],
+    "secondary": [
+      "forearms"
+    ],
+    "equipment": [
+      "ez_bar",
+      "preacher_bench"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "ELBOW": 2
+    },
+    "instructions": [
+      "Axilas encaixadas no apoio do banco Scott, braços apoiados.",
+      "Flexione os cotovelos trazendo a barra até perto dos ombros.",
+      "Desça devagar sem travar os cotovelos no fundo."
+    ],
+    "common_mistakes": [
+      "Tirar os braços do apoio",
+      "Soltar a barra rápido no fundo"
+    ],
+    "safety_notes": [
+      "Desça sem pressa: o fundo do movimento exige mais do cotovelo."
+    ],
+    "progression_methods": [
+      "Dupla progressão: suba as repetições até o topo da faixa e então aumente 2,5 kg"
+    ],
+    "substitutes": [
+      "ez_bar_curl",
+      "dumbbell_curl",
+      "cable_curl"
+    ],
+    "timed": false,
+    "staple": 2,
+    "max_tier": null
+  },
+  {
+    "id": "swiss_ball_leg_curl",
+    "name": "Flexão de joelhos na bola suíça",
+    "aliases": [
+      "flexora na bola",
+      "leg curl bola suíça"
+    ],
+    "pattern": "knee_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "hamstrings"
+    ],
+    "secondary": [
+      "glutes",
+      "calves"
+    ],
+    "equipment": [
+      "swiss_ball"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 3,
+    "mobility": 1,
+    "joint_demand": {
+      "KNEE": 1,
+      "HIP": 1
+    },
+    "instructions": [
+      "Deitado, calcanhares sobre a bola e quadril elevado (ponte).",
+      "Puxe a bola em direção aos glúteos flexionando os joelhos, sem baixar o quadril.",
+      "Volte a estender devagar."
+    ],
+    "common_mistakes": [
+      "Deixar o quadril cair",
+      "Ir rápido demais"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Unilateral",
+      "Descida mais lenta"
+    ],
+    "substitutes": [
+      "lying_or_seated_leg_curl",
+      "slider_leg_curl",
+      "band_leg_curl"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "decline_crunch",
+    "name": "Abdominal no banco declinado",
+    "aliases": [
+      "abdominal declinado",
+      "banco de abdominal"
+    ],
+    "pattern": "trunk_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "abs"
+    ],
+    "secondary": [
+      "obliques"
+    ],
+    "equipment": [
+      "ab_bench"
+    ],
+    "difficulty": 2,
+    "min_tier": "NOVICE",
+    "stability": 1,
+    "mobility": 1,
+    "joint_demand": {
+      "NECK": 1,
+      "LOWER_BACK": 1
+    },
+    "instructions": [
+      "Pés presos no apoio, tronco no banco declinado.",
+      "Enrole o tronco subindo até o meio do caminho, sem puxar o pescoço.",
+      "Desça devagar."
+    ],
+    "common_mistakes": [
+      "Puxar a cabeça com as mãos",
+      "Subir com embalo"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Mais inclinação",
+      "Carga no peito"
+    ],
+    "substitutes": [
+      "crunch",
+      "cable_crunch",
+      "swiss_ball_crunch"
+    ],
+    "timed": false,
+    "staple": 1,
+    "max_tier": null
+  },
+  {
+    "id": "swiss_ball_crunch",
+    "name": "Abdominal na bola suíça",
+    "aliases": [
+      "abdominal bola",
+      "crunch na bola"
+    ],
+    "pattern": "trunk_flexion",
+    "mechanic": "ISOLATION",
+    "laterality": "BILATERAL",
+    "load_type": "BODYWEIGHT",
+    "primary": [
+      "abs"
+    ],
+    "secondary": [],
+    "equipment": [
+      "swiss_ball"
+    ],
+    "difficulty": 1,
+    "min_tier": "NOVICE",
+    "stability": 2,
+    "mobility": 1,
+    "joint_demand": {
+      "NECK": 1
+    },
+    "instructions": [
+      "Sente na bola e role até apoiar a lombar nela, pés firmes no chão.",
+      "Enrole o tronco para cima sem tirar a lombar da bola.",
+      "Volte alongando o abdômen sobre a bola."
+    ],
+    "common_mistakes": [
+      "Puxar o pescoço",
+      "Rolar a bola para frente e para trás em vez de flexionar o tronco"
+    ],
+    "safety_notes": [],
+    "progression_methods": [
+      "Mais repetições",
+      "Pausa no topo",
+      "Carga no peito"
+    ],
+    "substitutes": [
+      "crunch",
+      "decline_crunch",
+      "cable_crunch"
     ],
     "timed": false,
     "staple": 1,

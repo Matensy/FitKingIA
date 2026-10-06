@@ -22,7 +22,7 @@ object PersonalRecords {
         if (prev.isEmpty() || new.sets.isEmpty()) return emptyList()
         val name = kb.exercise(new.exerciseId).name
         val out = mutableListOf<PersonalRecord>()
-        fun pr(t: PrType, what: String) = out.add(PersonalRecord(new.exerciseId, t, new.date, "🏆 NOVO PR — $name: $what (${t.label.lowercase()})"))
+        fun pr(t: PrType, what: String) = out.add(PersonalRecord(new.exerciseId, t, new.date, "🏆 NOVO RECORDE — $name: $what (${t.label.lowercase()})"))
 
         val prevSets = prev.flatMap { it.sets }
         val heaviest = new.sets.maxBy { it.loadKg }
@@ -98,7 +98,7 @@ class DeloadAdvisor(private val kb: KnowledgeBase) {
             "Queda de desempenho em ${declining.size} de ${valid.size} exercícios principais por ${r.decliningSessions}+ sessões" +
                 (if (lowReadiness) " e prontidão média baixa" else "") +
                 ". Sugestão: revisar o ciclo — por exemplo, uma semana com ~${(r.volumeReduction * 100).roundToInt()}% menos séries, " +
-                "mantendo os exercícios. A evidência sobre deloads programados é limitada; trate como ajuste, não obrigação."
+                "mantendo os exercícios. A evidência sobre semanas de descarga (deload) programadas é limitada; trate como ajuste, não obrigação."
         else "Sem sinal consistente de queda de desempenho que justifique revisar o ciclo agora."
         return DeloadAdvice(recommended, declining, Explanation.rule(text, rule.id))
     }

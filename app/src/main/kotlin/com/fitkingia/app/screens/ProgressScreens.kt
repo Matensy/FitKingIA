@@ -73,7 +73,7 @@ class ProgressScreen : Screen() {
         root.h2("Recordes pessoais")
         root.card {
             if (prs.isEmpty()) muted("Seus PRs aparecem aqui depois do segundo treino de cada exercício.")
-            prs.take(10).forEach { kv(Dates.short(it.date), it.description.removePrefix("🏆 NOVO PR — ")) }
+            prs.take(10).forEach { kv(Dates.short(it.date), it.description.removePrefix("🏆 NOVO RECORDE — ")) }
         }
 
         bodySection(root)
@@ -82,7 +82,7 @@ class ProgressScreen : Screen() {
         val readiness = fit.repo.readiness(7)
         if (readiness.isNotEmpty()) {
             root.h2("Prontidão recente")
-            root.card { readiness.forEach { kv(Dates.short(it.at.toLocalDate()), "Recovery Score ${it.score}") } }
+            root.card { readiness.forEach { kv(Dates.short(it.at.toLocalDate()), "Índice de recuperação ${it.score}") } }
         }
     }
 

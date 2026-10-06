@@ -257,7 +257,7 @@ class LocalCoach(
         val changes = adapted.changes.joinToString("\n") { "  • $it" }
         return reply(Intent.SHORT_ON_TIME,
             Say.me("Entendi: você tem $minutes minutos. ${note ?: ""}".trim()),
-            Say.rule("⚡ QUICK SESSION — ${Say.session(adapted.session)}"),
+            Say.rule("⚡ TREINO RÁPIDO — ${Say.session(adapted.session)}"),
             adapted.explanations.joinToString("\n") { Say.of(it) },
             if (changes.isNotEmpty()) "O que mudou e por quê:\n$changes" else null,
         )
@@ -326,7 +326,7 @@ class LocalCoach(
         return reply(Intent.TIRED,
             Say.me("Estimei sua prontidão pelo que você escreveu (sono ${check.sleep.label.substringAfter(' ').lowercase()}, energia ${check.energy}/10, " +
                 "dor muscular ${check.soreness}/10, estresse ${check.stress}/10, motivação ${check.motivation}/10). Faça o check-in completo para um ajuste mais preciso."),
-            Say.rule("🔥 Recovery Score: ${result.score}/100 — ${result.band.label}"),
+            Say.rule("🔥 Índice de recuperação: ${result.score}/100 — ${result.band.label}"),
             note?.let(Say::rule),
             Say.rule(Say.session(adapted.session)),
             adapted.changes.joinToString("\n") { "  • $it" }.ifBlank { null },
@@ -534,7 +534,7 @@ class LocalCoach(
         val hits = evidence.search(text, limit = 2)
         if (hits.isEmpty()) return reply(Intent.EVIDENCE,
             Say.me("Não tenho isso no banco de evidências ainda — e prefiro não inventar. Posso falar sobre volume, frequência, falha, descanso, " +
-                "RIR, deload, proteína, sono, hidratação, gordura localizada e suplementos."))
+                "RIR, semana de descarga, proteína, sono, hidratação, gordura localizada e suplementos."))
         return reply(Intent.EVIDENCE, Say.me("O que o banco de evidências diz:"), hits.joinToString("\n") { Say.claim(kb, it.claim) })
     }
 

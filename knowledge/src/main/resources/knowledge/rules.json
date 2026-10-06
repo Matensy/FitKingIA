@@ -401,7 +401,7 @@
   {
     "id": "recovery.readiness_score",
     "category": "recuperação",
-    "description": "Recovery Score 0–100 a partir do check-in (sono, energia, dor muscular, estresse, motivação) e faixas de ajuste do treino.",
+    "description": "Índice de recuperação 0–100 a partir da avaliação do dia (sono, energia, dor muscular, estresse, motivação) e faixas de ajuste do treino.",
     "basis": "HEURISTIC",
     "rationale": "Média ponderada transparente para autorregulação; não é índice fisiológico validado. Sono tem peso alto por sua relação com saúde e desempenho.",
     "claims": [
@@ -526,7 +526,7 @@
     "category": "progressão",
     "description": "Sugere revisão do ciclo quando há queda persistente de desempenho em vários exercícios principais.",
     "basis": "HEURISTIC",
-    "rationale": "Deload como resposta a sinais (queda de e1RM + prontidão baixa), não como obrigação de calendário — a evidência sobre deloads programados é limitada.",
+    "rationale": "Semana de descarga (deload) como resposta a sinais (queda de e1RM + prontidão baixa), não como obrigação de calendário — a evidência sobre descargas programadas é limitada.",
     "claims": [
       "deload_evidence",
       "e1rm_equations"
@@ -621,7 +621,7 @@
     "category": "treino",
     "description": "Escolha da divisão semanal pelo número de dias, nível e foco (templates do banco).",
     "basis": "HEURISTIC",
-    "rationale": "Com poucos dias, Full Body permite frequência ≥2× por músculo; com mais dias, divisões distribuem o volume. A vantagem de frequência para hipertrofia é incerta, por isso o usuário pode escolher outra divisão e comparar no simulador.",
+    "rationale": "Com poucos dias, o treino de corpo inteiro permite frequência ≥2× por músculo; com mais dias, divisões distribuem o volume. A vantagem de frequência para hipertrofia é incerta, por isso o usuário pode escolher outra divisão e comparar no simulador.",
     "claims": [
       "frequency_hypertrophy",
       "hypertrophy_volume"

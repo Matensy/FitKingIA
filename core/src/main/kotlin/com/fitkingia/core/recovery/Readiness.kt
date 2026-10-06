@@ -36,7 +36,7 @@ enum class ReadinessBand(val label: String) {
 data class ReadinessResult(val score: Int, val band: ReadinessBand, val explanation: Explanation)
 
 /**
- * Recovery Score 0–100. É uma heurística transparente do sistema (média ponderada das
+ * Índice de recuperação 0–100. É uma heurística transparente do sistema (média ponderada das
  * respostas), não um índice fisiológico validado — e o app diz isso ao usuário.
  */
 class RecoveryScorer(private val rule: Rule<RecoveryRules>) {
@@ -60,7 +60,7 @@ class RecoveryScorer(private val rule: Rule<RecoveryRules>) {
         return ReadinessResult(
             score, band,
             Explanation.rule(
-                "Recovery Score $score/100 (${band.label.lowercase()}). Pontuação heurística do app a partir de sono, " +
+                "Índice de recuperação $score/100 (${band.label.lowercase()}). Pontuação heurística do app a partir de sono, " +
                     "energia, dor muscular, estresse e motivação — útil para comparar seus próprios dias, não é medida clínica.",
                 rule.id,
             ),

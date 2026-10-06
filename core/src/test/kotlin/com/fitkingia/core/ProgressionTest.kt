@@ -89,7 +89,7 @@ class TrendsAndRecordsTest {
         assertEquals(4, t.decliningStreak)
         val advice = DeloadAdvisor(Fixtures.kb).advise(listOf(t), recentReadiness = listOf(40, 45, 50))
         assertTrue(advice.recommended)
-        assertTrue("evidência sobre deloads programados é limitada" in advice.explanation.text)
+        assertTrue("evidência sobre semanas de descarga (deload) programadas é limitada" in advice.explanation.text)
     }
 
     @Test fun `sem prontidão baixa e com poucos exercícios em queda não sugere deload`() {

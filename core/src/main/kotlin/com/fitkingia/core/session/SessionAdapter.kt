@@ -33,12 +33,12 @@ class SessionAdapter(private val kb: KnowledgeBase) {
             "A sessão estimada (${fit.originalMinutes} min) já cabe em $minutes min."
         else "Sessão original estimada em ${fit.originalMinutes} min; versão rápida: ${fit.session.estimatedMinutes} min."
         return AdaptedSession(
-            "⚡ QUICK SESSION — ${session.name}", fit.session, fit.changes,
+            "⚡ TREINO RÁPIDO — ${session.name}", fit.session, fit.changes,
             listOf(Explanation.rule(head, kb.ruleSet.timing.id)),
         )
     }
 
-    /** Ajuste por Recovery Score: reduz volume, mantém principais, aumenta RIR/descanso, troca exercícios exigentes. */
+    /** Ajuste por Índice de recuperação: reduz volume, mantém principais, aumenta RIR/descanso, troca exercícios exigentes. */
     fun forReadiness(session: PlannedSession, readiness: ReadinessResult, constraints: UserConstraints): AdaptedSession {
         val items = session.exercises.toMutableList()
         val changes = mutableListOf<SessionChange>()

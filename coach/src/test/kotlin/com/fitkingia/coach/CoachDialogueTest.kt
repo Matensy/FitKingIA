@@ -29,7 +29,7 @@ class CoachDialogueTest {
     @Test fun `tenho 35 minutos adapta a sessão e explica cortes`() {
         val r = chat("tenho só 35 minutos hoje").single()
         assertEquals(Intent.SHORT_ON_TIME, r.intent)
-        assertTrue("QUICK SESSION" in r.text)
+        assertTrue("TREINO RÁPIDO" in r.text)
         assertTrue("O que mudou e por quê" in r.text)
     }
 
@@ -38,13 +38,13 @@ class CoachDialogueTest {
         assertEquals(Intent.SHORT_ON_TIME, ask.intent)
         assertTrue("Quanto tempo" in ask.text)
         assertEquals(Intent.SHORT_ON_TIME, answer.intent)
-        assertTrue("30 minutos" in answer.text && "QUICK SESSION" in answer.text)
+        assertTrue("30 minutos" in answer.text && "TREINO RÁPIDO" in answer.text)
     }
 
     @Test fun `lembra o exercício da conversa para perguntas seguintes`() {
         val (how, swap, why) = chat("como faço stiff?", "e se a barra estiver ocupada, troca por outro", "por que ele está no meu treino?")
         assertEquals(Intent.EXERCISE_HOWTO, how.intent)
-        assertTrue("Levantamento terra romeno" in how.text)
+        assertTrue("Levantamento terra romeno" in how.text, how.text)
         assertEquals(Intent.SUBSTITUTE, swap.intent)
         assertTrue("no lugar de Levantamento terra romeno" in swap.text, swap.text)
         assertTrue(why.intent == Intent.EXPLAIN_EXERCISE)
@@ -59,10 +59,10 @@ class CoachDialogueTest {
         assertTrue("procure um profissional" in strong.text)
     }
 
-    @Test fun `cansaço vira Recovery Score e treino ajustado`() {
+    @Test fun `cansaço vira índice de recuperação e treino ajustado`() {
         val r = chat("hoje estou cansado, dormi mal").single()
         assertEquals(Intent.TIRED, r.intent)
-        assertTrue("Recovery Score" in r.text)
+        assertTrue("Índice de recuperação" in r.text)
         assertTrue("Faça o check-in completo" in r.text)
     }
 

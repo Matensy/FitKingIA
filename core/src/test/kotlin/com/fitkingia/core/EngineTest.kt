@@ -224,7 +224,7 @@ class SubstitutionTest {
 class ReadinessTest {
     private val scorer = RecoveryScorer(Fixtures.ruleSet.recovery)
 
-    @Test fun `extremos do Recovery Score`() {
+    @Test fun `extremos do indice de recuperacao`() {
         assertEquals(100, scorer.score(ReadinessCheck(SleepQuality.EXCELLENT, 10, 0, 1, 10)).score)
         val worst = scorer.score(ReadinessCheck(SleepQuality.POOR, 1, 10, 10, 1))
         assertEquals(5, worst.score)
@@ -315,7 +315,7 @@ class TimeAdapterTest {
         val program = generate(profile(days = mapOf(MONDAY to 90, WEDNESDAY to 90, FRIDAY to 90)))
         val s = program.sessionOn(MONDAY)!!
         val a = SessionAdapter(kb).forTime(s, 30)
-        assertTrue(a.title.startsWith("⚡ QUICK SESSION"))
+        assertTrue(a.title.startsWith("⚡ TREINO RÁPIDO"))
         assertTrue(a.session.estimatedMinutes <= 30)
         assertTrue(a.changes.isNotEmpty())
     }

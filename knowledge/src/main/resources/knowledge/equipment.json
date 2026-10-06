@@ -36,17 +36,17 @@
   },
   {
     "id": "smith_machine",
-    "name": "Smith",
+    "name": "Barra guiada (Smith)",
     "category": "machine"
   },
   {
     "id": "cable_station",
-    "name": "Polia / crossover",
+    "name": "Polia (cross)",
     "category": "machine"
   },
   {
     "id": "lat_pulldown",
-    "name": "Puxada (pulley alto)",
+    "name": "Puxada alta (polia)",
     "category": "machine"
   },
   {
@@ -56,12 +56,12 @@
   },
   {
     "id": "leg_press",
-    "name": "Leg press",
+    "name": "Prensa de pernas (leg press)",
     "category": "machine"
   },
   {
     "id": "hack_squat",
-    "name": "Hack squat",
+    "name": "Agachamento hack (máquina)",
     "category": "machine"
   },
   {
@@ -76,7 +76,7 @@
   },
   {
     "id": "pec_deck",
-    "name": "Peck deck / voador",
+    "name": "Voador (peck deck)",
     "category": "machine"
   },
   {
@@ -143,5 +143,60 @@
     "id": "low_bar",
     "name": "Barra baixa (parque ou rack)",
     "category": "station"
+  },
+  {
+    "id": "hip_thrust_machine",
+    "name": "Máquina de elevação pélvica",
+    "category": "machine"
+  },
+  {
+    "id": "glute_machine",
+    "name": "Máquina de glúteo (coice)",
+    "category": "machine"
+  },
+  {
+    "id": "seated_calf_machine",
+    "name": "Panturrilha sentado (máquina)",
+    "category": "machine"
+  },
+  {
+    "id": "t_bar_row",
+    "name": "Remada cavalinho (barra T)",
+    "category": "station"
+  },
+  {
+    "id": "assisted_pull_up_machine",
+    "name": "Barra fixa assistida (máquina)",
+    "category": "machine"
+  },
+  {
+    "id": "preacher_bench",
+    "name": "Banco Scott",
+    "category": "accessory"
+  },
+  {
+    "id": "ab_bench",
+    "name": "Banco de abdominal (declinado)",
+    "category": "accessory"
+  },
+  {
+    "id": "ankle_strap",
+    "name": "Tornozeleira para polia",
+    "category": "accessory"
+  },
+  {
+    "id": "ankle_weights",
+    "name": "Caneleiras",
+    "category": "accessory"
+  },
+  {
+    "id": "mini_band",
+    "name": "Mini band (elástico curto)",
+    "category": "accessory"
+  },
+  {
+    "id": "swiss_ball",
+    "name": "Bola suíça",
+    "category": "accessory"
   }
 ]

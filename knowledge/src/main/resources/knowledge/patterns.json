@@ -42,7 +42,7 @@
   {
     "id": "hinge",
     "name": "Dobradiça de quadril",
-    "description": "Flexão de quadril com joelhos pouco flexionados (terra, stiff).",
+    "description": "Flexão de quadril com joelhos pouco flexionados (levantamento terra, terra romeno/stiff).",
     "related": [
       "hip_extension",
       "knee_flexion"

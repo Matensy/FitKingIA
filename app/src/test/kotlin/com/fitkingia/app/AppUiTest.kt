@@ -142,7 +142,7 @@ class AppUiTest {
         tapExact("8", 3)   // motivação
         tap("Ajustar meu treino")
         assertTrue(activity.current is HomeScreen)
-        assertShows("Recovery Score")
+        assertShows("Índice de recuperação")
 
         // Treino: registrar todas as séries do primeiro exercício e concluir.
         tap("Começar treino")

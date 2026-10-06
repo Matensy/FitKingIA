@@ -17,11 +17,11 @@ class CliSmokeTest {
 
     @Test fun demoRunsEndToEnd() {
         val out = run("demo")
-        listOf("PROGRAMA", "QUICK SESSION", "Por que", "Substituições", "Recovery Score", "PROGRAM SIMULATOR",
+        listOf("PROGRAMA", "TREINO RÁPIDO", "Por que", "Substituições", "Índice de recuperação", "SIMULADOR",
             "PROGRESSIVE OVERLOAD", "Refeição registrada", "IA LOCAL").forEach { assertTrue(it in out, "faltou '$it'") }
     }
 
     @Test fun localCoachAnswersAQuestion() {
-        assertTrue("Recovery Score" in run("pergunta", "hoje", "estou", "cansado"))
+        assertTrue("Índice de recuperação" in run("pergunta", "hoje", "estou", "cansado"))
     }
 }

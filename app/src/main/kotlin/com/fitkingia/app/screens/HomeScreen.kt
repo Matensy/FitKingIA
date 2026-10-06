@@ -116,7 +116,7 @@ class HomeScreen : Screen() {
             muted("~${s.estimatedMinutes} min · ${s.exercises.size} exercícios" + (v.quickMinutes?.let { " · limite de $it min" } ?: ""))
             v.readiness?.let { r ->
                 val color = when (r.band) { ReadinessBand.NORMAL -> C.success; ReadinessBand.REDUCED -> C.warning; else -> C.danger }
-                badge("Recovery Score ${r.score} · ${r.band.label}", color)
+                badge("Índice de recuperação ${r.score} · ${r.band.label}", color)
             }
             space(4)
             s.exercises.forEach { e ->
@@ -249,11 +249,11 @@ class ReadinessScreen : Screen() {
         val ready = sleep != null && energy != null && soreness != null && stress != null && motivation != null
         root.button("Ajustar meu treino", enabled = ready) {
             val r = fit.checkIn(ReadinessCheck(sleep!!, energy!!, soreness!!, stress!!, motivation!!))
-            main.toast("Recovery Score ${r.score} — ${r.band.label}")
+            main.toast("Índice de recuperação ${r.score} — ${r.band.label}")
             pop()
         }
         if (fit.todayView()?.readiness != null) root.button("Apagar check-in de hoje", Btn.GHOST) { fit.clearCheckIn(); pop() }
-        root.muted("O Recovery Score é uma heurística do app para comparar seus próprios dias — não é medida clínica.")
+        root.muted("O Índice de recuperação é uma heurística do app para comparar seus próprios dias — não é medida clínica.")
     }
 
     private fun scale(root: LinearLayout, title: String, hint: String, range: IntRange, value: Int?, set: (Int) -> Unit) {
