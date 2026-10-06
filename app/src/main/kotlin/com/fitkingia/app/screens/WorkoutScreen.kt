@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.fitkingia.app.Screen
+import com.fitkingia.app.figure.exerciseFigureToggle
 import com.fitkingia.app.ui.*
 import com.fitkingia.appcore.ActiveWorkout
 import com.fitkingia.appcore.Perceived
@@ -34,6 +35,8 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
     private val reps = HashMap<ExerciseId, Int>()
     private val rir = HashMap<ExerciseId, Int>()
     private var showWarmup = false
+    /** Exercícios com a ilustração aberta (só nesta tela, como o aquecimento). */
+    private val showFigure = HashSet<ExerciseId>()
 
     private var restLeft = 0
     private var restLabel: TextView? = null
@@ -91,6 +94,7 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
 
         root.label("Exercício ${index + 1} de $count · ${pe.role.label}")
         root.h1(ex.name)
+        root.exerciseFigureToggle(ex, id in showFigure) { if (!showFigure.add(id)) showFigure.remove(id); refresh() }
         root.text("${pe.sets} × ${p.target} · RIR ${p.rir} · descanso ${Dates.mmss(pe.restSeconds)}", 15f, C.accent, bold = true)
         pe.note?.let { root.muted(it) }
 

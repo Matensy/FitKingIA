@@ -3,6 +3,7 @@ package com.fitkingia.app.screens
 import android.widget.LinearLayout
 import com.fitkingia.app.Screen
 import com.fitkingia.app.Tab
+import com.fitkingia.app.figure.exerciseFigureCard
 import com.fitkingia.app.ui.*
 import com.fitkingia.appcore.DayPlan
 import com.fitkingia.appcore.DayStatus
@@ -99,6 +100,7 @@ class ExerciseScreen(private val session: PlannedSession?, private val pe: Plann
         val kb = fit.kb
         val ex = pe.exercise
         val p = pe.prescription
+        root.exerciseFigureCard(ex)
         root.card(stroke = C.accent) {
             label("Prescrição")
             text("${pe.sets} × ${p.target}", 22f, bold = true, bottom = 2)
@@ -111,7 +113,7 @@ class ExerciseScreen(private val session: PlannedSession?, private val pe: Plann
             kv("Equipamento", ex.equipment.joinToString { kb.equipment(it).name }.ifEmpty { "nenhum" })
             kv("Dificuldade", "${ex.difficulty}/5")
         }
-        if (ex.instructions.isNotEmpty()) { root.h2("Como fazer"); root.card { ex.instructions.forEachIndexed { i, s -> body("${i + 1}. $s") } } }
+        if (ex.instructions.isNotEmpty()) { root.h2("Passo a passo"); root.card { ex.instructions.forEachIndexed { i, s -> body("${i + 1}. $s") } } }
         if (ex.commonMistakes.isNotEmpty()) { root.h2("Erros comuns"); root.card { bullets(ex.commonMistakes) } }
         if (ex.safetyNotes.isNotEmpty()) { root.h2("Segurança"); root.card(stroke = C.warning) { bullets(ex.safetyNotes) } }
         if (ex.progressionMethods.isNotEmpty()) { root.h2("Como progredir"); root.card { bullets(ex.progressionMethods) } }
