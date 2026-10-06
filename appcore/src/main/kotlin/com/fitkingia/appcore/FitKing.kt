@@ -68,8 +68,9 @@ data class DayPlan(
 }
 
 data class WeekView(val weekStart: LocalDate, val days: List<DayPlan>, val plan: WeekPlan?, val program: StoredProgram) {
-    val planned: Int get() = days.count { it.session != null }
-    val done: Int get() = days.count { it.session != null && it.status == DayStatus.DONE }
+    /** Sessões distintas: um treino remarcado aparece no dia original (replanejado) e no novo, mas conta uma vez. */
+    val planned: Int get() = days.mapNotNull { it.session?.key }.distinct().size
+    val done: Int get() = days.filter { it.status == DayStatus.DONE }.mapNotNull { it.session?.key }.distinct().size
 }
 
 data class TodayView(
@@ -278,6 +279,9 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
             val decision = missed.firstOrNull { it.missedOn == d }
             val status = when {
                 s == null -> if (wk.isNotEmpty()) DayStatus.DONE else DayStatus.REST
+                wk.any { it.sessionKey == s.key } -> DayStatus.DONE
+                // Perdido e já decidido (remarcado/ignorado): não vira "feito" quando a sessão é feita em outro dia.
+                d.isBefore(today) && decision != null -> DayStatus.MISSED_RESOLVED
                 s.key in doneKeys -> DayStatus.DONE
                 d == today -> DayStatus.TODAY
                 d.isBefore(today) -> if (decision != null) DayStatus.MISSED_RESOLVED else DayStatus.MISSED
@@ -366,6 +370,24 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
         }
         repo.recordMissed(day.sessionId, day.date, option.key, now())
     }
+
+    // =====================================================================================
+    // Reorganizar a semana (trocar dias, fazer hoje o treino de outro dia)
+    // =====================================================================================
+
+    private val reorder by lazy { WeekReorder(this) }
+
+    /**
+     * Troca os treinos de dois dias (hoje ou futuros) da semana atual; um deles pode ser descanso.
+     * Cada sessão é reajustada ao tempo do novo dia. [permanent] = muda também o programa base.
+     */
+    fun swapDays(a: LocalDate, b: LocalDate, permanent: Boolean): ReorderResult = reorder.swapDays(a, b, permanent)
+
+    /** Faz hoje o treino de outro dia desta semana (inclusive um treino perdido). Só esta semana. */
+    fun doToday(from: LocalDate): ReorderResult = reorder.doToday(from)
+
+    /** Prévia de [doToday]: para onde iria o treino de hoje (nulo se hoje é descanso). */
+    fun doTodayDisplaces(from: LocalDate): Displaced? = reorder.displaced(from)
 
     // =====================================================================================
     // Exercícios: por que, substituir, dor

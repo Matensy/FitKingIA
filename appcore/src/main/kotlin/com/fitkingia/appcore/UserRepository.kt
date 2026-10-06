@@ -291,6 +291,24 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
 
     fun clearWeekPlans() = db.execute("DELETE FROM week_plans WHERE user_id=$USER")
 
+    fun deleteWeekPlan(weekStart: LocalDate) =
+        db.execute("DELETE FROM week_plans WHERE user_id=$USER AND week_start=?", listOf(weekStart.toString()))
+
+    /**
+     * Troca permanente de dias: muda dia, tempo do dia e exercícios das sessões indicadas (ids mantidos,
+     * para os treinos já feitos continuarem vinculados) e renumera as posições na ordem dos dias.
+     */
+    fun rescheduleProgramSessions(programId: Long, sessions: Map<Long, PlannedSession>) = db.transaction {
+        for ((id, s) in sessions) {
+            db.execute("UPDATE program_sessions SET day_of_week=?, budget_minutes=?, estimated_minutes=? WHERE id=?",
+                listOf(s.day?.value, s.budgetMinutes, s.estimatedMinutes, id))
+            db.execute("DELETE FROM program_exercises WHERE session_id=?", listOf(id))
+            s.exercises.forEachIndexed { j, e -> insertExercise(id, j, e) }
+        }
+        val order = db.query("SELECT id FROM program_sessions WHERE program_id=? ORDER BY COALESCE(day_of_week, 8), position", listOf(programId)) { it.long("id") }
+        order.forEachIndexed { i, id -> db.execute("UPDATE program_sessions SET position=? WHERE id=?", listOf(i, id)) }
+    }
+
     // -------------------------------------------------------------------------------------
     // Treinos
     // -------------------------------------------------------------------------------------

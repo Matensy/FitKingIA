@@ -58,6 +58,29 @@ class ScreenshotTest {
             root.draw(Canvas(bmp))
             File(out, "$name.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
         }
+        fun draw(name: String, root: View, bg: Int) {
+            root.measure(View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(2340, View.MeasureSpec.AT_MOST))
+            root.layout(0, 0, 1080, root.measuredHeight)
+            idle()
+            val bmp = Bitmap.createBitmap(1080, maxOf(1, root.measuredHeight), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bmp)
+            canvas.drawColor(bg)
+            root.draw(canvas)
+            File(out, "$name.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        }
+        /** Captura o diálogo aberto (sheet), sobre fundo escurecido. */
+        fun shotDialog(name: String) {
+            idle()
+            draw(name, org.robolectric.shadows.ShadowDialog.getLatestDialog().window!!.decorView, 0xFF0B0D10.toInt())
+        }
+        fun views(v: View): List<View> = if (v is android.view.ViewGroup) listOf(v) + (0 until v.childCount).flatMap { views(v.getChildAt(it)) } else listOf(v)
+        /** Toca no primeiro elemento clicável cujo texto contém [label]. */
+        fun click(root: View, label: String) {
+            var v: View? = views(root).filterIsInstance<android.widget.TextView>().first { it.text.toString().contains(label) }
+            while (v != null && !v.isClickable) v = v.parent as? View
+            v!!.performClick()
+            idle()
+        }
         idle()
         shot("01_boas_vindas")
         val fit = a.fit
@@ -101,6 +124,21 @@ class ScreenshotTest {
         a.setRoot(ToolsScreen()); shot("14_ferramentas")
         val sim = SimulatorScreen(); a.setRoot(sim)
         a.setRoot(ProfileScreen()); shot("15_perfil")
+
+        // Semana: qualquer dia abre a tela do dia (perdido, feito, futuro) e dá para trocar a ordem.
+        val days = fit.week()!!.days
+        a.switchTab(Tab.WEEK); shot("16_semana_toque")
+        a.push(DayScreen(days.first { it.status == com.fitkingia.appcore.DayStatus.MISSED }.date)); shot("17_dia_perdido")
+        a.push(DayScreen(days.first { it.day == DayOfWeek.THURSDAY }.date)); shot("18_dia_feito")
+        a.push(DayScreen(days.first { it.day == DayOfWeek.FRIDAY }.date, swapping = true)); shot("19_trocar_dia")
+        now = LocalDateTime.of(2026, 10, 2, 8, 0) // sexta
+        a.switchTab(Tab.WEEK)
+        a.push(DayScreen(days.first { it.day == DayOfWeek.TUESDAY }.date)); shot("19b_perdido_fazer_hoje")
+        a.setRoot(HomeScreen())
+        click(a.window.decorView, "Trocar o treino de hoje"); shotDialog("20_trocar_hoje_sheet")
+        click(org.robolectric.shadows.ShadowDialog.getLatestDialog().window!!.decorView, "Trocar →"); shot("21_hoje_trocado")
+        now = LocalDateTime.of(2026, 10, 3, 9, 0) // sábado, descanso
+        a.setRoot(HomeScreen()); shot("22_descanso_fazer_hoje")
         // Prioridade por região: a amiga que quer treinar glúteo (4 dias, academia completa).
         val g = fit.currentAnswers()
         Questionnaire.selectSex(g, Sex.FEMALE)

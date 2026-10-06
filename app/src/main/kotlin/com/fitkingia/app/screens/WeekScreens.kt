@@ -35,23 +35,20 @@ class WeekScreen : Screen() {
         root.text("${week.done} de ${week.planned} treinos feitos", 16f, bold = true)
         root.bar(if (week.planned == 0) 0.0 else week.done.toDouble() / week.planned, C.success, bottom = 14)
         week.plan?.let { root.card(stroke = C.fact) { text("↪️ Semana replanejada: ${it.reason}", 14f, bottom = 2) } }
-        for (d in week.days) dayCard(root, d)
+        root.muted("Toque em um dia para ver o treino, fazer hoje ou trocar a ordem.", 13f)
+        for (d in week.days) dayCard(root, d, week.program.program.sessions.firstOrNull { it.key == d.session?.key }?.day)
         root.buttonRow(
             Triple("🔬 Por que esta divisão?", Btn.SECONDARY) { push(ProgramWhyScreen()) },
             Triple("🧪 Simular", Btn.SECONDARY) { push(SimulatorScreen()) },
         )
     }
 
-    private fun dayCard(root: LinearLayout, d: DayPlan) {
+    private fun dayCard(root: LinearLayout, d: DayPlan, programDay: java.time.DayOfWeek?) {
         val s = d.session
         val color = when (d.status) {
             DayStatus.DONE -> C.success; DayStatus.MISSED -> C.warning; DayStatus.TODAY -> C.accent; else -> null
         }
-        root.card(bottom = 8, stroke = color, onClick = when {
-            d.status == DayStatus.MISSED -> ({ push(MissedScreen(d)) })
-            s != null -> ({ push(SessionScreen(s, d.sessionId, d.date)) })
-            else -> null
-        }) {
+        root.card(bottom = 8, stroke = color, onClick = { push(DayScreen(d.date)) }) {
             row(bottom = 2) {
                 val t = text("${d.day.ptCapitalized()} ${Dates.short(d.date)}", 15f, bold = true, bottom = 0)
                 t.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -59,6 +56,7 @@ class WeekScreen : Screen() {
             }
             if (s != null) muted("${s.name} · ~${s.estimatedMinutes} min · ${s.exercises.size} exercícios")
             if (d.status == DayStatus.MISSED_RESOLVED) muted("Opção ${d.missedOption} escolhida")
+            else if (programDay != null && programDay != d.day) muted("↪️ Remarcado nesta semana")
             if (s == null && d.workouts.isNotEmpty()) muted("Treino extra registrado")
         }
     }

@@ -85,6 +85,18 @@ class AppUiTest {
         idle()
     }
 
+    /** Toca no item clicável do diálogo aberto (sheet) cujo texto contém [label]. */
+    private fun tapInDialog(label: String) {
+        val root = org.robolectric.shadows.ShadowDialog.getLatestDialog().window!!.decorView
+        val t = texts(root).firstOrNull { it.text.toString().contains(label) }
+        if (t == null) fail("'$label' não está no diálogo:\n" + texts(root).joinToString("\n") { it.text })
+        var v: View? = t
+        while (v != null && !v.isClickable) v = v.parent as? View
+        assertNotNull("'$label' não é clicável", v)
+        v!!.performClick()
+        idle()
+    }
+
     private fun assertShows(s: String) = assertTrue("esperava '$s' na tela:\n${screenText()}", screenText().contains(s, ignoreCase = true))
 
     private fun answerQuestionnaire() {
@@ -237,6 +249,78 @@ class AppUiTest {
         tap("Escolher C")
         activity.switchTab(Tab.WEEK); idle()
         assertShows("Opção C")
+    }
+
+    @Test fun `na terca abre o treino de segunda pela Semana e faz hoje`() {
+        answerQuestionnaire()
+        tap("Ver meu treino de hoje")
+        now = now.plusDays(1) // terça: a segunda ficou sem treino
+        activity.switchTab(Tab.WEEK); idle()
+        val monday = activity.fit.week()!!.days.first()
+        val s = monday.session!!
+        tap("Segunda 28/09")
+        assertTrue(activity.current is DayScreen)
+        assertShows(s.name)
+        assertShows("Não realizado")
+        s.exercises.forEach { assertShows(it.exercise.name) }
+        assertShows("Opções de treino perdido")
+        tap(s.exercises.first().exercise.name)
+        assertTrue(activity.current is ExerciseScreen)
+        activity.pop(); idle()
+
+        // Terça é descanso (Seg/Qua/Sex): nenhum treino é deslocado, então não há aviso de deslocamento.
+        assertNull(activity.fit.week()!!.days[1].session)
+        assertFalse(screenText().contains(", de hoje,"))
+        tap("Fazer este treino hoje")
+        assertTrue(activity.current is HomeScreen)
+        assertShows("Semana reorganizada")
+        assertShows("Treino de hoje")
+        val today = activity.fit.todayView()!!
+        assertEquals(s.key, today.session!!.key)
+        assertTrue("não fica mais pendente", today.pendingMissed.isEmpty())
+        activity.switchTab(Tab.WEEK); idle()
+        assertShows("Replanejado")
+    }
+
+    @Test fun `troca o treino de hoje pela Home`() {
+        answerQuestionnaire()
+        tap("Ver meu treino de hoje")
+        val before = activity.fit.week()!!.days
+        val mon = before[0].session!!
+        val wed = before[2].session!!
+        tap("Trocar o treino de hoje")
+        val dialog = texts(org.robolectric.shadows.ShadowDialog.getLatestDialog().window!!.decorView).joinToString("\n") { it.text }
+        assertTrue(dialog, dialog.contains("${mon.name}, de hoje, vai para quarta"))
+        tapInDialog("${wed.name} — quarta")
+        assertTrue(activity.current is HomeScreen)
+        assertShows("Semana reorganizada")
+        val after = activity.fit.week()!!.days
+        assertEquals(wed.key, after[0].session!!.key)
+        assertEquals(mon.key, after[2].session!!.key)
+        assertEquals(wed.key, activity.fit.todayView()!!.session!!.key)
+        tap("Entendi")
+        assertFalse(screenText().contains("Semana reorganizada"))
+        // Só nesta semana: na próxima, a segunda volta ao treino do programa.
+        now = now.plusDays(7)
+        assertEquals(mon.key, activity.fit.week()!!.days[0].session!!.key)
+    }
+
+    @Test fun `troca permanente pela tela do dia`() {
+        answerQuestionnaire()
+        tap("Ver meu treino de hoje")
+        activity.switchTab(Tab.WEEK); idle()
+        val fri = activity.fit.week()!!.days[4].session!!
+        tap("Sexta 02/10")
+        assertTrue(activity.current is DayScreen)
+        tap("Trocar com outro dia")
+        tap("Todas as semanas")
+        tap("Sábado 03/10")
+        assertShows("Semana reorganizada")
+        assertShows("próximas semanas")
+        assertShows("Descanso")
+        val program = activity.fit.program()!!.program
+        assertEquals(fri.key, program.sessionOn(java.time.DayOfWeek.SATURDAY)?.key)
+        assertNull(program.sessionOn(java.time.DayOfWeek.FRIDAY))
     }
 
     @Test fun `triagem com sinal de alerta nao gera treino`() {

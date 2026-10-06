@@ -17,7 +17,10 @@ import com.fitkingia.core.recovery.ReadinessCheck
 import com.fitkingia.core.safety.ScreeningStatus
 
 /** "Hoje": treino do dia (já ajustado), atalhos de ajuste por toque, água, sono e semana. */
-class HomeScreen : Screen() {
+class HomeScreen(
+    /** Resultado da última reorganização da semana (troca de treino), mostrado até o usuário dispensar. */
+    private var notice: com.fitkingia.appcore.ReorderResult? = null,
+) : Screen() {
     override val title = "Hoje"
     override val tab = Tab.HOME
     private var sleepHours: Double? = null
@@ -53,6 +56,7 @@ class HomeScreen : Screen() {
             if (fit.screening()?.status == ScreeningStatus.CAUTION) root.card(stroke = C.warning, onClick = { push(ProfileScreen()) }) {
                 text("⚠️ Liberado com cautela — toque para ver os cuidados", 14f, C.warning, bottom = 2)
             }
+            notice?.let { n -> root.reorderNotice(n) { notice = null; refresh() } }
             todayCard(root, view)
             if (fit.showPriorityHint()) priorityHint(root)
         }
@@ -97,10 +101,7 @@ class HomeScreen : Screen() {
             else -> root.card {
                 h2("😴 Dia de descanso", top = 0)
                 body("Nenhum treino de força planejado para hoje. Caminhada leve ou mobilidade ajudam sem atrapalhar a recuperação.")
-                v.next?.session?.let { n ->
-                    muted("Próximo: ${n.name} (${v.next!!.day.pt()}, ~${n.estimatedMinutes} min)")
-                    button("Treinar hoje mesmo assim: ${n.name}", Btn.SECONDARY) { start(n, v.next!!.sessionId, null) }
-                }
+                doTodayOptions(this) { r -> notice = r; main.refreshTop(this@HomeScreen) }
                 buttonRow(
                     Triple("🧘 Mobilidade", Btn.SECONDARY) { push(MobilityScreen()) },
                     Triple("🚶 Cardio", Btn.SECONDARY) { push(CardioScreen()) },
@@ -139,6 +140,7 @@ class HomeScreen : Screen() {
                 Triple("⚡ Pouco tempo", Btn.SECONDARY) { quickTime(v.quickMinutes) },
                 Triple(if (v.readiness == null) "🙂 Como estou" else "🙂 Refazer", Btn.SECONDARY) { push(ReadinessScreen()) },
             )
+            button("🔄  Trocar o treino de hoje", Btn.SECONDARY) { swapTodaySheet { r -> notice = r; main.refreshTop(this@HomeScreen) } }
             buttonRow(
                 Triple("📋 Detalhes", Btn.GHOST) { push(SessionScreen(s, v.sessionId, v.date)) },
                 Triple("🔬 Por que hoje?", Btn.GHOST) { fit.program()?.let { push(WhyScreen(fit.why.forDay(it.program, v.date.dayOfWeek))) } },
