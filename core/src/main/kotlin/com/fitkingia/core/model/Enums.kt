@@ -67,6 +67,16 @@ enum class Goal(
     CONSISTENCY("Criar consistência", GoalCategory.HEALTH, TrainingFocus.GENERAL_FITNESS),
 }
 
+/**
+ * Regiões que o usuário pode priorizar ("quero treinar mais o bumbum"). O mapeamento região →
+ * músculos vem do banco (muscles.json, campo focus_region), não do código.
+ */
+enum class BodyRegion(val label: String, val emoji: String) {
+    // Só emojis do Emoji 5.0 ou anteriores: o Android 8 (minSdk) não desenha os mais novos (ex.: 🦵).
+    GLUTES("Glúteos", "🍑"), LEGS("Pernas (coxas)", "🏃"), BACK("Costas", "🧗"), CHEST("Peito", "🏋️"),
+    SHOULDERS("Ombros", "🤸"), ARMS("Braços", "💪"), CORE("Abdômen", "🧘"),
+}
+
 enum class Mechanic { COMPOUND, ISOLATION }
 
 enum class Laterality { BILATERAL, UNILATERAL }

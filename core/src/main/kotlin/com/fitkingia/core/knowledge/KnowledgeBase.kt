@@ -36,6 +36,11 @@ class KnowledgeBase(
 
     val trackedMuscles: List<Muscle> = muscles.filter { it.volumeTracked }
 
+    /** Músculos de uma região priorizável (do banco). */
+    fun musclesOf(region: BodyRegion): Set<MuscleId> = muscles.filter { it.focusRegion == region }.map { it.id }.toSet()
+
+    fun musclesOf(regions: Set<BodyRegion>): Set<MuscleId> = regions.flatMap { musclesOf(it) }.toSet()
+
     fun muscle(id: MuscleId) = musclesById[id] ?: error("Músculo desconhecido: $id")
     fun pattern(id: PatternId) = patternsById[id] ?: error("Padrão desconhecido: $id")
     fun equipment(id: EquipmentId) = equipmentById[id] ?: error("Equipamento desconhecido: $id")

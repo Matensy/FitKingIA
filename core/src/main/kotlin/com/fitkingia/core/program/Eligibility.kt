@@ -12,6 +12,8 @@ data class UserConstraints(
     val favorites: Set<ExerciseId> = emptySet(),
     val history: Set<ExerciseId> = emptySet(),
     val focus: TrainingFocus? = null,
+    /** Músculos das regiões que o usuário priorizou (resolvidos pelo banco). */
+    val priorityMuscles: Set<MuscleId> = emptySet(),
 ) {
     companion object {
         fun of(p: UserProfile) = UserConstraints(

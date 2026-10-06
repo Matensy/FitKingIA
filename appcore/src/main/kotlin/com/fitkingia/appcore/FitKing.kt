@@ -238,6 +238,22 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
 
     fun program(): StoredProgram? = repo.activeProgram()
 
+    /**
+     * Checagem "seu objetivo × seu treino" recalculada no programa atual — continua valendo depois de
+     * trocas de exercício. Usa as prioridades com que o programa foi gerado.
+     */
+    fun goalCheck(): AlignmentReport? {
+        val p = profile() ?: return null
+        val program = program()?.program ?: return null
+        return GoalAlignment(kb).check(program, p.copy(priorities = program.priorities))
+    }
+
+    /** Programa salvo sem prioridade e a pessoa ainda não viu a novidade → sugerir na Home. */
+    fun showPriorityHint(): Boolean =
+        repo.pref(UserRepository.PREF_PRIORITY_HINT) == null && program()?.program?.priorities?.isEmpty() == true
+
+    fun dismissPriorityHint() = repo.setPref(UserRepository.PREF_PRIORITY_HINT, "dismissed")
+
     fun weekStart(date: LocalDate = today()): LocalDate = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
     private fun effectiveSessions(stored: StoredProgram, plan: WeekPlan?): List<PlannedSession> {

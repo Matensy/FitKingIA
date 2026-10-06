@@ -660,5 +660,88 @@
     ],
     "params": {},
     "last_reviewed": "2026-10-02"
+  },
+  {
+    "id": "priority.region",
+    "category": "treino",
+    "description": "Prioridade por região escolhida pelo usuário (ex.: glúteos): mais volume semanal, mais sessões com trabalho direto e exercícios da região no começo do treino.",
+    "basis": "HEURISTIC",
+    "rationale": "Priorizar uma região é redistribuir, não empilhar: a dose-resposta do volume tem retornos decrescentes e o tempo da semana é o mesmo. A região escolhida recebe mais séries (alvo +30%), mais sessões com trabalho focado (inferiores 3× com 3+ dias) e abre os treinos; as demais ficam em volume de manutenção e os músculos que trabalham junto (sinergistas) não são reduzidos. Os números são escolha do sistema dentro das faixas de volume.weekly_sets; a vantagem de frequência maior é incerta, por isso o total de séries e a progressão pesam mais.",
+    "claims": [
+      "hypertrophy_volume",
+      "fractional_sets",
+      "frequency_hypertrophy",
+      "strength_prescription"
+    ],
+    "params": {
+      "priority": {
+        "min_of_target": 1.0,
+        "target_factor": 1.3,
+        "max_factor": 1.3
+      },
+      "other": {
+        "min_factor": 0.75,
+        "target_factor": 0.8,
+        "max_factor": 1.0
+      },
+      "synergists": {
+        "GLUTES": [
+          "quads",
+          "hamstrings"
+        ],
+        "LEGS": [
+          "glutes"
+        ],
+        "BACK": [
+          "biceps",
+          "rear_delts"
+        ],
+        "CHEST": [
+          "triceps"
+        ],
+        "SHOULDERS": [
+          "triceps"
+        ],
+        "ARMS": [],
+        "CORE": []
+      },
+      "no_reduction_for": [
+        "CORE"
+      ],
+      "min_frequency": {
+        "lower": {
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 3,
+          "5": 3,
+          "6": 3
+        },
+        "other": {
+          "1": 1,
+          "2": 2,
+          "3": 2,
+          "4": 2,
+          "5": 2,
+          "6": 3
+        }
+      },
+      "leading_positions": 2,
+      "selection": {
+        "focus_bonus": 8,
+        "primary_bonus": 3
+      },
+      "min_focused_of_target": 1.0,
+      "min_share_of_half": {
+        "GLUTES": 0.4,
+        "LEGS": 0.5,
+        "CHEST": 0.3,
+        "BACK": 0.4,
+        "SHOULDERS": 0.3,
+        "ARMS": 0.3,
+        "CORE": 0.15
+      }
+    },
+    "last_reviewed": "2026-10-06"
   }
 ]

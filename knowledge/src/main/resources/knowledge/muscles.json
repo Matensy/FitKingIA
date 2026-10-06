@@ -5,7 +5,8 @@
     "region": "upper",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "horizontal_push"
+    "fill_pattern": "horizontal_push",
+    "focus_region": "CHEST"
   },
   {
     "id": "lats",
@@ -13,7 +14,8 @@
     "region": "upper",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "vertical_pull"
+    "fill_pattern": "vertical_pull",
+    "focus_region": "BACK"
   },
   {
     "id": "mid_back",
@@ -21,7 +23,8 @@
     "region": "upper",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "horizontal_pull"
+    "fill_pattern": "horizontal_pull",
+    "focus_region": "BACK"
   },
   {
     "id": "traps",
@@ -29,7 +32,8 @@
     "region": "upper",
     "volume_tracked": false,
     "volume_factor": 1.0,
-    "fill_pattern": null
+    "fill_pattern": null,
+    "focus_region": "BACK"
   },
   {
     "id": "front_delts",
@@ -37,7 +41,8 @@
     "region": "upper",
     "volume_tracked": false,
     "volume_factor": 1.0,
-    "fill_pattern": null
+    "fill_pattern": null,
+    "focus_region": "SHOULDERS"
   },
   {
     "id": "side_delts",
@@ -45,7 +50,8 @@
     "region": "upper",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "shoulder_abduction"
+    "fill_pattern": "shoulder_abduction",
+    "focus_region": "SHOULDERS"
   },
   {
     "id": "rear_delts",
@@ -53,7 +59,8 @@
     "region": "upper",
     "volume_tracked": true,
     "volume_factor": 0.8,
-    "fill_pattern": "horizontal_abduction"
+    "fill_pattern": "horizontal_abduction",
+    "focus_region": "SHOULDERS"
   },
   {
     "id": "biceps",
@@ -61,7 +68,8 @@
     "region": "upper",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "elbow_flexion"
+    "fill_pattern": "elbow_flexion",
+    "focus_region": "ARMS"
   },
   {
     "id": "triceps",
@@ -69,7 +77,8 @@
     "region": "upper",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "elbow_extension"
+    "fill_pattern": "elbow_extension",
+    "focus_region": "ARMS"
   },
   {
     "id": "forearms",
@@ -77,7 +86,8 @@
     "region": "upper",
     "volume_tracked": false,
     "volume_factor": 1.0,
-    "fill_pattern": null
+    "fill_pattern": null,
+    "focus_region": "ARMS"
   },
   {
     "id": "quads",
@@ -85,7 +95,8 @@
     "region": "lower",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "squat"
+    "fill_pattern": "squat",
+    "focus_region": "LEGS"
   },
   {
     "id": "hamstrings",
@@ -93,7 +104,8 @@
     "region": "lower",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "knee_flexion"
+    "fill_pattern": "knee_flexion",
+    "focus_region": "LEGS"
   },
   {
     "id": "glutes",
@@ -101,7 +113,8 @@
     "region": "lower",
     "volume_tracked": true,
     "volume_factor": 1.0,
-    "fill_pattern": "hip_extension"
+    "fill_pattern": "hip_extension",
+    "focus_region": "GLUTES"
   },
   {
     "id": "adductors",
@@ -109,7 +122,8 @@
     "region": "lower",
     "volume_tracked": false,
     "volume_factor": 1.0,
-    "fill_pattern": null
+    "fill_pattern": null,
+    "focus_region": "LEGS"
   },
   {
     "id": "calves",
@@ -125,7 +139,8 @@
     "region": "core",
     "volume_tracked": true,
     "volume_factor": 0.8,
-    "fill_pattern": "anti_extension"
+    "fill_pattern": "anti_extension",
+    "focus_region": "CORE"
   },
   {
     "id": "obliques",
@@ -133,7 +148,8 @@
     "region": "core",
     "volume_tracked": false,
     "volume_factor": 1.0,
-    "fill_pattern": null
+    "fill_pattern": null,
+    "focus_region": "CORE"
   },
   {
     "id": "lower_back",
@@ -141,6 +157,7 @@
     "region": "core",
     "volume_tracked": false,
     "volume_factor": 1.0,
-    "fill_pattern": null
+    "fill_pattern": null,
+    "focus_region": "CORE"
   }
 ]

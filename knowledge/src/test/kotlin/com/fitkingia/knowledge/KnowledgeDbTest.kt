@@ -3,6 +3,7 @@ package com.fitkingia.knowledge
 import com.fitkingia.core.knowledge.RuleBasis
 import com.fitkingia.core.knowledge.Stance
 import com.fitkingia.core.knowledge.VerificationStatus
+import com.fitkingia.core.model.BodyRegion
 import com.fitkingia.core.model.ClaimId
 import java.io.File
 import java.nio.file.Files
@@ -20,8 +21,10 @@ class KnowledgeDbTest {
     @Test fun `conteúdo mínimo esperado`() {
         assertTrue(kb.exercises.size >= 100)
         assertTrue(kb.sources.size >= 30)
-        assertEquals(7, kb.splits.size)
-        assertEquals((1..6).toSet(), kb.splits.map { it.daysPerWeek }.toSet())
+        assertTrue(kb.splits.size >= 10)
+        assertEquals((1..6).toSet(), kb.splits.filter { it.emphasis.isEmpty() }.map { it.daysPerWeek }.toSet())
+        // Modelos com ênfase em glúteos/pernas para 3, 4 e 5 dias (inferiores 3×/semana).
+        assertEquals(setOf(3, 4, 5), kb.splits.filter { BodyRegion.GLUTES in it.emphasis }.map { it.daysPerWeek }.toSet())
     }
 
     @Test fun `toda regra baseada em evidência chega até uma fonte verificada`() {

@@ -27,6 +27,8 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
     private val planner = VolumePlanner(kb, selector)
     private val clock = SessionClock(rules.timing.params)
     private val calc = VolumeCalculator(rules.volume.params)
+    private val alignment = GoalAlignment(kb)
+    private val volumeTargets = VolumeTargets(kb)
 
     fun generate(profile: UserProfile, screening: ScreeningResult): ProgramResult {
         if (!screening.allowsProgram) {
@@ -38,7 +40,8 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         val warnings = if (screening.status == ScreeningStatus.CAUTION) screening.messages.toMutableList() else mutableListOf()
         val focus = profile.focus
         val tier = profile.tier
-        val constraints = UserConstraints.of(profile)
+        val priorityMuscles = kb.trackedMuscles.filter { it.focusRegion != null && it.focusRegion in profile.priorities }.map { it.id }.toSet()
+        val constraints = UserConstraints.of(profile).copy(priorityMuscles = priorityMuscles)
 
         // 1. Dias
         val freq = rules.frequency
@@ -130,14 +133,20 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
             )
         }
 
-        // 6. Volume semanal
+        // 6. Volume semanal (músculos prioritários com meta maior)
         val volumeTarget = rules.volume.params.target(focus, tier)
-        val targets = kb.trackedMuscles.associate { it.id to volumeTarget.scaled(it.volumeFactor) }
-        val balanced = planner.balance(fitted.map { it.session.exercises }, budgets, targets, constraints, prescriptionFor)
+        val targets = volumeTargets.forProgram(focus, tier, profile.priorities)
+        val balanced = planner.balance(fitted.map { it.session.exercises }, budgets, targets, constraints, prescriptionFor, preferFocus = priorityMuscles)
         balanced.notes.forEach { explanations += Explanation.rule(it, rules.volume.id) }
 
+        // 6b. Região priorizada em mais sessões da semana (ex.: glúteos 3×), só com o tempo que sobrou.
+        val withFrequency = balanced.sessions.map { it.toMutableList() }
+        for (region in profile.priorities.sortedBy { it.ordinal }) {
+            for (note in ensureFrequency(withFrequency, budgets, region, targets, constraints, prescriptionFor)) explanations += Explanation.rule(note, rules.priority.id)
+        }
+
         val sessions = baseSessions.indices.map { i ->
-            val items = balanced.sessions[i]
+            val items = prioritizeOrder(withFrequency[i], priorityMuscles)
             baseSessions[i].copy(
                 exercises = items,
                 day = assignment.dayForSession[i].day,
@@ -161,7 +170,10 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
             rules.prescription.id,
         )
 
-        // 7. Avisos de volume
+        // 7. Avisos de volume. Com prioridade, músculos de fora dela que ficaram um pouco abaixo da
+        // manutenção viram um aviso só (é o preço esperado da prioridade, não um problema por músculo).
+        val priorityRegionMuscles = kb.musclesOf(profile.priorities)
+        val belowMaintenance = mutableListOf<String>()
         for ((m, t) in targets) {
             val v = weekly[m] ?: 0.0
             if (v > t.max + 1e-9) {
@@ -177,20 +189,41 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
             }
             if (v + 1e-9 < t.min) {
                 val direct = sessions.any { s -> s.exercises.any { m in it.exercise.primaryMuscles } }
-                val why = if (direct) "o tempo disponível limita o volume" else "nenhum exercício direto compatível com seu equipamento/restrições"
+                val possible = kb.exercises.any { m in it.primaryMuscles && Eligibility.isAllowed(it, constraints) }
+                if (profile.priorities.isNotEmpty() && m !in priorityRegionMuscles && possible) {
+                    belowMaintenance += "${kb.muscleName(m).lowercase()} ${fmt(v)} de ${fmt(t.min)}"
+                    continue
+                }
+                val why = when {
+                    direct -> "o tempo disponível limita o volume"
+                    possible -> "não coube um exercício direto no tempo das sessões"
+                    else -> "nenhum exercício direto compatível com seu equipamento/restrições"
+                }
                 warnings += Explanation.rule(
                     "Volume de ${kb.muscleName(m).lowercase()} planejado em ${fmt(v)} séries/semana, abaixo do mínimo de ${fmt(t.min)} — $why.",
                     rules.volume.id,
                 )
             }
         }
+        if (belowMaintenance.isNotEmpty()) {
+            warnings += Explanation.rule(
+                "Com a prioridade em ${profile.priorities.joinToString(" e ") { it.label.lowercase() }}, sobrou menos tempo para o resto e " +
+                    "alguns músculos ficaram abaixo do mínimo de manutenção (séries/semana planejadas de mínimo): " +
+                    "${belowMaintenance.joinToString()}. Para equilibrar, acrescente um dia de treino ou alguns minutos por treino " +
+                    "— ou aceite essa fase de foco.",
+                rules.volume.id,
+            )
+        }
 
         if (profile.primaryGoal.spotReductionNotice || profile.secondaryGoal?.spotReductionNotice == true) {
             explanations += spotReductionNotice()
         }
 
+        val draft = Program(split, focus, tier, sessions, weekly, targets, explanations, warnings, profile.priorities)
+        // 8. Seu objetivo × seu treino: confere o que foi gerado e mostra em números (vem primeiro).
+        val report = alignment.check(draft, profile)
         return ProgramResult.Generated(
-            Program(split, focus, tier, sessions, weekly, targets, explanations, warnings)
+            draft.copy(explanations = report.lines + explanations, warnings = report.warnings + warnings)
         )
     }
 
@@ -214,10 +247,76 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
             }
         }
         val forDays = kb.splits.filter { it.daysPerWeek == nDays }
+        // Com região priorizada, prefere o modelo cuja ênfase cobre a prioridade (ex.: inferiores 3× para glúteos);
+        // sem prioridade, prefere os modelos equilibrados (sem ênfase).
+        fun fit(s: SplitTemplate): Int =
+            if (profile.priorities.isEmpty()) (if (s.emphasis.isEmpty()) 1 else -1)
+            else (s.emphasis intersect profile.priorities).size * 2 - (if (s.emphasis.isNotEmpty() && (s.emphasis intersect profile.priorities).isEmpty()) 3 else 0)
         return forDays.filter { it.suits(profile.tier, profile.focus) }
-            .sortedWith(compareByDescending<SplitTemplate> { it.priority }.thenBy { it.id.value })
+            .sortedWith(compareByDescending<SplitTemplate> { fit(it) }.thenByDescending { it.priority }.thenBy { it.id.value })
             .firstOrNull()
+            ?: forDays.filter { it.emphasis.isEmpty() }.sortedByDescending { it.priority }.firstOrNull()
             ?: forDays.sortedByDescending { it.priority }.firstOrNull()
+    }
+
+    /**
+     * Garante trabalho direto na região priorizada em mais sessões (até a frequência mínima da regra):
+     * um acessório por sessão que ainda não treina a região, para o músculo da região mais longe da meta,
+     * só onde cabe no tempo do dia e sem passar do teto semanal de nenhum músculo.
+     */
+    private fun ensureFrequency(
+        sessions: List<MutableList<PlannedExercise>>, budgets: List<Int>, region: BodyRegion, targets: Map<MuscleId, VolumeTarget>,
+        constraints: UserConstraints, prescriptionFor: (SlotRole, Exercise) -> RepPrescription,
+    ): List<String> {
+        val muscles = kb.trackedMuscles.filter { it.focusRegion == region && it.fillPattern != null }
+        if (muscles.isEmpty()) return emptyList()
+        val ids = muscles.map { it.id }.toSet()
+        fun direct(list: List<PlannedExercise>) = list.any { e -> e.exercise.primaryMuscles.any { it in ids } }
+        val need = rules.priority.params.minFrequency(region, sessions.size)
+        val minSets = rules.volume.params.minSetsPerExercise
+        val notes = mutableListOf<String>()
+        var have = sessions.count { direct(it) }
+        val order = sessions.indices.filter { !direct(sessions[it]) }.sortedByDescending { budgets[it] - clock.estimateMinutes(sessions[it]) }
+        for (si in order) {
+            if (have >= need) break
+            val weekly = calc.ofExercises(sessions.flatten())
+            // Músculo da região mais longe da meta primeiro.
+            val byDeficit = muscles.sortedByDescending { m -> targets[m.id]?.let { t -> (t.target - (weekly[m.id] ?: 0.0)) / t.target } ?: 0.0 }
+            for (m in byDeficit) {
+                val slot = Slot(m.fillPattern!!, SlotRole.ACCESSORY, minSets, targetMuscle = m.id)
+                val usedInWeek = sessions.flatten().groupingBy { it.exercise.id }.eachCount()
+                val ex = selector.select(slot, constraints, sessions[si].map { it.exercise.id }.toSet(), usedInWeek) ?: continue
+                val planned = PlannedExercise(ex, SlotRole.ACCESSORY, minSets, prescriptionFor(SlotRole.ACCESSORY, ex), slot = slot)
+                if (clock.estimateMinutes(sessions[si] + planned) > budgets[si]) continue
+                val overshoots = (ex.primaryMuscles + ex.secondaryMuscles).any { o ->
+                    targets[o]?.let { t -> (weekly[o] ?: 0.0) + minSets * calc.credit(planned, o) > t.max + 1e-9 } == true
+                }
+                if (overshoots) continue
+                sessions[si].add(planned)
+                have++
+                notes += "Prioridade ${region.label.lowercase()}: ${ex.name} incluído em mais um treino da semana (${have}×/semana)."
+                break
+            }
+        }
+        return notes
+    }
+
+    /**
+     * Ordem dentro da hierarquia do treino: os compostos (principal/secundário) da região priorizada abrem a
+     * sessão; os acessórios da prioridade abrem o bloco de acessórios. Assim ninguém começa o dia de perna
+     * com rosca, e quem prioriza glúteos começa pela elevação pélvica ou pelo agachamento.
+     */
+    private fun prioritizeOrder(items: List<PlannedExercise>, priority: Set<MuscleId>): List<PlannedExercise> {
+        if (priority.isEmpty()) return items
+        fun hits(e: PlannedExercise) = e.exercise.primaryMuscles.any { it in priority }
+        return items.withIndex().sortedWith(compareBy<IndexedValue<PlannedExercise>> { (_, e) ->
+            when {
+                e.role != SlotRole.ACCESSORY && hits(e) -> 0
+                e.role != SlotRole.ACCESSORY -> 1
+                hits(e) -> 2
+                else -> 3
+            }
+        }.thenBy { it.index }).map { it.value }
     }
 
     private fun spotReductionNotice(): Explanation {

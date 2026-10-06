@@ -124,7 +124,9 @@ CREATE TABLE programs (
     kb_content_version   TEXT NOT NULL,
     active               INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0, 1)),
     -- {"explanations": [...], "warnings": [...]} (JSON validado pelo app; o SQLite do Android pode não ter JSON1)
-    explanations_json    TEXT
+    explanations_json    TEXT,
+    -- Regiões priorizadas quando o programa foi gerado (ex.: "GLUTES,LEGS"); NULL = equilibrado. Versão 2.
+    priorities           TEXT
 );
 
 CREATE TABLE program_sessions (

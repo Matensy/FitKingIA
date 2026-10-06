@@ -45,6 +45,7 @@ class KnowledgeReader(private val c: SqlDatabase) {
             Triple(it.str("exercise_id"), Joint.valueOf(it.str("joint")), it.int("demand"))
         }.groupBy { it.first }
         val subs = multi("SELECT exercise_id AS k, substitute_id AS v FROM exercise_substitutions ORDER BY exercise_id, rank")
+        val focus = multi("SELECT exercise_id AS k, muscle_id AS v FROM exercise_focus ORDER BY exercise_id, muscle_id")
 
         val exercises = query("SELECT * FROM exercises ORDER BY id") { rs ->
             val id = rs.str("id")
@@ -66,6 +67,7 @@ class KnowledgeReader(private val c: SqlDatabase) {
                 staple = rs.int("staple"),
                 maxTier = rs.strOrNull("max_tier")?.let(TrainingTier::valueOf),
                 timed = rs.int("timed") == 1,
+                focusMuscles = focus[id].orEmpty().map(::MuscleId).toSet(),
             )
         }
 
@@ -84,6 +86,7 @@ class KnowledgeReader(private val c: SqlDatabase) {
                 slots.filter { it.first == split && it.second == pos }.map { it.third })
         }.groupBy({ it.first }, { it.second })
         val focuses = multi("SELECT split_id AS k, focus AS v FROM split_focuses")
+        val emphasis = multi("SELECT split_id AS k, region AS v FROM split_emphasis")
         val claimSources = query("SELECT * FROM claim_sources ORDER BY claim_id, source_id") { rs ->
             rs.str("claim_id") to ClaimSource(SourceId(rs.str("source_id")), Stance.valueOf(rs.str("stance")), rs.strOrNull("note"))
         }.groupBy({ it.first }, { it.second })
@@ -91,7 +94,7 @@ class KnowledgeReader(private val c: SqlDatabase) {
         return KnowledgeBase(
             muscles = query("SELECT * FROM muscles ORDER BY rowid") { rs ->
                 Muscle(MuscleId(rs.str("id")), rs.str("name"), rs.str("region"), rs.int("volume_tracked") == 1,
-                    rs.double("volume_factor"), rs.strOrNull("fill_pattern_id")?.let(::PatternId))
+                    rs.double("volume_factor"), rs.strOrNull("fill_pattern_id")?.let(::PatternId), rs.strOrNull("focus_region")?.let(BodyRegion::valueOf))
             },
             patterns = query("SELECT * FROM movement_patterns ORDER BY rowid") { rs ->
                 val id = rs.str("id")
@@ -109,7 +112,8 @@ class KnowledgeReader(private val c: SqlDatabase) {
             splits = query("SELECT * FROM split_templates ORDER BY days_per_week, priority DESC, id") { rs ->
                 val id = rs.str("id")
                 SplitTemplate(SplitId(id), rs.str("name"), rs.int("days_per_week"), TrainingTier.valueOf(rs.str("min_tier")),
-                    focuses[id].orEmpty().map(TrainingFocus::valueOf).toSet(), rs.int("priority"), rs.str("rationale"), sessions[id].orEmpty())
+                    focuses[id].orEmpty().map(TrainingFocus::valueOf).toSet(), rs.int("priority"), rs.str("rationale"), sessions[id].orEmpty(),
+                    emphasis[id].orEmpty().map(BodyRegion::valueOf).toSet())
             },
             sports = query("SELECT * FROM sports ORDER BY rowid") { rs ->
                 Sport(SportId(rs.str("id")), rs.str("name"), rs.int("lower_body_load"), rs.int("upper_body_load"),

@@ -7,6 +7,7 @@ import kotlin.test.assertTrue
 
 class CliSmokeTest {
     private fun run(vararg args: String): String {
+        System.setProperty("fitking.today", "2026-10-02") // sexta-feira: dia de treino no perfil de exemplo
         val buf = ByteArrayOutputStream()
         val old = System.out
         System.setOut(PrintStream(buf, true, Charsets.UTF_8))

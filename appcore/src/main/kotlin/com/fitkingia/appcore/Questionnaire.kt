@@ -20,6 +20,8 @@ data class Answers(
     var waistCm: Int? = null,
     var primaryGoal: Goal? = null,
     var secondaryGoal: Goal? = null,
+    /** Regiões a priorizar (até [Questionnaire.MAX_PRIORITIES]). Vazio = equilibrado. */
+    var priorities: MutableSet<BodyRegion> = linkedSetOf(),
     var experience: ExperienceLevel? = null,
     var environment: EnvironmentId? = null,
     var equipment: MutableSet<EquipmentId> = mutableSetOf(),
@@ -38,7 +40,7 @@ data class Answers(
 ) {
     fun deepCopy(): Answers = copy(
         equipment = equipment.toMutableSet(), minutesByDay = minutesByDay.toMutableMap(), sports = sports.toMutableList(),
-        safety = safety.toMutableMap(), pains = LinkedHashMap(pains),
+        safety = safety.toMutableMap(), pains = LinkedHashMap(pains), priorities = LinkedHashSet(priorities),
     )
 
     val trainingDays: List<DayAvailability>
@@ -68,6 +70,7 @@ data class Answers(
         preferredSplit = preferredSplit,
         maxTrainingDays = maxDays,
         activityLevel = activity ?: ActivityLevel.MODERATE,
+        priorities = priorities.toSet(),
     )
 
     companion object {
@@ -79,6 +82,7 @@ data class Answers(
             maxDays = profile.maxTrainingDays, sports = profile.sports.toMutableList(), activity = profile.activityLevel,
             safety = safety.toMutableMap(), pains = profile.limitations.associate { it.joint to it.severity }.toMap(LinkedHashMap()),
             preferredSplit = profile.preferredSplit, sweat = sweat, hot = hot,
+            priorities = profile.priorities.toCollection(linkedSetOf()),
         )
     }
 }
@@ -92,6 +96,7 @@ enum class Step(val title: String, val subtitle: String? = null) {
     WAIST("Circunferência da cintura", "Opcional. Medida na altura do umbigo, sem apertar. Serve para acompanhar a cintura e calcular a relação cintura/altura."),
     GOAL("Qual é o seu objetivo principal?"),
     SECONDARY_GOAL("Tem um objetivo secundário?", "Opcional."),
+    PRIORITY("Quer dar prioridade a alguma parte do corpo?", "Escolha até 2. O motor aumenta o volume e a frequência dessa região e coloca os exercícios dela no começo do treino. As demais regiões continuam sendo treinadas."),
     EXPERIENCE("Você já treina?"),
     ENVIRONMENT("Onde você vai treinar?"),
     EQUIPMENT("Quais equipamentos você tem?", "Já marcamos o padrão do local. Toque para ajustar."),
@@ -165,6 +170,16 @@ object Questionnaire {
         }
         // Pergunta de gestação só existe para o sexo feminino.
         if (sex == Sex.MALE) a.safety.remove("pregnancy")
+    }
+
+    const val MAX_PRIORITIES = 2
+
+    /** Liga/desliga uma região; respeita o limite de escolhas (a mais antiga sai). */
+    fun togglePriority(a: Answers, r: BodyRegion) {
+        if (!a.priorities.remove(r)) {
+            a.priorities.add(r)
+            while (a.priorities.size > MAX_PRIORITIES) a.priorities.remove(a.priorities.first())
+        }
     }
 
     /** Intensidade da dor por toque. */

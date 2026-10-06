@@ -64,6 +64,17 @@ class ExerciseSelector(private val kb: KnowledgeBase) {
         if (ex.id in c.history) s += 8
         // Variedade: variações diferentes dos compostos ao longo da semana; acessórios podem repetir.
         s -= (usedInWeek[ex.id] ?: 0) * if (slot.role == SlotRole.ACCESSORY) 5.0 else 12.0
+        // Região priorizada: no mesmo slot, prefere o exercício que tem o músculo prioritário como principal
+        // (ex.: no slot de dobradiça, stiff/elevação pélvica antes de extensão lombar para quem prioriza glúteos).
+        if (c.priorityMuscles.isNotEmpty()) {
+            val p = kb.ruleSet.priority.params
+            val bonus = when {
+                ex.focus.any { it in c.priorityMuscles } -> p.focusBonus
+                ex.primaryMuscles.any { it in c.priorityMuscles } -> p.primaryBonus
+                else -> 0.0
+            }
+            s += bonus * (if (slot.role == SlotRole.ACCESSORY) 0.5 else 1.0)
+        }
         // Ao relatar dor, preferir quem poupa a articulação mesmo dentro do permitido.
         for (lim in c.limitations) s -= ex.demand(lim.joint) * 4.0
         return s

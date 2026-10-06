@@ -7,6 +7,7 @@ import com.fitkingia.core.model.*
 import com.fitkingia.core.program.PlannedSession
 import com.fitkingia.core.program.Program
 import com.fitkingia.core.program.VolumeCalculator
+import com.fitkingia.core.program.VolumeTargets
 import com.fitkingia.core.progression.ExerciseLog
 import com.fitkingia.core.progression.SetLog
 import com.fitkingia.knowledge.sql.SqlDatabase
@@ -100,6 +101,7 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
         }
         setPref(PREF_MAX_DAYS, p.maxTrainingDays?.toString())
         setPref(PREF_SPLIT, p.preferredSplit?.value)
+        setPref(PREF_PRIORITIES, p.priorities.takeIf { it.isNotEmpty() }?.joinToString(",") { it.name })
         setPref(PREF_SWEAT, sweat.name)
         setPref(PREF_HOT, hot.toString())
 
@@ -152,6 +154,8 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
             exerciseHistory = db.query("SELECT DISTINCT exercise_id FROM workout_sets") { ExerciseId(it.str("exercise_id")) }.toSet(),
             preferredSplit = pref(PREF_SPLIT)?.let(::SplitId),
             maxTrainingDays = pref(PREF_MAX_DAYS)?.toIntOrNull(),
+            priorities = pref(PREF_PRIORITIES).orEmpty().split(",").filter { it.isNotBlank() }
+                .mapNotNull { n -> BodyRegion.values().firstOrNull { it.name == n } }.toCollection(linkedSetOf()),
             activityLevel = ActivityLevel.valueOf(r.activity),
         )
     }
@@ -193,8 +197,9 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
         }.toString()
         val version = kb.meta["content_version"] ?: "?"
         val pid = db.insert(
-            "INSERT INTO programs(user_id, split_id, focus, tier, created_at, kb_content_version, active, explanations_json) VALUES ($USER,?,?,?,?,?,1,?)",
-            listOf(program.split.id.value, program.focus.name, program.tier.name, now.toString(), version, explanations),
+            "INSERT INTO programs(user_id, split_id, focus, tier, created_at, kb_content_version, active, explanations_json, priorities) VALUES ($USER,?,?,?,?,?,1,?,?)",
+            listOf(program.split.id.value, program.focus.name, program.tier.name, now.toString(), version, explanations,
+                program.priorities.takeIf { it.isNotEmpty() }?.joinToString(",") { it.name }),
         )
         program.sessions.forEachIndexed { i, s -> insertSession(pid, i, s) }
         db.execute(
@@ -231,9 +236,10 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
     }
 
     fun activeProgram(): StoredProgram? {
-        data class Head(val id: Long, val split: String, val focus: String, val tier: String, val created: String, val version: String, val json: String?)
+        data class Head(val id: Long, val split: String, val focus: String, val tier: String, val created: String, val version: String, val json: String?, val priorities: String?)
         val h = db.single("SELECT * FROM programs WHERE user_id=$USER AND active=1 ORDER BY id DESC LIMIT 1") {
-            Head(it.long("id"), it.str("split_id"), it.str("focus"), it.str("tier"), it.str("created_at"), it.str("kb_content_version"), it.strOrNull("explanations_json"))
+            Head(it.long("id"), it.str("split_id"), it.str("focus"), it.str("tier"), it.str("created_at"), it.str("kb_content_version"),
+                it.strOrNull("explanations_json"), it.strOrNull("priorities"))
         } ?: return null
         val split = kb.splits.firstOrNull { it.id.value == h.split } ?: return null
         data class SRow(val id: Long, val key: String, val name: String, val day: Int?, val budget: Int?, val est: Int)
@@ -254,17 +260,20 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
                     )
                 }
             }.filterNotNull()
-            PlannedSession(s.key, s.name, items, s.day?.let(DayOfWeek::of), s.budget, s.est)
+            // Nome pelo modelo atual (programas antigos passam a mostrar os nomes novos, em português).
+            val name = split.sessions.firstOrNull { it.key == s.key }?.name ?: s.name
+            PlannedSession(s.key, name, items, s.day?.let(DayOfWeek::of), s.budget, s.est)
         }
         val focus = TrainingFocus.valueOf(h.focus)
         val tier = TrainingTier.valueOf(h.tier)
-        val volume = kb.ruleSet.volume.params
-        val target = volume.target(focus, tier)
+        val priorities = h.priorities.orEmpty().split(",").filter { it.isNotBlank() }
+            .mapNotNull { n -> BodyRegion.values().firstOrNull { it.name == n } }.toSet()
         val json = h.json?.let { Json.parseToJsonElement(it).jsonObject }
         val program = Program(
-            split, focus, tier, sessions, VolumeCalculator(volume).weekly(sessions),
-            kb.trackedMuscles.associate { it.id to target.scaled(it.volumeFactor) },
+            split, focus, tier, sessions, VolumeCalculator(kb.ruleSet.volume.params).weekly(sessions),
+            VolumeTargets(kb).forProgram(focus, tier, priorities),
             Codec.explanationsFrom(json?.get("explanations")?.jsonArray), Codec.explanationsFrom(json?.get("warnings")?.jsonArray),
+            priorities = priorities,
         )
         return StoredProgram(h.id, program, LocalDateTime.parse(h.created), h.version, sessionRows.associate { it.key to it.id })
     }
@@ -521,6 +530,8 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
         const val USER = 1L
         const val PREF_MAX_DAYS = "max_training_days"
         const val PREF_SPLIT = "preferred_split"
+        const val PREF_PRIORITIES = "priority_regions"
+        const val PREF_PRIORITY_HINT = "priority_hint"
         const val PREF_SWEAT = "sweat_level"
         const val PREF_HOT = "hot_climate"
         const val PREF_BAR_KG = "bar_kg"
@@ -530,16 +541,24 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
     }
 }
 
-/** Criação e migração do user.db (PRAGMA user_version). */
+/**
+ * Criação e migração do user.db (PRAGMA user_version). Banco novo recebe o user.sql inteiro (já na
+ * versão atual); banco antigo recebe só os passos que faltam — nunca se apaga dado do usuário.
+ */
 object UserDb {
-    const val VERSION = 1
+    const val VERSION = 2
 
     fun migrate(db: SqlDatabase, schemaSql: String) {
         db.execute("PRAGMA foreign_keys = ON")
         val v = db.single("PRAGMA user_version") { it.int("user_version") } ?: 0
-        if (v < 1) {
-            db.transaction { db.runScript(schemaSql) }
-            db.execute("PRAGMA user_version = $VERSION")
+        if (v >= VERSION) return
+        db.transaction {
+            if (v < 1) db.runScript(schemaSql)
+            else {
+                // v2: regiões priorizadas gravadas junto do programa.
+                if (v < 2) db.execute("ALTER TABLE programs ADD COLUMN priorities TEXT")
+            }
         }
+        db.execute("PRAGMA user_version = $VERSION")
     }
 }

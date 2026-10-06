@@ -26,6 +26,8 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
         targets: Map<MuscleId, VolumeTarget>,
         constraints: UserConstraints,
         prescriptionFor: (SlotRole, Exercise) -> RepPrescription,
+        /** Músculos priorizados: ao somar séries para eles, preferir exercícios com foco neles. */
+        preferFocus: Set<MuscleId> = emptySet(),
     ): Outcome {
         val s = sessions.map { it.toMutableList() }
         val notes = mutableListOf<String>()
@@ -39,7 +41,7 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
                 .sortedWith(compareByDescending<Map.Entry<MuscleId, VolumeTarget>> { (m, t) -> (t.target - (weekly[m] ?: 0.0)) / t.target }
                     .thenBy { it.key.value })
             val progressed = deficits.any { (m, t) ->
-                addSet(s, budgets, m, weekly, targets) ||
+                addSet(s, budgets, m, weekly, targets, m in preferFocus) ||
                     ((weekly[m] ?: 0.0) < t.min - EPS || s.none { l -> l.any { m in it.exercise.primaryMuscles } }) &&
                     addFill(s, budgets, m, constraints, prescriptionFor, filled, notes)
             }
@@ -53,7 +55,7 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
             val excess = targets.entries.filter { (m, t) -> (weekly[m] ?: 0.0) > t.max + EPS }
                 .sortedByDescending { (m, t) -> (weekly[m] ?: 0.0) - t.max }
             if (excess.isEmpty()) break
-            val progressed = excess.any { (m, _) -> removeSet(s, m, weekly, targets) } ||
+            val progressed = excess.any { (m, _) -> removeSet(s, m, weekly, targets, m in preferFocus) } ||
                 excess.any { (m, t) -> removeExercise(s, m, t, weekly, targets, notes) }
             if (!progressed) break
         }
@@ -64,7 +66,7 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
 
     private fun addSet(
         s: List<MutableList<PlannedExercise>>, budgets: List<Int>, m: MuscleId,
-        weekly: Map<MuscleId, Double>, targets: Map<MuscleId, VolumeTarget>,
+        weekly: Map<MuscleId, Double>, targets: Map<MuscleId, VolumeTarget>, focusFirst: Boolean = false,
     ): Boolean {
         data class Cand(val si: Int, val ei: Int, val spill: Int, val headroom: Int)
         val cands = mutableListOf<Cand>()
@@ -82,7 +84,8 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
             cands += Cand(si, ei, spill, budgets[si] - clock.estimateMinutes(trial))
         }
         val best = cands.sortedWith(
-            compareBy<Cand> { if (s[it.si][it.ei].exercise.mechanic == Mechanic.ISOLATION) 0 else 1 }
+            compareBy<Cand> { if (focusFirst && m !in s[it.si][it.ei].exercise.focus) 1 else 0 }
+                .thenBy { if (s[it.si][it.ei].exercise.mechanic == Mechanic.ISOLATION) 0 else 1 }
                 .thenBy { it.spill }
                 .thenByDescending { it.headroom }
                 .thenBy { s[it.si][it.ei].sets }
@@ -127,11 +130,15 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
 
     private fun removeSet(
         s: List<MutableList<PlannedExercise>>, m: MuscleId,
-        weekly: Map<MuscleId, Double>, targets: Map<MuscleId, VolumeTarget>,
+        weekly: Map<MuscleId, Double>, targets: Map<MuscleId, VolumeTarget>, keepFocused: Boolean = false,
     ): Boolean {
         val best = s.withIndex().flatMap { (si, list) -> list.withIndex().map { (ei, ex) -> Triple(si, ei, ex) } }
             .filter { (_, _, ex) -> calc.credit(ex, m) > 0 && ex.sets > rules.minSetsPerExercise && !starves(ex, m, 1, weekly, targets) }
-            .sortedWith(compareByDescending<Triple<Int, Int, PlannedExercise>> { calc.credit(it.third, m) }
+            // O composto principal da prioridade não desce abaixo das séries-base do modelo: antes disso sai um acessório inteiro.
+            .filter { (_, _, ex) -> !(keepFocused && m in ex.exercise.focus && ex.role == SlotRole.MAIN && ex.sets <= (ex.slot?.baseSets ?: 3)) }
+            // Músculo priorizado acima do teto: tira primeiro de quem só o trabalha de carona (ex.: agachamento para glúteos).
+            .sortedWith(compareBy<Triple<Int, Int, PlannedExercise>> { if (keepFocused && m in it.third.exercise.focus) 1 else 0 }
+                .thenByDescending { calc.credit(it.third, m) }
                 .thenBy { it.third.role.keepPriority }
                 .thenByDescending { it.third.sets }
                 .thenBy { it.first }.thenBy { it.second })

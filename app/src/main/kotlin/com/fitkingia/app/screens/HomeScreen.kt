@@ -7,6 +7,7 @@ import com.fitkingia.app.Tab
 import com.fitkingia.app.ui.*
 import com.fitkingia.appcore.DayPlan
 import com.fitkingia.appcore.DayStatus
+import com.fitkingia.appcore.Step
 import com.fitkingia.core.model.Fmt
 import com.fitkingia.core.model.SleepQuality
 import com.fitkingia.core.program.PlannedSession
@@ -53,10 +54,25 @@ class HomeScreen : Screen() {
                 text("⚠️ Liberado com cautela — toque para ver os cuidados", 14f, C.warning, bottom = 2)
             }
             todayCard(root, view)
+            if (fit.showPriorityHint()) priorityHint(root)
         }
         waterCard(root)
         sleepCard(root)
         fit.week()?.let { weekStrip(root, it.days) }
+    }
+
+    /** Novidade para quem já tinha programa: escolher uma região para priorizar (ex.: glúteos). */
+    private fun priorityHint(root: LinearLayout) = root.card(stroke = C.accent) {
+        h3("🍑 Quer focar numa parte do corpo?")
+        muted("Agora o motor monta o treino com prioridade: glúteos, pernas, costas, braços… Mais séries e mais dias para a região escolhida, sem largar o resto.", 14f)
+        buttonRow(
+            Triple("Agora não", Btn.SECONDARY) { fit.dismissPriorityHint(); refresh() },
+            Triple("Escolher", Btn.PRIMARY) {
+                fit.dismissPriorityHint()
+                push(QuestionnaireScreen(fit.currentAnswers(), startAt = Step.PRIORITY))
+            },
+            bottom = 2,
+        )
     }
 
     private fun noProgram(root: LinearLayout) {

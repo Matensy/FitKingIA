@@ -9,6 +9,7 @@ import com.fitkingia.appcore.Questionnaire
 import com.fitkingia.appcore.Step
 import com.fitkingia.appcore.SubmitOutcome
 import com.fitkingia.core.model.*
+import com.fitkingia.core.program.GoalAlignment
 import com.fitkingia.core.program.ProgramResult
 import com.fitkingia.core.program.pt
 import com.fitkingia.core.program.ptCapitalized
@@ -19,8 +20,13 @@ import java.time.DayOfWeek
  * Questionário inicial: uma pergunta por página, respostas só por toque. No fim, o motor
  * determinístico gera o programa a partir das respostas.
  */
-class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean = false) : Screen() {
-    private var index = 0
+/**
+ * Questionário por toque. [startAt] abre direto numa pergunta (ex.: a Home sugerindo escolher uma
+ * prioridade); nesse caso "Próximo" volta ao resumo em vez de passar por todas as perguntas de novo.
+ */
+class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean = false, startAt: Step? = null) : Screen() {
+    private var index = startAt?.let { Questionnaire.steps(a).indexOf(it).coerceAtLeast(0) } ?: 0
+    private var backToSummary = startAt != null
     private var busy = false
     private var hint: String? = null
 
@@ -71,6 +77,20 @@ class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean 
             }
             Step.GOAL -> goals(root, primary = true)
             Step.SECONDARY_GOAL -> goals(root, primary = false)
+            Step.PRIORITY -> {
+                root.option("Nenhuma — treino equilibrado", "O volume fica distribuído entre todas as regiões", a.priorities.isEmpty()) {
+                    a.priorities.clear(); refresh()
+                }
+                root.chips(BodyRegion.values().map { it to "${it.emoji} ${it.label}" }, { it in a.priorities }) { r ->
+                    Questionnaire.togglePriority(a, r); refresh()
+                }
+                if (a.priorities.isNotEmpty()) root.card(stroke = C.rule) {
+                    explanation(com.fitkingia.core.explain.Explanation.rule(
+                        "Prioridade: ${a.priorities.joinToString(" e ") { it.label.lowercase() }}. O motor dá mais séries e mais dias " +
+                            "de treino para essa região e começa os treinos por ela — mas não dá para \"escolher\" de onde a gordura sai.",
+                    ))
+                }
+            }
             Step.EXPERIENCE -> ExperienceLevel.values().forEach { e ->
                 root.option(e.label, e.tier.label, a.experience == e) { a.experience = e; next() }
             }
@@ -156,6 +176,7 @@ class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean 
             Step.SUMMARY -> "Gerar meu programa"
             Step.WAIST -> if (a.waistCm == null) "Pular" else "Próximo"
             Step.SECONDARY_GOAL -> if (a.secondaryGoal == null) "Pular" else "Próximo"
+            Step.PRIORITY -> if (a.priorities.isEmpty()) "Equilibrado" else "Próximo"
             else -> "Próximo"
         }
         if (index == 0 && firstRun) root.button(nextLabel) { next() }
@@ -181,7 +202,8 @@ class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean 
         val blocker = Questionnaire.blocker(step, a, fit.kb)
         if (blocker != null) { hint = blocker; refresh(); return }
         hint = null
-        if (index < steps.lastIndex) index++
+        if (backToSummary) { backToSummary = false; index = steps.lastIndex }
+        else if (index < steps.lastIndex) index++
         main.refreshTop(this)
     }
 
@@ -284,6 +306,7 @@ class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean 
             item("Cintura", a.waistCm?.let { "$it cm" } ?: "não informada", Step.WAIST)
             item("Objetivo", a.primaryGoal?.label ?: "—", Step.GOAL)
             item("Secundário", a.secondaryGoal?.label ?: "nenhum", Step.SECONDARY_GOAL)
+            item("Prioridade", a.priorities.joinToString { it.label }.ifEmpty { "equilibrado" }, Step.PRIORITY)
             item("Experiência", a.experience?.label ?: "—", Step.EXPERIENCE)
             item("Local", a.environment?.let { kb.environment(it).name } ?: "—", Step.ENVIRONMENT)
             item("Equipamentos", "${a.equipment.size}", Step.EQUIPMENT)
@@ -337,12 +360,15 @@ class ProgramReadyScreen(private val outcome: SubmitOutcome) : Screen() {
                     h3("Liberado com cautela")
                     outcome.screening.messages.forEach { explanation(it) }
                 }
-                if (p.warnings.isNotEmpty()) {
+                val kb = fit.kb
+                root.goalSection(GoalAlignment(kb).check(p, outcome.profile), kb)
+                val warnings = p.warnings.filterNot { kb.isGoalCheck(it) }
+                if (warnings.isNotEmpty()) {
                     root.h2("Avisos do motor")
-                    root.card(stroke = C.warning) { p.warnings.forEach { explanation(it) } }
+                    root.card(stroke = C.warning) { warnings.forEach { explanation(it) } }
                 }
                 root.h2("Por que este programa?")
-                root.card { p.explanations.forEach { explanation(it) } }
+                root.card { p.explanations.filterNot { kb.isGoalCheck(it) }.forEach { explanation(it) } }
                 root.button("Ver meu treino de hoje") { main.setRoot(HomeScreen()) }
             }
             is ProgramResult.Refused -> {

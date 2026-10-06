@@ -32,7 +32,7 @@ import java.io.File
 
 @Serializable data class MuscleSeed(
     val id: String, val name: String, val region: String, val volumeTracked: Boolean,
-    val volumeFactor: Double = 1.0, val fillPattern: String? = null,
+    val volumeFactor: Double = 1.0, val fillPattern: String? = null, val focusRegion: String? = null,
 )
 
 @Serializable data class PatternSeed(val id: String, val name: String, val description: String, val related: List<String> = emptyList())
@@ -53,6 +53,8 @@ import java.io.File
     val staple: Int = 2,
     val maxTier: String? = null,
     val timed: Boolean = false,
+    /** Subconjunto de `primary` que justifica o exercício (ex.: agachamento → quads). Vazio = todos os principais. */
+    val focus: List<String> = emptyList(),
 )
 
 @Serializable data class SlotSeed(
@@ -64,7 +66,7 @@ import java.io.File
 
 @Serializable data class SplitSeed(
     val id: String, val name: String, val daysPerWeek: Int, val minTier: String, val focuses: List<String>,
-    val priority: Int, val rationale: String, val sessions: List<SessionSeed>,
+    val priority: Int, val rationale: String, val sessions: List<SessionSeed>, val emphasis: List<String> = emptyList(),
 )
 
 @Serializable data class SportSeed(

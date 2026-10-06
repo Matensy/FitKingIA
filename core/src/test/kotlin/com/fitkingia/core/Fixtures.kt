@@ -146,6 +146,10 @@ object Fixtures {
             listOf(BmiBand(18.5, "abaixo do peso"), BmiBand(25.0, "adequado"), BmiBand(30.0, "sobrepeso"), BmiBand(1000.0, "obesidade")), 0.5, 0.6,
         )),
         gamification = Rule(RuleId("gamification.xp"), GamificationRules(mapOf("workout_completed" to 100, "personal_record" to 200), 1000)),
+        priority = Rule(RuleId("priority.region"), PriorityRules(
+            1.0, 1.3, 1.3, 0.75, 0.8, 1.0, emptyMap(), setOf(BodyRegion.CORE),
+            (1..6).associateWith { minOf(it, 3) }, (1..6).associateWith { minOf(it, 2) }, 2, 8.0, 3.0, 1.0, emptyMap(),
+        )),
     )
 
     val safetyQuestions = listOf(

@@ -24,6 +24,7 @@ data class RuleSet(
     val weightTrend: Rule<WeightTrendRules>,
     val bodyMetrics: Rule<BodyMetricRules>,
     val gamification: Rule<GamificationRules>,
+    val priority: Rule<PriorityRules>,
 )
 
 data class VolumeTarget(val min: Double, val target: Double, val max: Double) {
@@ -154,3 +155,35 @@ data class BodyMetricRules(
 )
 
 data class GamificationRules(val points: Map<String, Int>, val xpPerLevel: Int)
+
+/** Prioridade por região ("quero treinar mais o glúteo"): redistribui volume, frequência e ordem dentro do mesmo tempo. */
+data class PriorityRules(
+    /** Meta da região priorizada: mínimo = alvo normal × [priorityMinOfTarget]; alvo e teto × fatores. */
+    val priorityMinOfTarget: Double,
+    val priorityTargetFactor: Double,
+    val priorityMaxFactor: Double,
+    /** Demais regiões (exceto sinergistas): manutenção para caber a prioridade no mesmo tempo. */
+    val otherMinFactor: Double,
+    val otherTargetFactor: Double,
+    val otherMaxFactor: Double,
+    /** Músculos que trabalham junto com a região e por isso não são reduzidos (ex.: glúteos → quadríceps, posterior). */
+    val synergists: Map<BodyRegion, Set<MuscleId>>,
+    /** Regiões pequenas cuja prioridade não reduz as demais (ex.: abdômen). */
+    val noReductionFor: Set<BodyRegion>,
+    /** Sessões/semana com trabalho focado na região, por nº de dias de treino; regiões de inferiores e demais. */
+    val minFrequencyLower: Map<Int, Int>,
+    val minFrequencyOther: Map<Int, Int>,
+    /** O composto da região prioritária abre a sessão (posição ≤ N). */
+    val leadingPositions: Int,
+    /** Pontuação na seleção: exercício com foco no músculo prioritário / só com ele como principal. */
+    val focusBonus: Double,
+    val primaryBonus: Double,
+    /** Checagem: séries focadas/semana ≥ alvo normal × fator; fração mínima das séries da metade do corpo. */
+    val minFocusedOfTarget: Double,
+    val minShareOfHalf: Map<BodyRegion, Double>,
+) {
+    fun minFrequency(region: BodyRegion, trainingDays: Int): Int {
+        val table = if (region == BodyRegion.GLUTES || region == BodyRegion.LEGS) minFrequencyLower else minFrequencyOther
+        return minOf(table[trainingDays] ?: table.entries.maxByOrNull { it.key }?.value ?: 2, trainingDays)
+    }
+}

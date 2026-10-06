@@ -97,6 +97,7 @@ class AppUiTest {
         tap("Informar cintura"); tap("Próximo")
         tap("Hipertrofia"); tap("Próximo")
         tap("Pular")                      // objetivo secundário
+        tap("Equilibrado")                // prioridade por região
         tap("1–2 anos")
         tap("Academia completa")
         tap("Próximo")                    // equipamentos
@@ -163,6 +164,27 @@ class AppUiTest {
         assertShows("500 /")
         tap("7 h"); tap("Boa")
         assertShows("Sono: 7 h")
+    }
+
+    @Test fun `prioridade escolhida pela Home refaz o programa com a checagem`() {
+        answerQuestionnaire()
+        assertShows("Seu objetivo × seu treino")
+        assertShows("Treino equilibrado")
+        tap("Ver meu treino de hoje")
+        assertShows("Quer focar numa parte do corpo?")
+        tap("Escolher")
+        assertTrue(activity.current is QuestionnaireScreen)
+        assertShows("Quer dar prioridade a alguma parte do corpo?")
+        tap("Glúteos")
+        tap("Próximo")                    // volta direto ao resumo
+        assertShows("Resumo")
+        tap("Gerar meu programa")
+        assertTrue(activity.current is ProgramReadyScreen)
+        assertShows("Seu objetivo × seu treino")
+        assertShows("Séries focadas por semana")
+        assertShows("3 de 3 (mínimo 3)")
+        tap("Ver meu treino de hoje")
+        assertFalse(screenText().contains("Quer focar numa parte do corpo?"))
     }
 
     @Test fun `todas as abas e telas de Mais abrem sem erro`() {

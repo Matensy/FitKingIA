@@ -57,7 +57,10 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "front_squat",
@@ -114,7 +117,10 @@
     ],
     "timed": false,
     "staple": 2,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "goblet_squat",
@@ -170,7 +176,10 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": "NOVICE"
+    "max_tier": "NOVICE",
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "hack_squat",
@@ -225,7 +234,10 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "smith_squat",
@@ -279,7 +291,10 @@
     ],
     "timed": false,
     "staple": 1,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "leg_press",
@@ -334,7 +349,10 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "bodyweight_squat",
@@ -387,7 +405,10 @@
     ],
     "timed": false,
     "staple": 2,
-    "max_tier": "NOVICE"
+    "max_tier": "NOVICE",
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "bulgarian_split_squat",
@@ -443,7 +464,11 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "quads",
+      "glutes"
+    ]
   },
   {
     "id": "dumbbell_split_squat",
@@ -495,7 +520,10 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "walking_lunge",
@@ -551,7 +579,11 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "quads",
+      "glutes"
+    ]
   },
   {
     "id": "reverse_lunge_bodyweight",
@@ -603,7 +635,11 @@
     ],
     "timed": false,
     "staple": 2,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "glutes",
+      "quads"
+    ]
   },
   {
     "id": "split_squat_bodyweight",
@@ -652,7 +688,10 @@
     ],
     "timed": false,
     "staple": 2,
-    "max_tier": "NOVICE"
+    "max_tier": "NOVICE",
+    "focus": [
+      "quads"
+    ]
   },
   {
     "id": "step_up",
@@ -706,7 +745,11 @@
     ],
     "timed": false,
     "staple": 2,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "glutes",
+      "quads"
+    ]
   },
   {
     "id": "leg_extension",
@@ -863,7 +906,11 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "glutes",
+      "hamstrings"
+    ]
   },
   {
     "id": "romanian_deadlift",
@@ -918,7 +965,11 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "hamstrings",
+      "glutes"
+    ]
   },
   {
     "id": "dumbbell_romanian_deadlift",
@@ -972,7 +1023,11 @@
     ],
     "timed": false,
     "staple": 3,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "hamstrings",
+      "glutes"
+    ]
   },
   {
     "id": "single_leg_rdl",
@@ -1026,7 +1081,11 @@
     ],
     "timed": false,
     "staple": 1,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "glutes",
+      "hamstrings"
+    ]
   },
   {
     "id": "single_leg_rdl_bodyweight",
@@ -1075,7 +1134,11 @@
     ],
     "timed": false,
     "staple": 1,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "glutes",
+      "hamstrings"
+    ]
   },
   {
     "id": "kettlebell_swing",
@@ -1131,7 +1194,10 @@
     ],
     "timed": false,
     "staple": 1,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "glutes"
+    ]
   },
   {
     "id": "back_extension",
@@ -1182,7 +1248,11 @@
     ],
     "timed": false,
     "staple": 2,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "glutes",
+      "hamstrings"
+    ]
   },
   {
     "id": "cable_pull_through",
@@ -1232,7 +1302,10 @@
     ],
     "timed": false,
     "staple": 1,
-    "max_tier": null
+    "max_tier": null,
+    "focus": [
+      "glutes"
+    ]
   },
   {
     "id": "barbell_hip_thrust",

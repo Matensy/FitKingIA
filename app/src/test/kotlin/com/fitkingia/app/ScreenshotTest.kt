@@ -101,6 +101,17 @@ class ScreenshotTest {
         a.setRoot(ToolsScreen()); shot("14_ferramentas")
         val sim = SimulatorScreen(); a.setRoot(sim)
         a.setRoot(ProfileScreen()); shot("15_perfil")
+        // Prioridade por região: a amiga que quer treinar glúteo (4 dias, academia completa).
+        val g = fit.currentAnswers()
+        Questionnaire.selectSex(g, Sex.FEMALE)
+        g.primaryGoal = Goal.HYPERTROPHY; g.secondaryGoal = null; g.sports.clear()
+        Questionnaire.applyPreset(g, mapOf(DayOfWeek.MONDAY to 60, DayOfWeek.TUESDAY to 60, DayOfWeek.THURSDAY to 60, DayOfWeek.FRIDAY to 60))
+        Questionnaire.togglePriority(g, BodyRegion.GLUTES)
+        Questionnaire.safetyQuestions(fit.kb, g).forEach { g.safety[it.id] = false }
+        val gq = QuestionnaireScreen(g, startAt = com.fitkingia.appcore.Step.PRIORITY)
+        a.setRoot(gq); shot("30_prioridade")
+        a.setRoot(ProgramReadyScreen(fit.submit(g))); shot("31_programa_gluteos")
+        a.setRoot(ProgramWhyScreen()); shot("32_por_que_programa")
         controller.pause().stop().destroy()
         Graph.override = null; Graph.fit = null
     }

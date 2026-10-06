@@ -36,6 +36,9 @@ data class ProfileFile(
     val preferredSplit: String? = null,
     val activityLevel: String = "MODERATE",
     val safetyAnswers: Map<String, Boolean> = emptyMap(),
+    /** Regiões a priorizar: GLUTES, LEGS, BACK, CHEST, SHOULDERS, ARMS, CORE. */
+    val priorities: List<String> = emptyList(),
+    val maxTrainingDays: Int? = null,
 ) {
     fun toProfile(kb: KnowledgeBase): UserProfile {
         val env = environment?.let { kb.environment(EnvironmentId(it)) }
@@ -51,6 +54,8 @@ data class ProfileFile(
             favoriteExercises = favoriteExercises.map(::ExerciseId).toSet(),
             preferredSplit = preferredSplit?.let(::SplitId),
             activityLevel = ActivityLevel.valueOf(activityLevel),
+            priorities = priorities.map(BodyRegion::valueOf).toSet(),
+            maxTrainingDays = maxTrainingDays,
         )
     }
 

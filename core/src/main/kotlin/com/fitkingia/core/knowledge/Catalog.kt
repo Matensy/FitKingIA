@@ -12,6 +12,8 @@ data class Muscle(
     val volumeFactor: Double = 1.0,
     /** Padrão usado para "completar" volume quando nenhum exercício do plano trabalha este músculo diretamente. */
     val fillPattern: PatternId? = null,
+    /** Região que o usuário escolhe priorizar e que inclui este músculo (ex.: glutes → GLUTES). */
+    val focusRegion: BodyRegion? = null,
 )
 
 data class MovementPattern(
@@ -60,7 +62,15 @@ data class Exercise(
     val maxTier: TrainingTier? = null,
     /** Isometria/carregamento: prescrito em segundos, não em repetições. */
     val timed: Boolean = false,
+    /**
+     * Músculo(s) que justificam escolher o exercício — subconjunto dos principais (curadoria). Ex.: o agachamento
+     * trabalha glúteos, mas o foco é quadríceps; a elevação pélvica foca glúteos. Vazio = todos os principais.
+     */
+    val focusMuscles: Set<MuscleId> = emptySet(),
 ) {
+    /** Músculos em foco (curadoria) ou, sem curadoria, os principais. */
+    val focus: Set<MuscleId> get() = focusMuscles.ifEmpty { primaryMuscles }
+
     val isUnilateral get() = laterality == Laterality.UNILATERAL
     fun demand(joint: Joint): Int = jointDemand[joint] ?: 0
     fun works(muscle: MuscleId): Double = when (muscle) {
@@ -93,6 +103,8 @@ data class SplitTemplate(
     val priority: Int,
     val rationale: String,
     val sessions: List<SessionTemplate>,
+    /** Regiões que o modelo prioriza (ex.: inferiores 3×/semana para glúteos/pernas). Vazio = equilibrado. */
+    val emphasis: Set<BodyRegion> = emptySet(),
 ) {
     fun suits(tier: TrainingTier, focus: TrainingFocus) =
         tier >= minTier && (focuses.isEmpty() || focus in focuses)

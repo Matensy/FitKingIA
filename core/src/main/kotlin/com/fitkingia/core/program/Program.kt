@@ -34,6 +34,8 @@ data class Program(
     val volumeTargets: Map<MuscleId, VolumeTarget>,
     val explanations: List<Explanation>,
     val warnings: List<Explanation>,
+    /** Regiões priorizadas com que o programa foi gerado (as metas dependem disso). */
+    val priorities: Set<BodyRegion> = emptySet(),
 ) {
     val trainingDays: List<DayOfWeek> get() = sessions.mapNotNull { it.day }
     val weeklyMinutes: Int get() = sessions.sumOf { it.estimatedMinutes }

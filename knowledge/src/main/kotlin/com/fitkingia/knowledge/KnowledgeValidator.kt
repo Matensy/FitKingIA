@@ -51,6 +51,9 @@ object KnowledgeValidator {
             val any = kb.exercises.any { it.pattern == sl.pattern && (sl.targetMuscle == null || sl.targetMuscle in it.primaryMuscles) && fullGym.containsAll(it.equipment) }
             if (!any) err("split ${sp.id}/${se.key}#$i", "nenhum exercício atende ${sl.pattern}${sl.targetMuscle?.let { "/$it" } ?: ""} na academia completa")
         }
+        for (r in BodyRegion.values()) {
+            if (kb.trackedMuscles.none { it.focusRegion == r }) err("region $r", "região priorizável sem músculo rastreado")
+        }
         for (m in kb.trackedMuscles) {
             if (kb.exercises.none { m.id in it.primaryMuscles }) err("muscle ${m.id}", "músculo rastreado sem exercício direto")
             if (m.fillPattern == null) warn("muscle ${m.id}", "músculo rastreado sem padrão de preenchimento")
@@ -58,6 +61,7 @@ object KnowledgeValidator {
         for (e in kb.exercises) {
             if (e.primaryMuscles.isEmpty()) err("exercise ${e.id}", "sem músculo principal")
             if ((e.primaryMuscles intersect e.secondaryMuscles).isNotEmpty()) err("exercise ${e.id}", "músculo listado como principal e secundário")
+            if (!e.primaryMuscles.containsAll(e.focusMuscles)) err("exercise ${e.id}", "foco ${e.focusMuscles} fora dos músculos principais")
             if (e.instructions.isEmpty()) warn("exercise ${e.id}", "sem instruções")
             for (sub in e.curatedSubstitutes) {
                 val s = kb.exerciseOrNull(sub) ?: run { err("exercise ${e.id}", "substituto inexistente $sub"); continue }
@@ -85,6 +89,6 @@ object KnowledgeValidator {
 
     private fun allTypedRuleIds(kb: KnowledgeBase): List<RuleId> = with(kb.ruleSet) {
         listOf(volume.id, prescription.id, frequency.id, timing.id, progression.id, recovery.id, fatigue.id, scheduling.id,
-            hydration.id, nutrition.id, deload.id, weightTrend.id, bodyMetrics.id, gamification.id)
+            hydration.id, nutrition.id, deload.id, weightTrend.id, bodyMetrics.id, gamification.id, priority.id)
     }
 }

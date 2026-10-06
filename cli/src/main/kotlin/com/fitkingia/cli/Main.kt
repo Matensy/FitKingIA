@@ -131,7 +131,8 @@ class App(private val kb: KnowledgeBase, private val pf: ProfileFile) {
     private val chatState = ConversationState()
     private val coachContext by lazy {
         val bench = ExerciseId("barbell_bench_press")
-        val today = LocalDate.now()
+        // -Dfitking.today=2026-10-02 fixa a data (testes e demonstrações reproduzíveis).
+        val today = System.getProperty("fitking.today")?.let(LocalDate::parse) ?: LocalDate.now()
         // Histórico de exemplo para a demonstração (o app real lê do user.db).
         val history = listOf(
             ExerciseLog(bench, today.minusWeeks(3), List(3) { SetLog(60.0, 10, 2) }),

@@ -67,8 +67,8 @@ object KnowledgeDbBuilder {
 
         ins("INSERT INTO movement_patterns VALUES (?,?,?)") { ps -> s.patterns.forEach { ps.row(it.id, it.name, it.description) } }
         ins("INSERT INTO pattern_relations VALUES (?,?)") { ps -> s.patterns.forEach { p -> p.related.forEach { ps.row(p.id, it) } } }
-        ins("INSERT INTO muscles VALUES (?,?,?,?,?,?)") { ps ->
-            s.muscles.forEach { ps.row(it.id, it.name, it.region, if (it.volumeTracked) 1 else 0, it.volumeFactor, it.fillPattern) }
+        ins("INSERT INTO muscles VALUES (?,?,?,?,?,?,?)") { ps ->
+            s.muscles.forEach { ps.row(it.id, it.name, it.region, if (it.volumeTracked) 1 else 0, it.volumeFactor, it.fillPattern, it.focusRegion) }
         }
         ins("INSERT INTO equipment VALUES (?,?,?)") { ps -> s.equipment.forEach { ps.row(it.id, it.name, it.category) } }
         ins("INSERT INTO environments VALUES (?,?)") { ps -> s.environments.forEach { ps.row(it.id, it.name) } }
@@ -79,6 +79,7 @@ object KnowledgeDbBuilder {
                 it.stability, it.mobility, it.staple, it.maxTier, if (it.timed) 1 else 0) }
         }
         ins("INSERT INTO exercise_aliases VALUES (?,?)") { ps -> s.exercises.forEach { e -> e.aliases.distinct().forEach { ps.row(e.id, it) } } }
+        ins("INSERT INTO exercise_focus VALUES (?,?)") { ps -> s.exercises.forEach { e -> e.focus.forEach { ps.row(e.id, it) } } }
         ins("INSERT INTO exercise_muscles VALUES (?,?,?)") { ps ->
             s.exercises.forEach { e ->
                 e.primary.forEach { ps.row(e.id, it, "primary") }
@@ -103,6 +104,7 @@ object KnowledgeDbBuilder {
             s.splits.forEach { ps.row(it.id, it.name, it.daysPerWeek, it.minTier, it.priority, it.rationale) }
         }
         ins("INSERT INTO split_focuses VALUES (?,?)") { ps -> s.splits.forEach { sp -> sp.focuses.forEach { ps.row(sp.id, it) } } }
+        ins("INSERT INTO split_emphasis VALUES (?,?)") { ps -> s.splits.forEach { sp -> sp.emphasis.forEach { ps.row(sp.id, it) } } }
         ins("INSERT INTO session_templates VALUES (?,?,?,?)") { ps ->
             s.splits.forEach { sp -> sp.sessions.forEachIndexed { i, se -> ps.row(sp.id, i, se.key, se.name) } }
         }

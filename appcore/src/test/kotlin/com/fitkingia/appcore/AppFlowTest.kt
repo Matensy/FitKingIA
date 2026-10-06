@@ -5,6 +5,9 @@ import com.fitkingia.core.program.ProgramResult
 import com.fitkingia.core.recovery.ReadinessBand
 import com.fitkingia.core.recovery.ReadinessCheck
 import com.fitkingia.core.safety.ScreeningStatus
+import com.fitkingia.knowledge.BundledKnowledge
+import com.fitkingia.knowledge.KnowledgeDbBuilder
+import com.fitkingia.knowledge.sql.JdbcSqlDatabase
 import org.junit.jupiter.api.Test
 import java.time.DayOfWeek
 import kotlin.test.*
@@ -40,6 +43,46 @@ class AppFlowTest {
         assertEquals(a.minutesByDay, again.minutesByDay)
         assertEquals(a.equipment, again.equipment)
         assertEquals(a.safety, again.safety)
+    }
+
+    @Test fun `prioridade de gluteos vai para o programa salvo e volta do banco`() {
+        val env = TestEnv()
+        val a = TestEnv.answers(sex = Sex.FEMALE, kb = env.kb,
+            days = mapOf(DayOfWeek.MONDAY to 60, DayOfWeek.TUESDAY to 60, DayOfWeek.THURSDAY to 60, DayOfWeek.FRIDAY to 60))
+        Questionnaire.togglePriority(a, BodyRegion.GLUTES)
+        val generated = assertIs<ProgramResult.Generated>(env.app.submit(a).result).program
+        assertEquals(setOf(BodyRegion.GLUTES), generated.priorities)
+        assertTrue(BodyRegion.GLUTES in generated.split.emphasis, generated.split.id.value)
+
+        val stored = assertNotNull(env.app.program()).program
+        assertEquals(setOf(BodyRegion.GLUTES), stored.priorities)
+        assertEquals(generated.volumeTargets, stored.volumeTargets)
+        assertEquals(generated.sessions.map { it.name }, stored.sessions.map { it.name })
+        assertTrue(stored.explanations.any { it.text.contains("Glúteos em") && it.ruleId == env.kb.ruleSet.priority.id })
+        assertEquals(setOf(BodyRegion.GLUTES), env.app.currentAnswers().priorities.toSet())
+        // Refazer o programa (ex.: depois de registrar dor) mantém a prioridade.
+        val again = assertIs<ProgramResult.Generated>(env.app.regenerate()).program
+        assertEquals(setOf(BodyRegion.GLUTES), again.priorities)
+    }
+
+    @Test fun `banco da versao 1 migra para a 2 sem perder dados`() {
+        val schema = KnowledgeDbBuilder.schema("user.sql")
+        val v1 = schema.replace(Regex(""",\s*--[^\n]*\n\s*priorities\s+TEXT"""), "")
+        assertNotEquals(schema, v1, "o teste precisa remover a coluna nova do esquema")
+        val db = JdbcSqlDatabase.inMemory()
+        db.runScript(v1)
+        db.execute("PRAGMA user_version = 1")
+        db.execute("INSERT INTO users(id, name, birth_year, sex, height_cm, experience) VALUES (1, 'Ana', 1995, 'FEMALE', 165, 'NONE')")
+        UserDb.migrate(db, schema)
+        assertEquals(UserDb.VERSION, db.single("PRAGMA user_version") { it.int("user_version") })
+        assertTrue("priorities" in db.query("PRAGMA table_info(programs)") { it.str("name") })
+        assertEquals("Ana", db.single("SELECT name FROM users WHERE id=1") { it.str("name") })
+        UserDb.migrate(db, schema) // idempotente
+        db.execute("DELETE FROM users") // o usuário de mentira não tem perfil completo; o app grava um novo
+        val kb = BundledKnowledge.load()
+        val app = FitKing(kb, db, MutableClock(TestEnv.MONDAY_9H))
+        assertIs<ProgramResult.Generated>(app.submit(TestEnv.answers(kb = kb)).result)
+        assertNotNull(app.program())
     }
 
     @Test fun `sinal de alerta na triagem bloqueia a prescricao`() {

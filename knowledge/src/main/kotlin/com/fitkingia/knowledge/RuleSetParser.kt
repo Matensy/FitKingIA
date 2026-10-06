@@ -91,6 +91,20 @@ object RuleSetParser {
             gamification = rule("gamification.xp") { o ->
                 GamificationRules(o.obj("points").entries.associate { it.key to it.value.jsonPrimitive.int }, o.int("xp_per_level"))
             },
+            priority = rule("priority.region") { o ->
+                val pr = o.obj("priority"); val ot = o.obj("other"); val f = o.obj("min_frequency"); val sel = o.obj("selection")
+                fun days(x: JsonObject) = x.entries.associate { it.key.toInt() to it.value.jsonPrimitive.int }
+                PriorityRules(
+                    pr.dbl("min_of_target"), pr.dbl("target_factor"), pr.dbl("max_factor"),
+                    ot.dbl("min_factor"), ot.dbl("target_factor"), ot.dbl("max_factor"),
+                    o.obj("synergists").entries.associate { (r, arr) -> BodyRegion.valueOf(r) to arr.jsonArray.map { MuscleId(it.jsonPrimitive.content) }.toSet() },
+                    o.getValue("no_reduction_for").jsonArray.map { BodyRegion.valueOf(it.jsonPrimitive.content) }.toSet(),
+                    days(f.obj("lower")), days(f.obj("other")),
+                    o.int("leading_positions"), sel.dbl("focus_bonus"), sel.dbl("primary_bonus"),
+                    o.dbl("min_focused_of_target"),
+                    o.obj("min_share_of_half").entries.associate { BodyRegion.valueOf(it.key) to it.value.jsonPrimitive.double },
+                )
+            },
         )
     }
 

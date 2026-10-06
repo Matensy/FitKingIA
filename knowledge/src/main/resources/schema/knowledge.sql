@@ -106,7 +106,8 @@ CREATE TABLE muscles (
     region          TEXT NOT NULL CHECK (region IN ('upper','lower','core')),
     volume_tracked  INTEGER NOT NULL CHECK (volume_tracked IN (0, 1)),
     volume_factor   REAL NOT NULL DEFAULT 1.0 CHECK (volume_factor > 0),
-    fill_pattern_id TEXT REFERENCES movement_patterns(id)
+    fill_pattern_id TEXT REFERENCES movement_patterns(id),
+    focus_region    TEXT CHECK (focus_region IN ('GLUTES','LEGS','BACK','CHEST','SHOULDERS','ARMS','CORE'))
 );
 
 CREATE TABLE equipment (
@@ -149,6 +150,13 @@ CREATE TABLE exercise_aliases (
     exercise_id TEXT NOT NULL REFERENCES exercises(id),
     alias       TEXT NOT NULL,
     PRIMARY KEY (exercise_id, alias)
+);
+
+-- Foco do exercício (curadoria): músculo principal que justifica escolhê-lo (ex.: agachamento → quadríceps).
+CREATE TABLE exercise_focus (
+    exercise_id TEXT NOT NULL REFERENCES exercises(id),
+    muscle_id   TEXT NOT NULL REFERENCES muscles(id),
+    PRIMARY KEY (exercise_id, muscle_id)
 );
 
 CREATE TABLE exercise_muscles (
@@ -204,6 +212,13 @@ CREATE TABLE split_focuses (
     split_id TEXT NOT NULL REFERENCES split_templates(id),
     focus    TEXT NOT NULL CHECK (focus IN ('HYPERTROPHY','STRENGTH','POWER','MUSCULAR_ENDURANCE','GENERAL_FITNESS')),
     PRIMARY KEY (split_id, focus)
+);
+
+-- Regiões priorizadas pelo modelo (ex.: inferiores 3×/semana para quem prioriza glúteos).
+CREATE TABLE split_emphasis (
+    split_id TEXT NOT NULL REFERENCES split_templates(id),
+    region   TEXT NOT NULL CHECK (region IN ('GLUTES','LEGS','BACK','CHEST','SHOULDERS','ARMS','CORE')),
+    PRIMARY KEY (split_id, region)
 );
 
 CREATE TABLE session_templates (

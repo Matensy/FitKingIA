@@ -9,3 +9,4 @@ local.properties
 *.db-journal
 !knowledge/dist/*.db
 .DS_Store
+.claude/

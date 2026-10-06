@@ -1,0 +1,18 @@
+{
+  "name": "Ana",
+  "age": 26,
+  "sex": "FEMALE",
+  "height_cm": 163,
+  "weight_kg": 60,
+  "primary_goal": "HYPERTROPHY",
+  "experience": "MONTHS_6_TO_12",
+  "environment": "full_gym",
+  "availability": { "MONDAY": 60, "TUESDAY": 60, "THURSDAY": 60, "FRIDAY": 60 },
+  "priorities": ["GLUTES"],
+  "activity_level": "MODERATE",
+  "safety_answers": {
+    "chest_pain": false, "fainting": false, "breathlessness": false, "medical_restriction": false,
+    "recent_surgery": false, "known_disease": false, "blood_pressure": false, "medication": false,
+    "current_pain": false, "mobility_limit": false, "pregnancy": false
+  }
+}

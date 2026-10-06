@@ -41,6 +41,8 @@ data class UserProfile(
     val preferredSplit: SplitId? = null,
     val maxTrainingDays: Int? = null,
     val activityLevel: ActivityLevel = ActivityLevel.MODERATE,
+    /** Regiões que o usuário quer priorizar (até 2). Vazio = programa equilibrado. */
+    val priorities: Set<BodyRegion> = emptySet(),
 ) {
     val tier: TrainingTier get() = experience.tier
     val focus: TrainingFocus get() = primaryGoal.focus

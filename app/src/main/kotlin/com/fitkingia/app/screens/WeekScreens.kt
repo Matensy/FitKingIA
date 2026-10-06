@@ -6,6 +6,7 @@ import com.fitkingia.app.Tab
 import com.fitkingia.app.ui.*
 import com.fitkingia.appcore.DayPlan
 import com.fitkingia.appcore.DayStatus
+import com.fitkingia.appcore.Step
 import com.fitkingia.core.explain.WhyReport
 import com.fitkingia.core.knowledge.VerificationStatus
 import com.fitkingia.core.model.Fmt
@@ -183,9 +184,14 @@ class ProgramWhyScreen : Screen() {
         val p = sp.program
         root.h2("${p.split.name} · ${p.focus.label} · ${p.tier.label}", top = 0)
         root.muted("Gerado em ${Dates.short(sp.createdAt.toLocalDate())} com o conhecimento ${sp.kbVersion}.")
-        if (p.warnings.isNotEmpty()) { root.h2("Avisos"); root.card(stroke = C.warning) { p.warnings.forEach { explanation(it) } } }
+        val kb = fit.kb
+        fit.goalCheck()?.let { report ->
+            root.goalSection(report, kb) { push(QuestionnaireScreen(fit.currentAnswers(), startAt = Step.PRIORITY)) }
+        }
+        val warnings = p.warnings.filterNot { kb.isGoalCheck(it) }
+        if (warnings.isNotEmpty()) { root.h2("Avisos"); root.card(stroke = C.warning) { warnings.forEach { explanation(it) } } }
         root.h2("Decisões do motor")
-        root.card { p.explanations.forEach { explanation(it) } }
+        root.card { p.explanations.filterNot { kb.isGoalCheck(it) }.forEach { explanation(it) } }
         root.h2("Volume semanal planejado")
         root.card {
             fit.kb.trackedMuscles.forEach { m ->
