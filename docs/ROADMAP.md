@@ -9,9 +9,17 @@ Motor determinístico (`core`), banco de conhecimento com evidências (`knowledg
 - `user.db` no aparelho com o schema de `user.sql`; `fitness.db` empacotado nos assets e renovado a cada atualização do APK.
 - Testes de UI com Robolectric, capturas de tela e checagem de API do Android 8 no build.
 
+## ✅ Fase 2.1 — Treino que faz sentido para o objetivo (concluída, v0.2.0)
+- Prioridade por região no questionário (ex.: glúteos) com redistribuição real de volume, frequência mínima e ordem; modelos com ênfase em glúteos (2–6 dias) e em pernas (3–5 dias); "Inferiores" (dia de pernas da divisão superiores/inferiores) diferenciado de "Pernas" (dia completo da divisão empurrar/puxar/pernas), com sessões de quadríceps × glúteos e posterior.
+- Checagem "seu objetivo × seu treino" em números, com aviso quando não dá.
+- 11 aparelhos e 17 exercícios novos; ilustrações animadas próprias para todos os exercícios.
+- Ver o treino de qualquer dia, fazer hoje o de outro dia e trocar a ordem da semana.
+- Lembretes locais (água, treino, sequência); termos em português; animações.
+- Revisão adversarial independente do motor (centenas de perfis) com os achados corrigidos.
+
 ## Fase 3 — Próximos passos do app
 - Criptografia do `user.db` (SQLCipher) e das fotos.
-- Lembretes locais opcionais (água, treino do dia) com notificações.
+- Modelos com ênfase em superiores (costas, braços) para quem prioriza uma região de cima com poucos dias.
 - Calendário mensal e linha do tempo de PRs; mapa muscular desenhado.
 - Exercícios de mobilidade guiados no banco (hoje a mobilidade é só registro).
 - Correlações pessoais: sono × desempenho, prontidão × volume (sem diagnóstico).

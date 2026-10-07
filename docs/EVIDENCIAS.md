@@ -43,7 +43,7 @@ Uma afirmação com fontes `SUPPORTS` **e** `CONTRADICTS` é marcada como confli
 
 ## Regras sem evidência direta
 
-Nem tudo tem estudo direto (ex.: pesos do Recovery Score, custo do agendamento). Essas regras são marcadas como `HEURISTIC` ou `CONVENTION`, com justificativa obrigatória, e o app as apresenta como heurística do sistema — não como fato.
+Nem tudo tem estudo direto (ex.: pesos do índice de recuperação, custo do agendamento). Essas regras são marcadas como `HEURISTIC` ou `CONVENTION`, com justificativa obrigatória, e o app as apresenta como heurística do sistema — não como fato.
 
 ## Como adicionar ou atualizar conhecimento
 

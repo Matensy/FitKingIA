@@ -8,26 +8,30 @@ Legenda: ✅ implementado e testado · 🟡 parcial (domínio/banco prontos, fal
 
 | Área | Status | Onde |
 |---|---|---|
-| **Perfil & avaliação**: dados, objetivos (composição, performance, saúde), experiência, ambiente, equipamentos, disponibilidade por dia, esportes, limitações | ✅ questionário de 19 passos só por toque | `appcore/Questionnaire.kt`, `QuestionnaireScreen` |
+| **Perfil & avaliação**: dados, objetivos (composição, performance, saúde), região a priorizar, experiência, ambiente, equipamentos, disponibilidade por dia, esportes, limitações | ✅ questionário de 20 passos só por toque | `appcore/Questionnaire.kt`, `QuestionnaireScreen` |
+| **Prioridade por região** (glúteos, pernas, costas, peito, ombros, braços, abdômen; até 2): metas maiores para a região, manutenção para o resto, frequência mínima (inferiores 3× com 3+ dias), exercícios com foco na região no começo do treino; modelos com ênfase em glúteos (2–6 dias) e em pernas/coxas (3–5 dias) | ✅ | regra `priority.region`, `VolumeTargets`, `VolumePlanner`, `ProgramGenerator` |
+| **"Seu objetivo × seu treino"**: confere em números se o programa treina o que a pessoa pediu (dias, séries focadas por músculo, fatia das séries, ordem) e avisa quando não dá | ✅ | `GoalAlignment`, `GoalViews` |
 | **Questionário de segurança** com red flags que bloqueiam a prescrição | ✅ | `core/safety`, `safety_questions.json` |
 | **"Perder barriga"** como objetivo, com explicação sobre perda localizada e evidência conflitante | ✅ | `Goal.spotReductionNotice`, claim `spot_reduction` |
 | **Gerador de programa** por dias e tempo; recalcula ao mudar a disponibilidade | ✅ | `core/program` |
-| **"Tenho só 40 minutos"** — Quick Session explicando o que saiu e por quê | ✅ | `SessionFitter`, `SessionAdapter.forTime` |
-| **Banco de exercícios** (108) com padrão, músculos, equipamento, dificuldade, estabilidade, mobilidade, demanda articular, instruções, erros comuns, segurança, progressão, substituições | ✅ (meta 300+) | `exercises.json` |
+| **"Tenho só 40 minutos"** — treino rápido explicando o que saiu e por quê | ✅ | `SessionFitter`, `SessionAdapter.forTime` |
+| **Banco de exercícios** (125) com padrão, músculos, foco curado, equipamento (40 aparelhos/acessórios), dificuldade, estabilidade, mobilidade, demanda articular, instruções, erros comuns, segurança, progressão, substituições | ✅ (meta 300+) | `exercises.json`, `equipment.json` |
+| **Ilustrações animadas** dos exercícios (sem fotos de terceiros): 110 movimentos, todos os exercícios mapeados | ✅ | `app/figure`, `ExerciseScreen`, `WorkoutScreen` |
 | **23 padrões de movimento** (empurrar/puxar H/V, agachar, dobradiça, afundo, carregar, antirrotação, antiextensão…) | ✅ | `patterns.json` |
 | **Substituição** por padrão, músculos, equipamento, nível, estabilidade, dificuldade, dor, curadoria e histórico | ✅ | `SubstitutionEngine` |
 | **Prescrição**: séries, faixa de reps/tempo, RIR, descanso, cadência, aquecimento | ✅ | regra `prescription.reps_rir_rest`, `WarmupGenerator` |
 | **Progressive overload**: dupla progressão, RIR, redução após falhas, padrão aprendido do usuário | ✅ | `ProgressionEngine` |
 | **PRs** (carga, reps na carga, 1RM estimado, volume) e **tendência** de 1RM | ✅ | `Records.kt` |
 | **Dashboard de volume** semanal por músculo com mensagens | ✅ | `VolumeDashboard` |
-| **Autorregulação**: check-in → Recovery Score → ajuste do treino | ✅ | `core/recovery`, `SessionAdapter.forReadiness` |
+| **Autorregulação**: avaliação do dia → índice de recuperação → ajuste do treino | ✅ | `core/recovery`, `SessionAdapter.forReadiness` |
 | **Fadiga por músculo** (inclui esportes) | ✅ | `FatigueModel` |
 | **Esportes** (kickboxing etc.) no agendamento da semana | ✅ | `WeekScheduler`, `sports.json` |
 | **Dor/lesões**: sem diagnóstico, filtros por articulação, substituições | ✅ | `JointLimitation`, `SubstitutionEngine` |
 | **Treino perdido** (A mover · B incorporar · C ignorar · D recalcular) | ✅ | `MissedWorkoutPlanner` |
-| **Program simulator / "E se?"** (dias, tempo, casa × academia) | ✅ | `ProgramSimulator` |
-| **Auto-deload** por queda persistente + prontidão baixa | ✅ | `DeloadAdvisor` |
+| **Simulador "E se?"** (dias, tempo, casa × academia) | ✅ | `ProgramSimulator` |
+| **Semana de descarga (deload)** sugerida por queda persistente + prontidão baixa | ✅ | `DeloadAdvisor` |
 | **Hidratação**: meta, registro +250/+500 ml | ✅ | `core/hydration` |
+| **Lembretes locais** (água abaixo do ritmo, treino do dia, sequência), sem servidor | ✅ | `appcore/Reminders.kt`, `app/notify`, `NotificationsScreen` |
 | **Nutrição**: metas de energia/proteína, registro por toque (alimento + porções); na CLI também em linguagem natural | ✅ (10 alimentos TACO; expandir) | `core/nutrition`, `NutritionScreen` |
 | **Suplementos**: informação baseada em evidência, sem prescrição | ✅ | `supplements.json` |
 | **Composição corporal**: IMC e cintura/altura com ressalvas | ✅ · ⬜ massa muscular estimada | `BodyMetrics` |
@@ -40,7 +44,8 @@ Legenda: ✅ implementado e testado · 🟡 parcial (domínio/banco prontos, fal
 | **Gamificação** discreta (XP, nível, streak) | ✅ | `core/gamification` |
 | **Ferramentas**: anilhas, 1RM, volume, aquecimento | ✅ | `core/tools`, `OneRepMax` |
 | **Timer de descanso** (vibração + som) | ✅ | `WorkoutScreen` |
-| **Semana** com status por dia (feito, perdido, replanejado) | ✅ · ⬜ calendário mensal | `WeekScreen` |
+| **Semana** com status por dia (feito, perdido, replanejado); qualquer dia abre o treino; fazer hoje o treino de outro dia; trocar dias (só esta semana ou todas) | ✅ · ⬜ calendário mensal | `WeekScreen`, `DayScreen`, `appcore/WeekReorder.kt` |
+| **Animações** de navegação, toque, cronômetro em anel e comemoração (respeitam "remover animações") | ✅ | `app/ui/Motion.kt` |
 | **Mapa muscular** | 🟡 barras de volume por músculo · ⬜ desenho | `ProgressScreen` |
 
 ## Evidências e IA
@@ -60,8 +65,8 @@ Legenda: ✅ implementado e testado · 🟡 parcial (domínio/banco prontos, fal
 
 | Item | Status |
 |---|---|
-| Testes de unidade, integração, banco, motor de regras, geração (216 cenários), questionário (90 combinações), UI (Robolectric), regressão e diálogo | ✅ 435 testes |
+| Testes de unidade, integração, banco, motor de regras, geração (216 cenários), prioridade por região (~300 cenários), questionário (90 combinações), UI (Robolectric), regressão e diálogo | ✅ ~800 testes |
 | Banco distribuído não vazio (`fitness.db`) separado do `user.db` | ✅ |
 | Privacidade: local, consentimento, exportar (JSON) e apagar dados, sem permissão de internet | ✅ · ⬜ criptografia (SQLCipher) |
-| App Android (Kotlin, telas em código, SQLite do sistema) — APK em `dist/` | ✅ v0.1.0 — ver [ADR 0004](adr/0004-apk-sem-agp.md) |
+| App Android (Kotlin, telas em código, SQLite do sistema) — APK em `dist/` | ✅ v0.2.0 — ver [ADR 0004](adr/0004-apk-sem-agp.md) |
 | Checagem de API do Android 8 no build | ✅ `:app:checkAndroidApi` |

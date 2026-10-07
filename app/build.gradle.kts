@@ -33,8 +33,8 @@ kotlin {
     }
 }
 
-val appVersionName = "0.1.0"
-val appVersionCode = 1
+val appVersionName = "0.2.0"
+val appVersionCode = 2
 val minSdk = 26
 val targetSdk = 34
 

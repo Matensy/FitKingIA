@@ -11,4 +11,8 @@
 - App Android: lógica nova vai no `appcore` (testável na JVM); `app` só desenha telas e chama `FitKing`. Telas em código com o kit de `app/ui` (sem XML/AndroidX).
 - O app compila contra `android.jar` da API 23: getters adicionados depois não viram propriedade Kotlin (use `setGravity`, `setCornerRadius`). Evite APIs Java 9+ (`List.of`, `removeLast`…): `./gradlew :app:apk` roda `checkAndroidApi` e falha se aparecer.
 - SQL do `user.db` precisa rodar no SQLite do Android 8 (3.18): sem UPSERT, sem funções JSON, sem window functions.
+- `user.db` mudou de esquema? Suba `UserDb.VERSION`, acrescente o passo (idempotente) em `UserDb.migrate` e um teste migrando um banco da versão anterior com dados.
+- Exercício novo no banco: preencha `focus` quando o foco não for todos os músculos principais e confira a figura em `app/figure/FigureMapping.kt` (folhas `figuras_*.png` com `-Pscreenshots`).
+- Testes de UI desligam animações (`Motion.enabled = false` no `setUp`); só `MotionTest` e `ScreenshotTest` ligam.
+- Prioridade por região: parâmetros em `rules.json` (`priority.region`); confira com `PriorityScenarioTest` e a CLI (`--perfil examples/perfil-gluteos.json programa`) que a checagem "objetivo × treino" bate com o treino impresso.
 - Antes de entregar mudança de tela: `./gradlew :app:test` (Robolectric) e, se mexeu em layout, `./gradlew :app:test -Pscreenshots` e olhe os PNGs.
