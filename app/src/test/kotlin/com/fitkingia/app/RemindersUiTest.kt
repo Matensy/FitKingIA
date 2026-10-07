@@ -58,6 +58,7 @@ class RemindersUiTest {
 
     @Before fun setUp() {
         MainActivity.synchronous = true
+        com.fitkingia.app.ui.Motion.enabled = false // estados finais imediatos (outros testes ligam as animações)
         Graph.fit = null
         Graph.override = {
             val db = JdbcSqlDatabase.inMemory().also { UserDb.migrate(it, KnowledgeDbBuilder.schema("user.sql")) }

@@ -39,8 +39,10 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
     private val showFigure = HashSet<ExerciseId>()
 
     private var restLeft = 0
-    private var restLabel: TextView? = null
+    private var restTotal = 0
+    private var restRing: RestRing? = null
     private val tick = Runnable { onTick() }
+    override val page get() = if (finishing) Int.MAX_VALUE else index
 
     override fun build(root: LinearLayout) {
         w = fit.activeWorkout()?.takeIf { it.id == w.id } ?: w
@@ -187,11 +189,7 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
     override fun footer(root: LinearLayout) {
         if (restLeft <= 0) return
         root.card(bottom = 6, color = C.surface2, stroke = C.fact) {
-            row(bottom = 6) {
-                val t = text("⏱ Descanso ${Dates.mmss(restLeft)}", 18f, bold = true, bottom = 0)
-                t.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-                restLabel = t
-            }
+            restRing = restTimer(restLeft, restTotal)
             buttonRow(
                 Triple("−15 s", Btn.SECONDARY) { restLeft = (restLeft - 15).coerceAtLeast(1); updateRest() },
                 Triple("+15 s", Btn.SECONDARY) { restLeft += 15; updateRest() },
@@ -204,17 +202,19 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
     private fun startRest(seconds: Int) {
         stopRest()
         restLeft = seconds
+        restTotal = seconds
         main.mainHandler.postDelayed(tick, 1000)
     }
 
     private fun stopRest() {
         main.mainHandler.removeCallbacks(tick)
         restLeft = 0
-        restLabel = null
+        restRing = null
     }
 
     private fun updateRest() {
-        restLabel?.text = "⏱ Descanso ${Dates.mmss(restLeft)}"
+        restTotal = maxOf(restTotal, restLeft)
+        restRing?.set(restLeft, restTotal)
     }
 
     private fun onTick() {
@@ -264,23 +264,24 @@ class WorkoutSummaryScreen(private val s: WorkoutSummary) : Screen() {
     override val title = "Treino concluído"
 
     override fun build(root: LinearLayout) {
-        root.text("🏁", 48f, gravity = Gravity.CENTER)
+        root.hero("🏁", 48f)
         root.h1("Mandou bem!")
         root.card {
             kv("Duração", "${s.minutes} min")
             kv("Séries", s.setsDone.toString())
             kv("Volume", "${Fmt.int(s.volumeKg.toInt())} kg")
-            kv("XP ganho", "+${s.xpGained}", C.ai)
+            kvCount("XP ganho", s.xpGained, C.ai) { "+$it" }
         }
         if (s.levelAfter > s.levelBefore) root.card(stroke = C.ai) { h3("⬆️ Subiu para o nível ${s.levelAfter}!") }
         if (s.weekCompleted) root.card(stroke = C.success) { h3("📅 Semana completa! Todos os treinos planejados foram feitos.") }
         if (s.records.isNotEmpty()) {
             root.h2("Recordes pessoais")
-            root.card(stroke = C.warning) { s.records.forEach { body(it.description) } }
+            root.card(stroke = C.warning) { hero("🏆", 36f, delay = 520); s.records.forEach { body(it.description) } }
         }
         root.h2("O que você fez")
         root.card { s.perExercise.forEach { (n, sets) -> kv(n, sets) } }
         root.muted("As próximas sugestões de carga usam estes registros (dupla progressão).")
         root.button("Voltar ao início") { main.setRoot(HomeScreen()) }
+        root.celebrate()
     }
 }

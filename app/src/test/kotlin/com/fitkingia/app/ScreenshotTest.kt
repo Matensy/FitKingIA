@@ -4,8 +4,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import com.fitkingia.app.data.Graph
 import com.fitkingia.app.screens.*
+import com.fitkingia.app.ui.Motion
 import com.fitkingia.appcore.AppClock
 import com.fitkingia.appcore.FitKing
 import com.fitkingia.appcore.Questionnaire
@@ -22,8 +25,10 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.shadows.ShadowChoreographer
 import java.io.File
 import java.time.DayOfWeek
+import java.time.Duration
 import java.time.LocalDateTime
 
 /**
@@ -35,11 +40,26 @@ import java.time.LocalDateTime
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ScreenshotTest {
 
+    private fun texts(v: View): List<TextView> = when (v) {
+        is ViewGroup -> (0 until v.childCount).flatMap { texts(v.getChildAt(it)) }
+        is TextView -> listOf(v)
+        else -> emptyList()
+    }
+
+    /** Toca no primeiro elemento clicável cujo texto contém [label]. */
+    private fun tapText(a: MainActivity, label: String) {
+        texts(a.window.decorView).first { it.isClickable && it.text.toString().contains(label) }.performClick()
+        shadowOf(Looper.getMainLooper()).idle()
+    }
+
     @Test fun capture() {
         assumeTrue(System.getProperty("screenshots") == "true")
         val out = File(System.getProperty("screenshotDir") ?: "build/screenshots").also { it.mkdirs() }
         var now = LocalDateTime.of(2026, 9, 30, 18, 0) // quarta
         MainActivity.synchronous = true
+        // Animações ligadas: cada captura avança o relógio do looper até o estado final, o que
+        // também confere que nada fica transparente ou fora do lugar depois das transições.
+        Motion.enabled = true
         Graph.fit = null
         Graph.override = {
             val db = JdbcSqlDatabase.inMemory().also { UserDb.migrate(it, KnowledgeDbBuilder.schema("user.sql")) }
@@ -48,8 +68,8 @@ class ScreenshotTest {
         val controller = Robolectric.buildActivity(MainActivity::class.java).setup()
         val a = controller.get()
         fun idle() = shadowOf(Looper.getMainLooper()).idle()
-        fun shot(name: String) {
-            idle()
+        fun shot(name: String, settleMs: Long = 2500) {
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(settleMs))
             val root: View = a.window.decorView
             root.measure(View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(2340, View.MeasureSpec.EXACTLY))
             root.layout(0, 0, 1080, 2340)
@@ -109,8 +129,14 @@ class ScreenshotTest {
         val pe = t.session!!.exercises.first()
         fit.logSet(w.id, pe.exercise.id, 1, 60.0, 8, 2)
         a.push(WorkoutScreen(fit.activeWorkout()!!)); shot("07_treino")
+        tapText(a, "Registrar série"); shot("07a_descanso", settleMs = 600) // anel do descanso no rodapé
         val summary = fit.finishWorkout(w.id, com.fitkingia.appcore.Perceived.ADEQUATE)
-        a.setRoot(WorkoutSummaryScreen(summary)); shot("07b_resumo")
+        // Quadro do meio da comemoração: com o Choreographer pausado o relógio anda só o pedido
+        // (por padrão o Robolectric avança até o fim das animações pendentes).
+        ShadowChoreographer.setPaused(true)
+        a.setRoot(WorkoutSummaryScreen(summary)); shot("07b_resumo_confete", settleMs = 650)
+        ShadowChoreographer.setPaused(false)
+        shot("07b_resumo")
         a.setRoot(HomeScreen())
         a.push(MissedScreen(fit.week()!!.days.first { it.status == com.fitkingia.appcore.DayStatus.MISSED })); shot("07c_faltei")
         a.setRoot(ReadinessScreen()); shot("07d_prontidao")

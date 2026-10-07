@@ -9,7 +9,9 @@ import com.fitkingia.knowledge.BundledKnowledge
 import com.fitkingia.knowledge.KnowledgeDbBuilder
 import com.fitkingia.knowledge.KnowledgeReader
 import com.fitkingia.knowledge.Seeds
+import com.fitkingia.app.ui.Motion
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -25,6 +27,10 @@ import java.time.LocalDateTime
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], manifest = Config.NONE)
 class AndroidSqlTest {
+
+    @Before fun setUp() {
+        Motion.enabled = false
+    }
 
     @Test fun conhecimentoLidoPeloSqliteDoAndroidIgualAoJdbc() {
         val file = File.createTempFile("fitness", ".db").also { it.deleteOnExit() }

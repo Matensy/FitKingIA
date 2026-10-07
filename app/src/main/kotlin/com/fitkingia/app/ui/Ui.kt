@@ -102,13 +102,14 @@ fun ViewGroup.row(bottom: Int = 8, gravity: Int = Gravity.CENTER_VERTICAL, block
 fun ViewGroup.card(
     bottom: Int = 12, color: Int = C.surface, stroke: Int? = null, onClick: (() -> Unit)? = null, block: LinearLayout.() -> Unit,
 ): LinearLayout {
-    val c = LinearLayout(context)
+    // Cartão clicável encolhe levemente ao pressionar (Motion).
+    val c = if (onClick != null) PressableLayout(context) else LinearLayout(context)
     c.orientation = LinearLayout.VERTICAL
     val r = dp(16).toFloat()
     val bg = rounded(color, r, stroke, dp(1))
     c.background = if (onClick != null) ripple(bg, r) else bg
     c.setPadding(dp(16), dp(14), dp(16), dp(10))
-    if (onClick != null) { c.isClickable = true; c.setOnClickListener { onClick() } }
+    if (onClick != null) { c.isClickable = true; c.setOnClickListener { Motion.noteTap(it); onClick() } }
     c.block()
     return add(c, bottom)
 }
@@ -116,7 +117,7 @@ fun ViewGroup.card(
 enum class Btn { PRIMARY, SECONDARY, GHOST, DANGER }
 
 fun ViewGroup.button(label: String, style: Btn = Btn.PRIMARY, bottom: Int = 8, width: Int = ViewGroup.LayoutParams.MATCH_PARENT, enabled: Boolean = true, onClick: () -> Unit): TextView {
-    val b = TextView(context)
+    val b = if (enabled) PressableTextView(context) else TextView(context)
     b.text = label
     b.gravity = Gravity.CENTER
     b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
@@ -132,7 +133,7 @@ fun ViewGroup.button(label: String, style: Btn = Btn.PRIMARY, bottom: Int = 8, w
     b.setTextColor(if (enabled) fg else C.muted)
     b.background = ripple(rounded(if (enabled) bgColor else C.surface2, r, stroke, dp(1)), r)
     b.isClickable = true
-    b.setOnClickListener { if (enabled) onClick() }
+    b.setOnClickListener { if (enabled) { Motion.noteTap(it); onClick() } }
     b.contentDescription = label
     return add(b, bottom, width)
 }
@@ -148,7 +149,8 @@ fun ViewGroup.buttonRow(vararg items: Triple<String, Btn, () -> Unit>, bottom: I
 }
 
 fun chip(ctx: Context, label: String, selected: Boolean, small: Boolean = false, onClick: () -> Unit): TextView {
-    val t = TextView(ctx)
+    val t = PressableTextView(ctx)
+    t.isSelected = selected // o Motion usa para dar o "pop" no chip recém-selecionado
     t.text = label
     t.setTextSize(TypedValue.COMPLEX_UNIT_SP, if (small) 13f else 14f)
     t.setTextColor(if (selected) C.onAccent else C.text)
@@ -159,7 +161,7 @@ fun chip(ctx: Context, label: String, selected: Boolean, small: Boolean = false,
     val r = ctx.dp(20).toFloat()
     t.background = ripple(rounded(if (selected) C.accent else C.surface2, r, if (selected) null else C.stroke, ctx.dp(1)), r)
     t.isClickable = true
-    t.setOnClickListener { onClick() }
+    t.setOnClickListener { Motion.noteTap(it); onClick() }
     t.contentDescription = label + if (selected) " (selecionado)" else ""
     return t
 }
@@ -187,7 +189,7 @@ fun ViewGroup.option(title: String, subtitle: String? = null, selected: Boolean,
             }
             addView(mark)
         }
-    }
+    }.also { it.isSelected = selected }
 
 /** Valor numérico ajustado só com toques (− / +). */
 fun ViewGroup.stepper(
@@ -196,7 +198,7 @@ fun ViewGroup.stepper(
 ): LinearLayout = row(bottom, Gravity.CENTER) {
     val half = steps.size / 2
     fun stepButton(label: String, action: () -> Unit) {
-        val b = TextView(context)
+        val b = PressableTextView(context)
         b.text = label
         b.gravity = Gravity.CENTER
         b.setTextColor(C.text)
@@ -205,7 +207,7 @@ fun ViewGroup.stepper(
         val r = dp(24).toFloat()
         b.background = ripple(rounded(C.surface2, r, C.stroke, dp(1)), r)
         b.isClickable = true
-        b.setOnClickListener { action() }
+        b.setOnClickListener { Motion.noteTap(it); action() }
         b.contentDescription = label
         val size = dp(if (big) 52 else 44)
         addView(b, LinearLayout.LayoutParams(if (label.length > 2) ViewGroup.LayoutParams.WRAP_CONTENT else size, size).apply { marginStart = dp(4); marginEnd = dp(4) })
@@ -220,21 +222,54 @@ fun ViewGroup.stepper(
     v.typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
     addView(v, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
     steps.drop(half).forEach { stepButton(it.first, it.second) }
+    Motion.valueTick(v) // número que mudou num refresh rola para cima/baixo
 }
 
-/** Barra de progresso simples (0..1). */
+/** Barra de progresso simples (0..1). Cresce ao aparecer na navegação; num refresh anima a diferença. */
 fun ViewGroup.bar(fraction: Double, color: Int = C.accent, height: Int = 8, bottom: Int = 8): FrameLayout {
     val f = FrameLayout(context)
     f.background = rounded(C.surface2, dp(height).toFloat())
-    val fill = View(context)
-    fill.background = rounded(color, dp(height).toFloat())
-    f.addView(fill, FrameLayout.LayoutParams(0, dp(height)))
+    val frac = if (fraction.isNaN()) 0f else fraction.coerceIn(0.0, 1.0).toFloat()
+    val fill = BarFill(context, frac, color)
+    f.addView(fill, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(height)))
     add(f, bottom).layoutParams.height = dp(height)
-    f.post {
-        val w = (f.width * fraction.coerceIn(0.0, 1.0)).toInt()
-        fill.layoutParams = FrameLayout.LayoutParams(if (fraction > 0 && w < dp(height)) dp(height) else w, dp(height))
-    }
+    Motion.bar(fill, frac)
     return f
+}
+
+/** Linha "rótulo .......... número" cujo número sobe de 0 até [value] ao abrir a tela (ex.: XP ganho). */
+fun ViewGroup.kvCount(k: String, value: Int, valueColor: Int = C.text, bottom: Int = 6, format: (Int) -> String = { it.toString() }): LinearLayout {
+    val r = kv(k, format(value), valueColor, bottom)
+    Motion.countUp(r.getChildAt(1) as TextView, value, format = format)
+    return r
+}
+
+/** Emoji grande centralizado que "estoura" ao abrir a tela (🏁, 🏆…). */
+fun ViewGroup.hero(emoji: String, size: Float = 48f, delay: Long = 120, bottom: Int = 6): TextView {
+    val t = text(emoji, size, gravity = Gravity.CENTER, bottom = bottom)
+    Motion.popIn(t, delay)
+    return t
+}
+
+/** Confete por cima da tela (só quando a tela acabou de abrir, não a cada refresh). */
+fun ViewGroup.celebrate() = Motion.celebrate(this)
+
+/**
+ * Cronômetro de descanso: anel animado com o tempo no centro e um texto ao lado.
+ * Devolve o anel para a tela atualizar a cada segundo com [RestRing.set].
+ */
+fun ViewGroup.restTimer(left: Int, total: Int, bottom: Int = 6): RestRing {
+    val ring = RestRing(context)
+    row(bottom) {
+        addView(ring, LinearLayout.LayoutParams(dp(58), dp(58)).apply { marginEnd = dp(14) })
+        val c = column(bottom = 0) {
+            text("Descanso", 18f, bold = true, bottom = 2)
+            muted("Respire fundo — a próxima série já vem.")
+        }
+        c.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+    }
+    ring.set(left, total, smooth = false, fromEmpty = Motion.ringAppears(left))
+    return ring
 }
 
 fun ViewGroup.badge(s: String, color: Int, bottom: Int = 6): TextView {

@@ -47,6 +47,7 @@
 
 - **Dados**: na primeira abertura de cada versão do APK, `assets/fitness.db` é copiado e aberto só para leitura; o `user.db` é criado com `assets/user.sql` e versionado por `PRAGMA user_version`. Programa ativo em `programs/program_sessions/program_exercises`; replanejamentos de uma semana (treino perdido) em `week_plans`; o treino em andamento guarda a sessão do dia em `workouts.plan_json` e cada série em `workout_sets` assim que é registrada (dá para retomar).
 - **Telas**: `MainActivity` com pilha de telas e barra inferior (Hoje, Semana, Progresso, Mais). Cada `Screen` reconstrói sua UI a partir do estado; trabalho pesado (gerar programa, simular) roda fora da thread de UI.
+- **Movimento** (`app/ui/Motion.kt`): só a navegação anima a tela inteira (empilhar entra da direita, voltar da esquerda, troca de aba com fade cruzado, página do questionário na direção certa, blocos em cascata); um `refresh()` comum só dá retorno no que foi tocado (mola, "pop" do chip selecionado, número do stepper, barra que mudou). Tudo em 150–350 ms, desligado pela preferência do sistema "remover animações" e pelo interruptor `Motion.enabled` (os testes de UI desligam; `MotionTest` liga e confere os estados inicial e final).
 - **Build do APK**: ver [ADR 0004](adr/0004-apk-sem-agp.md) — Kotlin → ProGuard (backport) → dx → aapt2 → zipalign → apksigner, com checagem de API do Android 8.
 
 ## Fluxo de geração do programa (`ProgramGenerator`)

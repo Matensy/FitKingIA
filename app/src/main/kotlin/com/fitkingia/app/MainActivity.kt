@@ -47,6 +47,12 @@ abstract class Screen {
     /** Área fixa acima da barra inferior (ex.: cronômetro de descanso). */
     open fun footer(root: LinearLayout) {}
 
+    /**
+     * Página atual dentro da tela (ex.: pergunta do questionário). Em refreshTop(), página maior
+     * desliza da direita e menor, da esquerda.
+     */
+    open val page: Int get() = 0
+
     /** true = a tela tratou o "voltar". */
     open fun onBack(): Boolean = false
     open fun onLeave() {}
@@ -72,6 +78,13 @@ class MainActivity : Activity() {
     private val handler = Handler(Looper.getMainLooper())
     private var pickerCallback: ((Uri) -> Unit)? = null
     private var permissionCallback: ((Boolean) -> Unit)? = null
+    private lateinit var transitions: ScreenTransitions
+    private var splashAnims: List<android.animation.Animator> = emptyList()
+    private var lastPage = 0
+    private val navItems = ArrayList<NavItem>()
+    private var navSelected: Tab? = null
+
+    private class NavItem(val tab: Tab, val pill: View, val icon: TextView, val label: TextView) { var on = false }
 
     val current: Screen? get() = stack.lastOrNull()
 
@@ -135,32 +148,82 @@ class MainActivity : Activity() {
         nav = LinearLayout(this)
         nav.orientation = LinearLayout.HORIZONTAL
         nav.setBackgroundColor(C.surface)
+        nav.visibility = View.GONE
         root.addView(nav)
+        transitions = ScreenTransitions(root, scroll)
         return root
     }
 
-    private fun renderNav(selected: Tab?) {
-        nav.removeAllViews()
-        nav.visibility = if (selected == null) View.GONE else View.VISIBLE
-        if (selected == null) return
+    /** Barra inferior: montada uma vez; a aba selecionada ganha uma "pílula" atrás do ícone. */
+    private fun buildNav() {
         for (t in Tab.values()) {
             val item = LinearLayout(this)
             item.orientation = LinearLayout.VERTICAL
             item.setGravity(Gravity.CENTER)
-            item.setPadding(0, dp(8), 0, dp(10))
+            item.setPadding(0, dp(6), 0, dp(8))
             item.isClickable = true
             item.contentDescription = t.label
             item.background = ripple(rounded(C.surface, 0f), 0f)
-            item.setOnClickListener { if (t != selected || stack.size > 1) switchTab(t) }
-            val on = t == selected
-            item.addView(TextView(this).apply { text = t.icon; gravity = Gravity.CENTER; setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f); alpha = if (on) 1f else 0.55f })
-            item.addView(TextView(this).apply {
+            item.setOnClickListener { if (t != navSelected || stack.size > 1) switchTab(t) }
+            val box = FrameLayout(this)
+            val pill = View(this)
+            pill.background = rounded(C.accentDark, dp(16).toFloat())
+            pill.alpha = 0f
+            box.addView(pill, FrameLayout.LayoutParams(dp(56), dp(30), Gravity.CENTER))
+            val icon = TextView(this).apply { text = t.icon; gravity = Gravity.CENTER; setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f); alpha = 0.55f }
+            box.addView(icon, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
+            item.addView(box, LinearLayout.LayoutParams(dp(56), dp(30)))
+            val label = TextView(this).apply {
                 text = t.label; gravity = Gravity.CENTER
-                setTextColor(if (on) C.accent else C.muted)
+                setTextColor(C.muted)
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-                if (on) typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
-            })
+            }
+            item.addView(label, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(2) })
             nav.addView(item, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            navItems.add(NavItem(t, pill, icon, label))
+        }
+    }
+
+    private fun renderNav(selected: Tab?) {
+        val wasVisible = nav.visibility == View.VISIBLE
+        nav.visibility = if (selected == null) View.GONE else View.VISIBLE
+        if (selected == null) return
+        if (navItems.isEmpty()) buildNav()
+        val animate = Motion.on(this)
+        if (!wasVisible && animate) {
+            // A barra sobe ao reaparecer (ex.: ao sair do questionário ou do treino).
+            val h = dp(60).toFloat()
+            nav.translationY = h
+            android.animation.ObjectAnimator.ofFloat(nav, View.TRANSLATION_Y, h, 0f).apply { duration = 280; interpolator = Motion.easeOut; start() }
+        }
+        if (selected == navSelected) return
+        val animateTab = animate && wasVisible && navSelected != null
+        navSelected = selected
+        for (item in navItems) styleNavItem(item, item.tab == selected, animateTab)
+    }
+
+    private fun styleNavItem(item: NavItem, on: Boolean, animate: Boolean) {
+        val wasOn = item.on
+        item.on = on
+        item.label.setTextColor(if (on) C.accent else C.muted)
+        item.label.typeface = if (on) Typeface.create("sans-serif-medium", Typeface.BOLD) else Typeface.DEFAULT
+        item.pill.animate().cancel()
+        item.icon.animate().cancel()
+        if (!animate || on == wasOn) {
+            item.pill.alpha = if (on) 1f else 0f
+            item.pill.scaleX = 1f
+            item.icon.alpha = if (on) 1f else 0.55f
+            return
+        }
+        if (on) {
+            // A pílula se abre a partir do centro e o ícone dá um pequeno "pop".
+            item.pill.scaleX = 0.4f
+            item.pill.animate().alpha(1f).scaleX(1f).setDuration(260).setInterpolator(Motion.easeOut).start()
+            item.icon.alpha = 1f
+            Motion.pop(item.icon, from = 0.8f)
+        } else {
+            item.pill.animate().alpha(0f).scaleX(0.7f).setDuration(160).setInterpolator(Motion.easeIn).start()
+            item.icon.animate().alpha(0.55f).setDuration(160).start()
         }
     }
 
@@ -177,45 +240,60 @@ class MainActivity : Activity() {
         stack.forEach { it.onLeave() }
         stack.clear()
         scrollMemory.clear()
-        push(s)
+        s.main = this
+        stack.add(s)
+        render(0, ScreenChange.ROOT)
     }
 
     fun push(s: Screen) {
         current?.let { scrollMemory[it] = scroll.scrollY; it.onLeave() }
         s.main = this
         stack.add(s)
-        render(0)
+        render(0, if (stack.size > 1) ScreenChange.PUSH else ScreenChange.ROOT)
     }
 
     fun pop(): Boolean {
         if (stack.size <= 1) return false
         stack.removeAt(stack.lastIndex).onLeave()
-        render(scrollMemory.remove(current) ?: 0)
+        render(scrollMemory.remove(current) ?: 0, ScreenChange.POP)
         return true
     }
 
     /** Volta [n] telas de uma vez (ex.: depois de concluir um fluxo). */
     fun popTo(predicate: (Screen) -> Boolean) {
         while (stack.size > 1 && !predicate(stack.last())) stack.removeAt(stack.lastIndex).onLeave()
-        render(scrollMemory.remove(current) ?: 0)
+        render(scrollMemory.remove(current) ?: 0, ScreenChange.POP)
     }
 
+    /** Atualiza a tela atual sem animar a troca (só o retorno do toque e valores que mudaram). */
     fun refresh(s: Screen) {
-        if (s === current) render(scroll.scrollY)
+        if (s === current) render(scroll.scrollY, ScreenChange.NONE)
     }
 
-    /** Atualiza voltando ao topo (troca de página dentro da mesma tela). */
+    /** Atualiza voltando ao topo (troca de página dentro da mesma tela), deslizando na direção da página. */
     fun refreshTop(s: Screen) {
-        if (s === current) render(0)
+        if (s !== current) return
+        val p = s.page
+        render(0, when {
+            p > lastPage -> ScreenChange.FORWARD
+            p < lastPage -> ScreenChange.BACK
+            else -> ScreenChange.FADE
+        })
     }
 
-    private fun render(scrollY: Int) {
+    private fun render(scrollY: Int, change: ScreenChange) {
         val s = current ?: return
+        val animate = change != ScreenChange.NONE && Motion.on(this)
+        splashAnims.forEach { it.cancel() }
+        splashAnims = emptyList()
+        if (animate) transitions.capture()
+        val tap = Motion.captureTap(content, footer) // sempre consome o toque; só o refresh o repete
         titleView.text = s.title
         backButton.visibility = if (stack.size > 1) View.VISIBLE else View.GONE
         header.setPadding(if (stack.size > 1) dp(4) else dp(16), dp(10), dp(16), dp(6))
         content.removeAllViews()
         footer.removeAllViews()
+        Motion.beginRender(this, s, change)
         try {
             s.build(content)
             s.footer(footer)
@@ -227,10 +305,15 @@ class MainActivity : Activity() {
                 muted(e.toString())
                 button("Voltar ao início", Btn.SECONDARY) { setRoot(HomeScreen()) }
             }
+        } finally {
+            Motion.endRender()
         }
+        lastPage = s.page
         footer.visibility = if (footer.childCount > 0) View.VISIBLE else View.GONE
         if (footer.childCount > 0) footer.setPadding(dp(16), dp(8), dp(16), dp(4))
         renderNav(s.tab)
+        if (animate) transitions.play(change, content, titleView, footer)
+        else if (change == ScreenChange.NONE) Motion.replayTap(tap, content, footer)
         if (s.keepScreenOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         scroll.post { scroll.scrollTo(0, scrollY) }
@@ -241,14 +324,17 @@ class MainActivity : Activity() {
         backButton.visibility = View.GONE
         content.removeAllViews()
         content.space(120)
-        content.text("👑", 56f, gravity = Gravity.CENTER)
-        content.text("FitKingIA", 28f, bold = true, gravity = Gravity.CENTER)
-        content.text("Carregando o banco de conhecimento…", 14f, C.muted, gravity = Gravity.CENTER)
+        val crown = content.text("👑", 56f, gravity = Gravity.CENTER)
+        val name = content.text("FitKingIA", 28f, bold = true, gravity = Gravity.CENTER)
+        val hint = content.text("Carregando o banco de conhecimento…", 14f, C.muted, gravity = Gravity.CENTER)
         renderNav(null)
+        splashAnims = Motion.splash(crown, name, hint)
     }
 
     private fun showFatal(e: Throwable) {
         android.util.Log.e("FitKingIA", "falha ao abrir o app", e)
+        splashAnims.forEach { it.cancel() }
+        splashAnims = emptyList()
         content.removeAllViews()
         content.space(60)
         content.card(stroke = C.danger) {
@@ -266,6 +352,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        splashAnims.forEach { it.cancel() }
         stack.forEach { it.onLeave() }
         super.onDestroy()
     }

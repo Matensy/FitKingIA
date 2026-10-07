@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.fitkingia.app.data.Graph
 import com.fitkingia.app.screens.*
+import com.fitkingia.app.ui.Motion
 import com.fitkingia.appcore.AppClock
 import com.fitkingia.appcore.FitKing
 import com.fitkingia.appcore.UserDb
@@ -36,6 +37,7 @@ class AppUiTest {
     private var now = LocalDateTime.of(2026, 9, 28, 9, 0) // segunda-feira
 
     @Before fun setUp() {
+        Motion.enabled = false // sem animações: estados finais imediatos e determinísticos
         MainActivity.synchronous = true
         Graph.fit = null
         Graph.override = {

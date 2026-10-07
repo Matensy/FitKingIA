@@ -1,13 +1,17 @@
 package com.fitkingia.app.ui
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Typeface
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import kotlin.math.max
+import kotlin.math.min
 
 /** Quebra os filhos em linhas (chips de alternativas). */
 class FlowLayout(context: Context) : ViewGroup(context) {
@@ -151,5 +155,155 @@ class BarChart(context: Context, private val labels: List<String>, private val v
             val gy = (bottom - (bottom - top) * (it / hi)).toFloat()
             canvas.drawLine(0f, gy, width.toFloat(), gy, goalPaint)
         }
+    }
+}
+
+/** Preenchimento da barra de progresso; [shown] (0..1) é o que está desenhado (animado pelo Motion). */
+class BarFill(context: Context, val fraction: Float, color: Int) : View(context) {
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = color }
+    var shown: Float = fraction
+        set(v) { field = v; invalidate() }
+
+    override fun onDraw(canvas: Canvas) {
+        if (shown <= 0f || width == 0) return
+        val h = height.toFloat()
+        // Valor pequeno ainda aparece como um ponto (largura mínima = altura).
+        val w = max(width * shown.coerceAtMost(1f), min(h, width.toFloat()))
+        canvas.drawRoundRect(0f, 0f, w, h, h / 2, h / 2, paint)
+    }
+}
+
+/**
+ * Anel do cronômetro de descanso: o arco esvazia continuamente conforme o tempo passa e o
+ * tempo restante fica no centro. Nos últimos 10 s o arco fica na cor de destaque.
+ */
+class RestRing(context: Context) : View(context) {
+    private var left = 0
+    private var total = 1
+    private var shown = 0f
+    private var anim: ValueAnimator? = null
+    private val stroke = context.dp(6).toFloat()
+    private val track = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = stroke; color = C.stroke }
+    private val arc = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = stroke; strokeCap = Paint.Cap.ROUND; color = C.fact }
+    private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = C.text
+        textAlign = Paint.Align.CENTER
+        textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15f, context.resources.displayMetrics)
+        typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
+    }
+    private val oval = RectF()
+
+    /** Fração desenhada (0..1). */
+    val fraction: Float get() = shown
+
+    /**
+     * Atualiza o tempo. [smooth] anima o arco até o novo valor (a cada segundo, ~1 s linear, o
+     * que dá um movimento contínuo); [fromEmpty] enche do zero (descanso que acabou de começar).
+     */
+    fun set(left: Int, total: Int, smooth: Boolean = true, fromEmpty: Boolean = false) {
+        this.left = left
+        this.total = max(max(total, left), 1)
+        val target = left.toFloat() / this.total
+        contentDescription = "Descanso ${Dates.mmss(left)}"
+        arc.color = if (left <= 10) C.accent else C.fact
+        anim?.cancel()
+        anim = null
+        if (!Motion.on(context) || (!smooth && !fromEmpty)) { shown = target; invalidate(); return }
+        val from = if (fromEmpty) 0f else shown
+        shown = from
+        anim = ValueAnimator.ofFloat(from, target).apply {
+            duration = if (fromEmpty) 420 else 950
+            interpolator = if (fromEmpty) Motion.easeOut else Motion.linear
+            addUpdateListener { shown = it.animatedValue as Float; invalidate() }
+            start()
+        }
+        invalidate()
+    }
+
+    override fun onDetachedFromWindow() {
+        anim?.cancel()
+        super.onDetachedFromWindow()
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val size = context.dp(58)
+        setMeasuredDimension(resolveSize(size, widthMeasureSpec), resolveSize(size, heightMeasureSpec))
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        val s = min(width, height).toFloat()
+        val cx = width / 2f
+        val cy = height / 2f
+        oval.set(cx - s / 2 + stroke / 2, cy - s / 2 + stroke / 2, cx + s / 2 - stroke / 2, cy + s / 2 - stroke / 2)
+        canvas.drawArc(oval, 0f, 360f, false, track)
+        if (shown > 0f) canvas.drawArc(oval, -90f, 360f * shown.coerceAtMost(1f), false, arc)
+        canvas.drawText(Dates.mmss(left), cx, cy - (label.descent() + label.ascent()) / 2, label)
+    }
+}
+
+/** Confete simples (partículas em Canvas) para comemorar; [progress] vai de 0 a 1 em ~1,5 s. */
+class ConfettiView(context: Context, seed: Long = 7L) : View(context) {
+    private class Piece(
+        val angle: Double, val speed: Float, val spin: Float, val rot0: Float, val flip: Float,
+        val w: Float, val h: Float, val color: Int, val round: Boolean,
+    )
+
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pieces = ArrayList<Piece>()
+    var progress = 0f
+        set(v) { field = v; invalidate() }
+
+    init {
+        val rnd = java.util.Random(seed)
+        val colors = intArrayOf(C.accent, C.success, C.warning, C.fact, C.ai, C.danger, C.text)
+        val unit = context.dp(1).toFloat()
+        repeat(COUNT) {
+            // Leque para cima (de -170° a -10°), alguns pedaços mais rápidos que outros.
+            pieces += Piece(
+                angle = Math.toRadians(-170.0 + rnd.nextDouble() * 160.0),
+                speed = 0.55f + rnd.nextFloat() * 0.75f,
+                spin = (rnd.nextFloat() - 0.5f) * 900f,
+                rot0 = rnd.nextFloat() * 360f,
+                flip = 4f + rnd.nextFloat() * 8f,
+                w = unit * (5 + rnd.nextInt(5)),
+                h = unit * (8 + rnd.nextInt(6)),
+                color = colors[rnd.nextInt(colors.size)],
+                round = rnd.nextInt(4) == 0,
+            )
+        }
+        isClickable = false
+        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        if (progress <= 0f || progress >= 1f) return
+        val t = progress * DURATION_MS / 1000f // segundos
+        val ox = width / 2f
+        val oy = height * 0.2f
+        val g = height * 0.8f // "gravidade" (px/s²)
+        val drag = 2.2f       // resistência do ar: o leque abre rápido e desacelera
+        val travel = (1 - Math.exp((-drag * t).toDouble())).toFloat() / drag
+        val fadeFrom = 0.7f
+        val alpha = if (progress < fadeFrom) 255 else ((1 - (progress - fadeFrom) / (1 - fadeFrom)) * 255).toInt().coerceIn(0, 255)
+        for (p in pieces) {
+            // Abertura horizontal proporcional à largura; vertical, à altura.
+            val x = ox + (Math.cos(p.angle) * p.speed * width * travel * 1.1).toFloat()
+            val y = oy + (Math.sin(p.angle) * p.speed * height * travel).toFloat() + 0.5f * g * t * t
+            paint.color = p.color
+            paint.alpha = alpha
+            canvas.save()
+            canvas.translate(x, y)
+            canvas.rotate(p.rot0 + p.spin * t)
+            // "Vira" no ar: a altura oscila como se o papel girasse em 3D.
+            val sy = Math.abs(Math.cos((p.flip * t).toDouble())).toFloat().coerceAtLeast(0.15f)
+            if (p.round) canvas.drawCircle(0f, 0f, p.w / 2, paint)
+            else canvas.drawRect(-p.w / 2, -p.h / 2 * sy, p.w / 2, p.h / 2 * sy, paint)
+            canvas.restore()
+        }
+    }
+
+    companion object {
+        const val DURATION_MS = 1500L
+        private const val COUNT = 90
     }
 }

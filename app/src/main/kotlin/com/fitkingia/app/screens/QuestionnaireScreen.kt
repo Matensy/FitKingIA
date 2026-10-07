@@ -34,6 +34,7 @@ class QuestionnaireScreen(private val a: Answers, private val firstRun: Boolean 
     private val step get() = steps[index.coerceAtMost(steps.lastIndex)]
 
     override val title: String get() = if (firstRun) "Vamos montar seu treino" else "Questionário"
+    override val page get() = index
 
     override fun build(root: LinearLayout) {
         val kb = fit.kb
