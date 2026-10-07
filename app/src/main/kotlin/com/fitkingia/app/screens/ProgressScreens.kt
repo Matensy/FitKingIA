@@ -72,8 +72,9 @@ class ProgressScreen : Screen() {
         val prs = fit.records()
         root.h2("Recordes pessoais")
         root.card {
-            if (prs.isEmpty()) muted("Seus PRs aparecem aqui depois do segundo treino de cada exercício.")
-            prs.take(10).forEach { kv(Dates.short(it.date), it.description.removePrefix("🏆 NOVO RECORDE — ")) }
+            if (prs.isEmpty()) muted("Seus recordes aparecem aqui depois do segundo treino de cada exercício.")
+            // Registros de versões antigas foram gravados com "NOVO PR".
+            prs.take(10).forEach { kv(Dates.short(it.date), it.description.removePrefix("🏆 NOVO RECORDE — ").removePrefix("🏆 NOVO PR — ")) }
         }
 
         bodySection(root)

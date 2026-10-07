@@ -68,7 +68,7 @@ object Codec {
     }
 
     fun sessionFrom(o: JsonObject, kb: KnowledgeBase): PlannedSession = PlannedSession(
-        key = o.str("key"), name = o.str("name"),
+        key = o.str("key"), name = LegacyNames.pt(o.str("name")),
         exercises = o["exercises"]!!.jsonArray.mapNotNull { exerciseFrom(it.jsonObject, kb) },
         day = o["day"]?.jsonPrimitive?.int?.let(DayOfWeek::of),
         budgetMinutes = o["budget"]?.jsonPrimitive?.intOrNull,

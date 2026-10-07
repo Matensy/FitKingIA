@@ -33,6 +33,7 @@ class Printer(private val kb: KnowledgeBase, private val out: (String) -> Unit =
         out("")
         out("⏱ Tempo semanal estimado: ${p.weeklyMinutes} min")
         volume(p)
+        if (p.goalCheck.isNotEmpty()) { rule("SEU OBJETIVO × SEU TREINO"); explanations(p.goalCheck) }
         rule("POR QUE ESTE PROGRAMA")
         explanations(p.explanations)
         if (p.warnings.isNotEmpty()) { rule("AVISOS"); explanations(p.warnings) }

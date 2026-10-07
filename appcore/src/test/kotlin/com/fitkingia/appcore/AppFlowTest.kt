@@ -58,11 +58,21 @@ class AppFlowTest {
         assertEquals(setOf(BodyRegion.GLUTES), stored.priorities)
         assertEquals(generated.volumeTargets, stored.volumeTargets)
         assertEquals(generated.sessions.map { it.name }, stored.sessions.map { it.name })
-        assertTrue(stored.explanations.any { it.text.contains("Glúteos em") && it.ruleId == env.kb.ruleSet.priority.id })
+        assertTrue(generated.goalCheck.any { it.text.contains("Glúteos em") && it.ruleId == env.kb.ruleSet.priority.id })
+        val live = assertNotNull(env.app.goalCheck())
+        assertTrue(live.coverage.single { it.region == BodyRegion.GLUTES }.ok, live.warnings.joinToString { it.text })
         assertEquals(setOf(BodyRegion.GLUTES), env.app.currentAnswers().priorities.toSet())
         // Refazer o programa (ex.: depois de registrar dor) mantém a prioridade.
         val again = assertIs<ProgramResult.Generated>(env.app.regenerate()).program
         assertEquals(setOf(BodyRegion.GLUTES), again.priorities)
+    }
+
+    @Test fun `nomes antigos em ingles viram portugues sem trocar o treino`() {
+        assertEquals("Empurrar", LegacyNames.pt("Push (empurrar)"))
+        assertEquals("Pernas A", LegacyNames.pt("Legs A"))
+        assertEquals("Corpo inteiro B", LegacyNames.pt("Full Body B"))
+        assertEquals("Superiores A", LegacyNames.pt("Superiores A"))
+        assertEquals("Inferiores B — glúteos e posterior", LegacyNames.pt("Inferiores B — glúteos e posterior"))
     }
 
     @Test fun `banco da versao 1 migra para a 2 sem perder dados`() {
@@ -78,6 +88,10 @@ class AppFlowTest {
         assertTrue("priorities" in db.query("PRAGMA table_info(programs)") { it.str("name") })
         assertEquals("Ana", db.single("SELECT name FROM users WHERE id=1") { it.str("name") })
         UserDb.migrate(db, schema) // idempotente
+        // Queda entre o ALTER e o user_version (versões antigas da migração): roda de novo sem erro.
+        db.execute("PRAGMA user_version = 1")
+        UserDb.migrate(db, schema)
+        assertEquals(UserDb.VERSION, db.single("PRAGMA user_version") { it.int("user_version") })
         db.execute("DELETE FROM users") // o usuário de mentira não tem perfil completo; o app grava um novo
         val kb = BundledKnowledge.load()
         val app = FitKing(kb, db, MutableClock(TestEnv.MONDAY_9H))

@@ -22,10 +22,16 @@ class KnowledgeDbTest {
         assertTrue(kb.exercises.size >= 100)
         assertTrue(kb.sources.size >= 30)
         assertTrue(kb.splits.size >= 10)
-        assertEquals((1..6).toSet(), kb.splits.filter { it.emphasis.isEmpty() }.map { it.daysPerWeek }.toSet())
-        // Modelos com ênfase em glúteos/pernas para 3, 4 e 5 dias (inferiores 3×/semana).
-        assertEquals(setOf(3, 4, 5), kb.splits.filter { BodyRegion.GLUTES in it.emphasis }.map { it.daysPerWeek }.toSet())
+        assertEquals((1..6).toSet(), daysWithEmphasis(emptySet()))
+        // Modelos com ênfase em glúteos (e pernas) de 2 a 6 dias: inferiores 3×/semana a partir de 3 dias.
+        assertEquals((2..6).toSet(), daysWithEmphasis(setOf(BodyRegion.GLUTES, BodyRegion.LEGS)))
+        // "Pernas (coxas)" tem modelos próprios: não cai no modelo de glúteos.
+        assertEquals(setOf(3, 4, 5), daysWithEmphasis(setOf(BodyRegion.LEGS)))
     }
+
+    // Fora do teste de nome acentuado (lambdas lá dentro geram .class com acento).
+    private fun daysWithEmphasis(emphasis: Set<BodyRegion>): Set<Int> =
+        kb.splits.filter { it.emphasis == emphasis }.map { it.daysPerWeek }.toSet()
 
     @Test fun `toda regra baseada em evidência chega até uma fonte verificada`() {
         for (r in kb.rules.filter { it.basis == RuleBasis.EVIDENCE }) {

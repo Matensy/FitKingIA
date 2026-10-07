@@ -3,15 +3,11 @@ package com.fitkingia.app.screens
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.fitkingia.app.ui.*
-import com.fitkingia.core.explain.Explanation
 import com.fitkingia.core.knowledge.KnowledgeBase
 import com.fitkingia.core.model.BodyRegion
 import com.fitkingia.core.model.Fmt
 import com.fitkingia.core.program.AlignmentReport
 import com.fitkingia.core.program.RegionCoverage
-
-/** As explicações da checagem "objetivo × treino" (para não repetir em "Decisões do motor"). */
-fun KnowledgeBase.isGoalCheck(e: Explanation) = e.ruleId == ruleSet.priority.id
 
 /**
  * "Seu objetivo × seu treino": para cada região priorizada, os números que dizem se o programa
@@ -20,7 +16,6 @@ fun KnowledgeBase.isGoalCheck(e: Explanation) = e.ruleId == ruleSet.priority.id
 fun ViewGroup.goalSection(report: AlignmentReport, kb: KnowledgeBase, onChoosePriority: (() -> Unit)? = null) {
     h2("Seu objetivo × seu treino")
     val priorities = report.coverage.filter { it.priority }
-    val half = kb.ruleSet.priority.params.minFocusedOfTarget
     card(stroke = if (priorities.any { !it.ok }) C.warning else null) {
         if (priorities.isEmpty()) {
             report.lines.forEach { explanation(it) }
@@ -35,8 +30,9 @@ fun ViewGroup.goalSection(report: AlignmentReport, kb: KnowledgeBase, onChoosePr
             }
             metric("Treinos na semana", "${c.frequency} de ${report.sessions} (mínimo ${c.minFrequency})", c.frequency >= c.minFrequency,
                 c.frequency.toDouble() / c.minFrequency.coerceAtLeast(1))
-            metric("Séries focadas por semana", "${c.focusedSets} (normal: ${Fmt.num(c.normalTarget)})",
-                c.focusedSets + 1e-9 >= c.normalTarget * half, c.focusedSets / (c.normalTarget * 1.5).coerceAtLeast(1.0))
+            val perMuscle = if (kb.trackedMuscles.count { it.focusRegion == c.region } > 1) "/músculo" else ""
+            metric("Séries focadas por semana", "${c.focusedSets} (normal: ${Fmt.num(c.normalTarget)}$perMuscle)",
+                c.focusedOk, c.focusedSets / (c.normalTarget * 1.5).coerceAtLeast(1.0))
             if (c.minShare > 0) metric("Fatia das séries de ${c.halfName()}", "${(c.shareOfHalf * 100).toInt()}% (mín. ${(c.minShare * 100).toInt()}%)",
                 c.shareOfHalf + 1e-9 >= c.minShare, c.shareOfHalf)
             if (c.sessionsWithCompound > 0) kv("Abre o treino", "${c.leadingSessions} de ${c.sessionsWithCompound} dias",

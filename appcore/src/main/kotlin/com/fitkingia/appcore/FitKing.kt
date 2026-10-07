@@ -189,6 +189,7 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
         val result = screening.evaluate(profile, a.safety)
         val generated = generator.generate(profile, result)
         repo.saveProfile(profile, a.safety, a.waistCm, a.sweat, a.hot, now())
+        dismissPriorityHint() // o questionário atual já tem a pergunta de prioridade
         saveNutritionTargets(profile)
         if (generated is ProgramResult.Generated) {
             repo.saveProgram(generated.program, now())

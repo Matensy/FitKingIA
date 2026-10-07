@@ -260,9 +260,7 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
                     )
                 }
             }.filterNotNull()
-            // Nome pelo modelo atual (programas antigos passam a mostrar os nomes novos, em português).
-            val name = split.sessions.firstOrNull { it.key == s.key }?.name ?: s.name
-            PlannedSession(s.key, name, items, s.day?.let(DayOfWeek::of), s.budget, s.est)
+            PlannedSession(s.key, LegacyNames.pt(s.name), items, s.day?.let(DayOfWeek::of), s.budget, s.est)
         }
         val focus = TrainingFocus.valueOf(h.focus)
         val tier = TrainingTier.valueOf(h.tier)
@@ -570,13 +568,16 @@ object UserDb {
         db.execute("PRAGMA foreign_keys = ON")
         val v = db.single("PRAGMA user_version") { it.int("user_version") } ?: 0
         if (v >= VERSION) return
+        // Tudo numa transação só, inclusive o user_version (é transacional no SQLite): se o app morrer
+        // no meio, o banco continua na versão antiga e a migração roda de novo no próximo início.
         db.transaction {
             if (v < 1) db.runScript(schemaSql)
             else {
-                // v2: regiões priorizadas gravadas junto do programa.
-                if (v < 2) db.execute("ALTER TABLE programs ADD COLUMN priorities TEXT")
+                // v2: regiões priorizadas gravadas junto do programa. Idempotente por segurança.
+                if (v < 2 && "priorities" !in db.query("PRAGMA table_info(programs)") { it.str("name") })
+                    db.execute("ALTER TABLE programs ADD COLUMN priorities TEXT")
             }
+            db.execute("PRAGMA user_version = $VERSION")
         }
-        db.execute("PRAGMA user_version = $VERSION")
     }
 }

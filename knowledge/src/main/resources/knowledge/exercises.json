@@ -5763,8 +5763,9 @@
   },
   {
     "id": "ankle_weight_kickback",
-    "name": "Coice em quatro apoios com caneleira",
+    "name": "Coice em quatro apoios",
     "aliases": [
+      "coice em quatro apoios",
       "coice com caneleira",
       "glúteo quatro apoios",
       "extensão de quadril em quatro apoios"
@@ -5779,9 +5780,7 @@
     "secondary": [
       "hamstrings"
     ],
-    "equipment": [
-      "ankle_weights"
-    ],
+    "equipment": [],
     "difficulty": 1,
     "min_tier": "NOVICE",
     "stability": 2,
@@ -5802,7 +5801,7 @@
     "safety_notes": [],
     "progression_methods": [
       "Mais repetições",
-      "Caneleira mais pesada",
+      "Caneleira (ou caneleira mais pesada)",
       "Pausa de 1–2 s na contração"
     ],
     "substitutes": [
@@ -5878,9 +5877,7 @@
       "glutes"
     ],
     "secondary": [],
-    "equipment": [
-      "ankle_weights"
-    ],
+    "equipment": [],
     "difficulty": 1,
     "min_tier": "NOVICE",
     "stability": 1,
@@ -5900,7 +5897,7 @@
     "safety_notes": [],
     "progression_methods": [
       "Mais repetições",
-      "Caneleira mais pesada",
+      "Caneleira (ou caneleira mais pesada)",
       "Pausa de 1–2 s no topo"
     ],
     "substitutes": [
@@ -6186,7 +6183,7 @@
     "pattern": "vertical_pull",
     "mechanic": "COMPOUND",
     "laterality": "BILATERAL",
-    "load_type": "MACHINE",
+    "load_type": "BODYWEIGHT",
     "primary": [
       "lats"
     ],
@@ -6206,7 +6203,7 @@
       "ELBOW": 1
     },
     "instructions": [
-      "Ajoelhe ou fique em pé na plataforma; quanto mais peso no pino, mais ajuda.",
+      "Ajoelhe ou fique em pé na plataforma; quanto mais peso no pino, mais ajuda (registre as repetições; a ajuda não conta como carga).",
       "Pegada um pouco além dos ombros; puxe até o queixo passar a barra.",
       "Desça devagar até estender os braços."
     ],
@@ -6216,7 +6213,8 @@
     ],
     "safety_notes": [],
     "progression_methods": [
-      "Diminua a ajuda (menos peso no pino) ao chegar no topo da faixa"
+      "Mais repetições",
+      "Menos ajuda (menos peso no pino) ao chegar no topo da faixa"
     ],
     "substitutes": [
       "lat_pulldown",

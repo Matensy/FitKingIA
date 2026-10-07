@@ -1,6 +1,7 @@
 package com.fitkingia.core.session
 
 import com.fitkingia.core.knowledge.KnowledgeBase
+import com.fitkingia.core.model.MuscleId
 import com.fitkingia.core.model.SlotRole
 import com.fitkingia.core.program.PlannedExercise
 import com.fitkingia.core.program.PlannedSession
@@ -38,7 +39,12 @@ class SessionFitter(private val kb: KnowledgeBase) {
     private val volume = VolumeCalculator(kb.ruleSet.volume.params)
     private val minSets = kb.ruleSet.volume.params.minSetsPerExercise
 
-    fun fit(session: PlannedSession, budgetMinutes: Int, keepMain: Int = 1): FitResult {
+    /**
+     * [protect]: músculos priorizados pelo usuário — exercícios que os têm como principais são os últimos a
+     * perder séries ou sair (quem prioriza braços não perde a rosca para caber no tempo).
+     */
+    fun fit(session: PlannedSession, budgetMinutes: Int, keepMain: Int = 1, protect: Set<MuscleId> = emptySet()): FitResult {
+        val guarded = { e: PlannedExercise -> e.exercise.primaryMuscles.any { it in protect } }
         val items = session.exercises.toMutableList()
         val changes = mutableListOf<SessionChange>()
         val original = clock.estimateMinutes(items)
@@ -46,15 +52,15 @@ class SessionFitter(private val kb: KnowledgeBase) {
 
         var restShortened = false
         while (over()) {
-            if (removeFullyRedundant(items, changes)) continue
+            if (removeFullyRedundant(items, changes, guarded)) continue
             if (!restShortened) {
                 restShortened = true
                 if (shortenRest(items, changes)) continue
             }
-            if (reduceSets(items, changes, SlotRole.ACCESSORY)) continue
-            if (reduceSets(items, changes, SlotRole.SECONDARY)) continue
-            if (removeMostRedundant(items, changes)) continue
-            if (reduceSets(items, changes, SlotRole.MAIN)) continue
+            if (reduceSets(items, changes, SlotRole.ACCESSORY, guarded)) continue
+            if (reduceSets(items, changes, SlotRole.SECONDARY, guarded)) continue
+            if (removeMostRedundant(items, changes, guarded)) continue
+            if (reduceSets(items, changes, SlotRole.MAIN, guarded)) continue
             if (removeLastMain(items, changes, keepMain)) continue
             changes += SessionChange(
                 ChangeKind.NOT_ENOUGH_TIME, null,
@@ -91,9 +97,9 @@ class SessionFitter(private val kb: KnowledgeBase) {
         all.filter { o -> o !== target && target.exercise.primaryMuscles.any { it in o.exercise.primaryMuscles } }
             .joinToString { it.exercise.name }
 
-    private fun removeFullyRedundant(items: MutableList<PlannedExercise>, changes: MutableList<SessionChange>): Boolean {
+    private fun removeFullyRedundant(items: MutableList<PlannedExercise>, changes: MutableList<SessionChange>, guarded: (PlannedExercise) -> Boolean): Boolean {
         val victim = items.withIndex()
-            .filter { it.value.role != SlotRole.MAIN && redundancy(it.value, items, directOnly = true) >= 0.999 }
+            .filter { it.value.role != SlotRole.MAIN && !guarded(it.value) && redundancy(it.value, items, directOnly = true) >= 0.999 }
             .sortedWith(compareBy<IndexedValue<PlannedExercise>> { it.value.role.keepPriority }.thenByDescending { it.index })
             .firstOrNull() ?: return false
         val ex = victim.value
@@ -119,9 +125,9 @@ class SessionFitter(private val kb: KnowledgeBase) {
         return changed
     }
 
-    private fun reduceSets(items: MutableList<PlannedExercise>, changes: MutableList<SessionChange>, role: SlotRole): Boolean {
+    private fun reduceSets(items: MutableList<PlannedExercise>, changes: MutableList<SessionChange>, role: SlotRole, guarded: (PlannedExercise) -> Boolean): Boolean {
         val idx = items.indices.filter { items[it].role == role && items[it].sets > minSets }
-            .maxWithOrNull(compareBy<Int> { redundancy(items[it], items) }.thenBy { it }) ?: return false
+            .maxWithOrNull(compareBy<Int> { if (guarded(items[it])) 0 else 1 }.thenBy { redundancy(items[it], items) }.thenBy { it }) ?: return false
         val ex = items[idx]
         items[idx] = ex.copy(sets = ex.sets - 1)
         changes += SessionChange(
@@ -131,10 +137,11 @@ class SessionFitter(private val kb: KnowledgeBase) {
         return true
     }
 
-    private fun removeMostRedundant(items: MutableList<PlannedExercise>, changes: MutableList<SessionChange>): Boolean {
+    private fun removeMostRedundant(items: MutableList<PlannedExercise>, changes: MutableList<SessionChange>, guarded: (PlannedExercise) -> Boolean): Boolean {
         val victim = items.withIndex().filter { it.value.role != SlotRole.MAIN }
             .sortedWith(
-                compareBy<IndexedValue<PlannedExercise>> { it.value.role.keepPriority }
+                compareBy<IndexedValue<PlannedExercise>> { if (guarded(it.value)) 1 else 0 }
+                    .thenBy { it.value.role.keepPriority }
                     .thenByDescending { redundancy(it.value, items) }
                     .thenByDescending { it.index }
             ).firstOrNull() ?: return false

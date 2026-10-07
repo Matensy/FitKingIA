@@ -182,7 +182,11 @@ class AppUiTest {
         answerQuestionnaire()
         assertShows("Seu objetivo × seu treino")
         assertShows("Treino equilibrado")
+        // Quem acabou de responder já viu a pergunta; a dica é para quem tinha programa da versão anterior.
         tap("Ver meu treino de hoje")
+        assertFalse(screenText().contains("Quer focar numa parte do corpo?"))
+        activity.fit.repo.setPref(com.fitkingia.appcore.UserRepository.PREF_PRIORITY_HINT, null)
+        activity.setRoot(HomeScreen()); idle()
         assertShows("Quer focar numa parte do corpo?")
         tap("Escolher")
         assertTrue(activity.current is QuestionnaireScreen)

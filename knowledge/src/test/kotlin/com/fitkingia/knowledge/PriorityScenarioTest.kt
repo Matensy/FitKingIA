@@ -34,7 +34,8 @@ class PriorityScenarioTest {
         fun regionMuscles(r: BodyRegion) = kb.trackedMuscles.filter { it.focusRegion == r }.map { it.id }.toSet()
         fun directSessions(p: Program, r: BodyRegion) = p.sessions.count { s -> s.exercises.any { e -> e.exercise.primaryMuscles.any { it in regionMuscles(r) } } }
         fun weekly(p: Program, r: BodyRegion) = regionMuscles(r).map { p.weeklyVolume[it] ?: 0.0 }.average()
-        fun warned(p: Program, r: BodyRegion) = p.warnings.any { r.label in it.text }
+        fun warned(p: Program, r: BodyRegion) =
+            p.warnings.any { r.label in it.text } || p.goalCheck.any { it.text.startsWith("⚠️") && r.label in it.text }
         fun focused(p: Program, r: BodyRegion) = p.sessions.flatMap { it.exercises }.filter { e -> e.exercise.focus.any { it in regionMuscles(r) } }.sumOf { it.sets }
     }
 
@@ -68,12 +69,12 @@ class PriorityScenarioTest {
         // e nenhuma sessão começa por acessório se houver composto.
         val pm = priorities.flatMap { regionMuscles(it) }.toSet()
         for (s in program.sessions) {
-            val compound = s.exercises.indexOfFirst { e -> e.role != SlotRole.ACCESSORY && e.exercise.primaryMuscles.any { it in pm } }
+            val compound = s.exercises.indexOfFirst { e -> e.role != SlotRole.ACCESSORY && e.exercise.focus.any { it in pm } }
             if (compound >= 0) assertTrue(compound < rule.leadingPositions, "${s.name}: composto da prioridade só na posição ${compound + 1}")
             if (s.exercises.any { it.role != SlotRole.ACCESSORY }) assertTrue(s.exercises.first().role != SlotRole.ACCESSORY, "${s.name} começa por acessório")
         }
         // a checagem objetivo × treino sempre aparece (✅ ou ⚠️) para cada prioridade
-        for (r in priorities) assertTrue((program.explanations + program.warnings).any { r.label in it.text && it.ruleId == kb.ruleSet.priority.id }, "sem checagem para $r")
+        for (r in priorities) assertTrue(program.goalCheck.any { r.label in it.text && it.ruleId == kb.ruleSet.priority.id }, "sem checagem para $r")
     }
 
     @Test fun `quem quer treinar gluteo treina inferiores 3x por semana`() {
@@ -85,7 +86,7 @@ class PriorityScenarioTest {
             val report = GoalAlignment(kb).check(program, p)
             val c = report.coverage.single { it.region == BodyRegion.GLUTES }
             assertTrue(c.frequency >= 3)
-            assertTrue(c.ok, "$env/$exp/$days: checagem de glúteos não passou: ${(program.explanations + program.warnings).filter { it.ruleId == kb.ruleSet.priority.id }.joinToString { it.text }}")
+            assertTrue(c.ok, "$env/$exp/$days: checagem de glúteos não passou: ${program.goalCheck.joinToString { it.text }}")
             assertTrue(program.split.emphasis.contains(BodyRegion.GLUTES), "$env/$exp/$days: modelo ${program.split.id} sem ênfase em glúteos")
         }
     }

@@ -362,13 +362,13 @@ class ProgramReadyScreen(private val outcome: SubmitOutcome) : Screen() {
                 }
                 val kb = fit.kb
                 root.goalSection(GoalAlignment(kb).check(p, outcome.profile), kb)
-                val warnings = p.warnings.filterNot { kb.isGoalCheck(it) }
+                val warnings = p.warnings
                 if (warnings.isNotEmpty()) {
                     root.h2("Avisos do motor")
                     root.card(stroke = C.warning) { warnings.forEach { explanation(it) } }
                 }
                 root.h2("Por que este programa?")
-                root.card { p.explanations.filterNot { kb.isGoalCheck(it) }.forEach { explanation(it) } }
+                root.card { p.explanations.forEach { explanation(it) } }
                 root.button("Ver meu treino de hoje") { main.setRoot(HomeScreen()) }
             }
             is ProgramResult.Refused -> {

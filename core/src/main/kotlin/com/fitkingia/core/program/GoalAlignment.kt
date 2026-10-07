@@ -15,8 +15,15 @@ data class RegionCoverage(
     val minFrequency: Int,
     /** E — séries/semana em exercícios com FOCO na região (curadoria: elevação pélvica foca glúteos; agachamento, quadríceps). */
     val focusedSets: Int,
-    /** Alvo normal (sem prioridade) da região, para comparar as séries focadas. */
+    /** Alvo normal (sem prioridade) por músculo da região, para comparar as séries focadas. */
     val normalTarget: Double,
+    /**
+     * Cada músculo rastreado da região tem séries focadas ≥ alvo normal × min_focused_of_target. Por músculo, e
+     * não somando a região: uma remada conta para latíssimo e dorsal média, mas é uma série só.
+     */
+    val focusedOk: Boolean,
+    /** Músculos rastreados da região abaixo do mínimo planejado, ex.: "quadríceps 0 de 9". */
+    val musclesBelowMin: List<String>,
     /** V — séries/semana com contagem fracionada (média dos músculos rastreados da região). */
     val weeklySets: Double,
     /** S — séries focadas ÷ séries da metade do corpo (inferiores para glúteos/pernas; superiores para o resto). */
@@ -65,28 +72,36 @@ class GoalAlignment(private val kb: KnowledgeBase) {
             val focused = all.filter { e -> e.exercise.focus.any { it in ids } }.sumOf { it.sets }
             val halfSets = all.filter { half(it, region) }.sumOf { it.sets }
             val share = if (halfSets == 0) 0.0 else focused.toDouble() / halfSets
-            val withCompound = sessions.filter { s -> s.exercises.any { e -> e.role != SlotRole.ACCESSORY && e.exercise.primaryMuscles.any { it in ids } } }
+            // Dias em que a região é o foco: há composto com FOCO nela (o terra no dia de glúteos não é dia de costas).
+            val withCompound = sessions.filter { s -> s.exercises.any { e -> e.role != SlotRole.ACCESSORY && e.exercise.focus.any { it in ids } } }
             val leading = withCompound.count { s ->
-                s.exercises.indexOfFirst { e -> e.exercise.primaryMuscles.any { it in ids } } in 0 until p.leadingPositions
+                s.exercises.indexOfFirst { e -> e.exercise.focus.any { it in ids } } in 0 until p.leadingPositions
             }
-            val normalTarget = muscles.map { base.target * it.volumeFactor }.average()
+            val normalTarget = muscles.maxOf { base.target * it.volumeFactor }
+            fun focusedOn(m: MuscleId) = all.filter { e -> m in e.exercise.focus }.sumOf { it.sets }
             val minFreq = p.minFrequency(region, n)
             val minShare = p.minShareOfHalf[region] ?: 0.0
             val priority = region in profile.priorities
             val vol = muscles.map { weekly[it.id] ?: 0.0 }.average()
-            val ok = if (priority) frequency >= minFreq && focused + 1e-9 >= normalTarget * p.minFocusedOfTarget &&
-                share + 1e-9 >= minShare && leading == withCompound.size
-            else muscles.all { m -> (weekly[m.id] ?: 0.0) + 1e-9 >= (program.volumeTargets[m.id]?.min ?: 0.0) }
-            RegionCoverage(region, priority, frequency, minFreq, focused, normalTarget, vol, share, minShare, leading, withCompound.size, ok)
+            val below = muscles.filter { m -> (weekly[m.id] ?: 0.0) + 1e-9 < (program.volumeTargets[m.id]?.min ?: 0.0) }
+                .map { m -> "${m.name.lowercase()} ${Fmt.num(weekly[m.id] ?: 0.0)} de ${Fmt.num(program.volumeTargets[m.id]?.min ?: 0.0)}" }
+            val focusedOk = muscles.all { m -> focusedOn(m.id) + 1e-9 >= base.target * m.volumeFactor * p.minFocusedOfTarget }
+            val ok = if (priority) frequency >= minFreq && focusedOk && share + 1e-9 >= minShare &&
+                leading == withCompound.size && below.isEmpty()
+            else below.isEmpty()
+            RegionCoverage(region, priority, frequency, minFreq, focused, normalTarget, focusedOk, below, vol, share, minShare,
+                leading, withCompound.size, ok)
         }
 
         val lines = mutableListOf<Explanation>()
         val warnings = mutableListOf<Explanation>()
         if (profile.priorities.isEmpty()) {
-            val low = coverage.filter { !it.ok }
+            // Todos os músculos rastreados (inclui panturrilha, que não pertence a nenhuma região priorizável).
+            val tracked = kb.trackedMuscles
+            val low = tracked.filter { m -> (weekly[m.id] ?: 0.0) + 1e-9 < (program.volumeTargets[m.id]?.min ?: 0.0) }
             lines += Explanation.rule(
-                "Treino equilibrado (sem região prioritária): ${coverage.count { it.ok }} de ${coverage.size} regiões dentro da faixa semanal planejada." +
-                    if (low.isEmpty()) "" else " Abaixo do mínimo: ${low.joinToString { it.region.label.lowercase() }}.",
+                "Treino equilibrado (sem região prioritária): ${tracked.size - low.size} de ${tracked.size} músculos dentro da faixa semanal planejada." +
+                    if (low.isEmpty()) "" else " Abaixo do mínimo: ${low.joinToString { it.name.lowercase() }}.",
                 rule.id,
             )
         }
@@ -99,7 +114,8 @@ class GoalAlignment(private val kb: KnowledgeBase) {
                 else -> "das séries de superiores"
             }
             val freqText = "$name em ${c.frequency} de $n treinos da semana"
-            val focusText = "${c.focusedSets} séries por semana em exercícios com foco em ${name.lowercase()} (referência sem prioridade: ${Fmt.num(c.normalTarget)})"
+            val perMuscle = if (kb.trackedMuscles.count { it.focusRegion == c.region } > 1) " por músculo" else ""
+            val focusText = "${c.focusedSets} séries por semana em exercícios com foco em ${name.lowercase()} (referência sem prioridade: ${Fmt.num(c.normalTarget)}$perMuscle)"
             val shareText = "$pct% $halfName são focadas em ${name.lowercase()}"
             val posText = when {
                 c.sessionsWithCompound == 0 -> "entra como acessório"
@@ -111,7 +127,8 @@ class GoalAlignment(private val kb: KnowledgeBase) {
             else {
                 val why = buildList {
                     if (c.frequency < c.minFrequency) add("frequência abaixo de ${c.minFrequency}× (faltou tempo ou equipamento compatível)")
-                    if (c.focusedSets + 1e-9 < c.normalTarget * p.minFocusedOfTarget) add("poucas séries focadas — o tempo ou o equipamento limitou")
+                    if (!c.focusedOk) add("poucas séries focadas — o tempo ou o equipamento limitou")
+                    if (c.musclesBelowMin.isNotEmpty()) add("abaixo do mínimo da prioridade (séries/semana): ${c.musclesBelowMin.joinToString()}")
                     if (c.shareOfHalf + 1e-9 < c.minShare) add("os exercícios escolhidos trabalham mais outras regiões (meta: ${(c.minShare * 100).toInt()}% ou mais)")
                     if (c.leadingSessions < c.sessionsWithCompound) add("em alguns treinos a região não ficou no começo")
                 }
@@ -121,8 +138,8 @@ class GoalAlignment(private val kb: KnowledgeBase) {
         val others = coverage.filter { !it.priority }
         if (profile.priorities.any { it !in p.noReductionFor } && others.isNotEmpty()) {
             lines += Explanation.rule(
-                "Para caber a prioridade no mesmo tempo, as demais regiões ficam em volume de manutenção " +
-                    "(${Fmt.num(others.minOf { it.weeklySets })}–${Fmt.num(others.maxOf { it.weeklySets })} séries/semana); " +
+                "Para caber a prioridade no mesmo tempo, as demais regiões têm meta e teto de manutenção — o excesso é cortado " +
+                    "(planejado: ${Fmt.num(others.minOf { it.weeklySets })}–${Fmt.num(others.maxOf { it.weeklySets })} séries/semana); " +
                     "músculos que trabalham junto com a prioridade não são reduzidos.",
                 rule.id,
             )

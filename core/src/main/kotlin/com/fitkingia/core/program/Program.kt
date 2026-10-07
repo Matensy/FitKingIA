@@ -36,6 +36,11 @@ data class Program(
     val warnings: List<Explanation>,
     /** Regiões priorizadas com que o programa foi gerado (as metas dependem disso). */
     val priorities: Set<BodyRegion> = emptySet(),
+    /**
+     * Checagem "seu objetivo × seu treino" feita na geração (avisos primeiro). Fica separada das
+     * explicações: o app recalcula ao vivo (vale depois de trocas) com GoalAlignment.
+     */
+    val goalCheck: List<Explanation> = emptyList(),
 ) {
     val trainingDays: List<DayOfWeek> get() = sessions.mapNotNull { it.day }
     val weeklyMinutes: Int get() = sessions.sumOf { it.estimatedMinutes }

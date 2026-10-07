@@ -282,11 +282,13 @@ class EntityExtractor(private val kb: KnowledgeBase) {
         ?.takeIf { id -> kb.supplements.any { it.id == id } }
 
     // ---------------------------------------------------------------- exercícios
-    private data class Alias(val exercise: Exercise, val words: List<String>)
+    /** [noise]: palavras do apelido que sozinhas não identificam o exercício, mas desempatam ("panturrilha sentado"). */
+    private data class Alias(val exercise: Exercise, val words: List<String>, val noise: List<String>)
 
     private val aliases: List<Alias> = kb.exercises.flatMap { ex ->
         (listOf(ex.name) + ex.aliases).map { a ->
-            Alias(ex, PtText.tokens(a).filter { it !in PtText.STOPWORDS && it !in NOISE && !it.startsWith("(") })
+            val tokens = PtText.tokens(a).filter { it !in PtText.STOPWORDS && !it.startsWith("(") }
+            Alias(ex, tokens.filter { it !in NOISE }, tokens.filter { it in NOISE && it !in CONNECTORS })
         }
     }.filter { it.words.isNotEmpty() }
 
@@ -297,13 +299,14 @@ class EntityExtractor(private val kb: KnowledgeBase) {
     fun exercise(tokens: List<String>, preferred: Set<ExerciseId> = emptySet()): Exercise? {
         val words = tokens.filter { it !in PtText.STOPWORDS }
         if (words.isEmpty()) return null
-        data class Hit(val ex: Exercise, val matched: Int, val total: Int)
+        data class Hit(val ex: Exercise, val matched: Int, val total: Int, val noise: Int)
         val hits = aliases.mapNotNull { a ->
             val matched = a.words.count { w -> words.any { PtText.similarWord(it, w) } }
-            if (matched == a.words.size) Hit(a.exercise, matched, a.words.size) else null
+            if (matched == a.words.size) Hit(a.exercise, matched, a.words.size, a.noise.count { it in words }) else null
         }
         return hits.sortedWith(
             compareByDescending<Hit> { it.matched }
+                .thenByDescending { it.noise }
                 .thenByDescending { it.ex.id in preferred }
                 .thenByDescending { it.ex.staple }
                 .thenBy { it.ex.id.value }
@@ -313,5 +316,6 @@ class EntityExtractor(private val kb: KnowledgeBase) {
     private companion object {
         /** Palavras dos nomes que sozinhas não identificam exercício. */
         val NOISE = setOf("maquina", "barra", "halter", "halteres", "polia", "peso", "corporal", "sentado", "pe", "com", "no", "na")
+        val CONNECTORS = setOf("com", "no", "na")
     }
 }

@@ -50,6 +50,14 @@ class CoachDialogueTest {
         assertTrue(why.intent == Intent.EXPLAIN_EXERCISE)
     }
 
+    @Test fun `aparelho no nome desempata exercicios parecidos`() {
+        val seated = chat("como faço panturrilha sentado?").single()
+        assertEquals(Intent.EXERCISE_HOWTO, seated.intent)
+        assertTrue("Panturrilha sentado" in seated.text, seated.text)
+        val cable = chat("como faço coice na polia?").single()
+        assertTrue("Coice na polia" in cable.text, cable.text)
+    }
+
     @Test fun `dor no joelho não diagnostica e oferece alternativas`() {
         val r = chat("meu joelho está doendo no agachamento").single()
         assertEquals(Intent.PAIN, r.intent)

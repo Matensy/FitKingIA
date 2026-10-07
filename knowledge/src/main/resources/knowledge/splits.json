@@ -751,7 +751,7 @@
       },
       {
         "key": "legs",
-        "name": "Pernas — glúteos e posterior",
+        "name": "Pernas — posterior e glúteos",
         "slots": [
           {
             "pattern": "hinge",
@@ -760,15 +760,14 @@
             "target_muscle": "hamstrings"
           },
           {
-            "pattern": "hip_extension",
+            "pattern": "squat",
             "role": "SECONDARY",
             "base_sets": 3
           },
           {
-            "pattern": "lunge",
+            "pattern": "hip_extension",
             "role": "SECONDARY",
-            "base_sets": 3,
-            "prefer_laterality": "UNILATERAL"
+            "base_sets": 3
           },
           {
             "pattern": "knee_flexion",
@@ -776,9 +775,9 @@
             "base_sets": 3
           },
           {
-            "pattern": "hip_abduction",
+            "pattern": "knee_extension",
             "role": "ACCESSORY",
-            "base_sets": 2
+            "base_sets": 3
           },
           {
             "pattern": "calf_raise",
@@ -989,7 +988,7 @@
       },
       {
         "key": "legs_b",
-        "name": "Pernas B — glúteos e posterior",
+        "name": "Pernas B — posterior e glúteos",
         "slots": [
           {
             "pattern": "hinge",
@@ -998,12 +997,12 @@
             "target_muscle": "hamstrings"
           },
           {
-            "pattern": "hip_extension",
+            "pattern": "squat",
             "role": "SECONDARY",
             "base_sets": 3
           },
           {
-            "pattern": "squat",
+            "pattern": "hip_extension",
             "role": "SECONDARY",
             "base_sets": 3
           },
@@ -1013,9 +1012,9 @@
             "base_sets": 3
           },
           {
-            "pattern": "hip_abduction",
+            "pattern": "knee_extension",
             "role": "ACCESSORY",
-            "base_sets": 2
+            "base_sets": 3
           },
           {
             "pattern": "calf_raise",
@@ -1492,6 +1491,789 @@
             "pattern": "calf_raise",
             "role": "ACCESSORY",
             "base_sets": 2
+          },
+          {
+            "pattern": "anti_rotation",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fbl2",
+    "name": "Corpo inteiro A/B — ênfase em glúteos e pernas",
+    "days_per_week": 2,
+    "min_tier": "NOVICE",
+    "focuses": [],
+    "priority": 10,
+    "rationale": "Para quem prioriza glúteos com 2 dias: os dois treinos começam por um exercício de glúteo (elevação pélvica ou dobradiça) e mantêm o resto do corpo em volume de manutenção.",
+    "emphasis": [
+      "GLUTES",
+      "LEGS"
+    ],
+    "sessions": [
+      {
+        "key": "full_a",
+        "name": "Corpo inteiro A — glúteos e quadríceps",
+        "slots": [
+          {
+            "pattern": "hip_extension",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "squat",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_push",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_pull",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hip_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "anti_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      },
+      {
+        "key": "full_b",
+        "name": "Corpo inteiro B — glúteos e posterior",
+        "slots": [
+          {
+            "pattern": "hip_extension",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hinge",
+            "role": "SECONDARY",
+            "base_sets": 3,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "lunge",
+            "role": "SECONDARY",
+            "base_sets": 2,
+            "prefer_laterality": "UNILATERAL"
+          },
+          {
+            "pattern": "horizontal_pull",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_push",
+            "role": "SECONDARY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "hip_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lowf6",
+    "name": "Inferiores ×3 + Superiores ×3 — ênfase em glúteos e pernas",
+    "days_per_week": 6,
+    "min_tier": "ADVANCED",
+    "focuses": [],
+    "priority": 10,
+    "rationale": "Para quem prioriza glúteos com 6 dias: inferiores 3× (glúteos e posterior, quadríceps e glúteos, glúteos unilateral) alternando com superiores 3× em volume de manutenção.",
+    "emphasis": [
+      "GLUTES",
+      "LEGS"
+    ],
+    "sessions": [
+      {
+        "key": "lower_glutes",
+        "name": "Inferiores — glúteos e posterior",
+        "slots": [
+          {
+            "pattern": "hip_extension",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hinge",
+            "role": "MAIN",
+            "base_sets": 3,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "lunge",
+            "role": "SECONDARY",
+            "base_sets": 3,
+            "prefer_laterality": "UNILATERAL"
+          },
+          {
+            "pattern": "knee_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hip_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          }
+        ]
+      },
+      {
+        "key": "push",
+        "name": "Empurrar (peito, ombros e tríceps)",
+        "slots": [
+          {
+            "pattern": "horizontal_push",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_push",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_adduction",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "shoulder_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "elbow_extension",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          }
+        ]
+      },
+      {
+        "key": "lower_quads",
+        "name": "Inferiores — quadríceps e glúteos",
+        "slots": [
+          {
+            "pattern": "squat",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hip_extension",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "lunge",
+            "role": "SECONDARY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "knee_extension",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "calf_raise",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "anti_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      },
+      {
+        "key": "pull",
+        "name": "Puxar (costas e bíceps)",
+        "slots": [
+          {
+            "pattern": "vertical_pull",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_pull",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_pull",
+            "role": "SECONDARY",
+            "base_sets": 2,
+            "prefer_laterality": "UNILATERAL"
+          },
+          {
+            "pattern": "horizontal_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "elbow_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          }
+        ]
+      },
+      {
+        "key": "glutes",
+        "name": "Glúteos — volume e unilateral",
+        "slots": [
+          {
+            "pattern": "hip_extension",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "lunge",
+            "role": "SECONDARY",
+            "base_sets": 3,
+            "prefer_laterality": "UNILATERAL"
+          },
+          {
+            "pattern": "hinge",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hip_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "calf_raise",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "anti_rotation",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      },
+      {
+        "key": "upper",
+        "name": "Superiores — completo",
+        "slots": [
+          {
+            "pattern": "horizontal_pull",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_push",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_pull",
+            "role": "SECONDARY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "shoulder_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "horizontal_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "elbow_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "elbow_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "legf3",
+    "name": "Corpo inteiro ×3 — ênfase em pernas (coxas)",
+    "days_per_week": 3,
+    "min_tier": "NOVICE",
+    "focuses": [],
+    "priority": 10,
+    "rationale": "Para quem prioriza as coxas (quadríceps e posterior) com 3 dias: todo treino começa por agachamento ou dobradiça, com extensora e flexora; superiores em volume de manutenção.",
+    "emphasis": [
+      "LEGS"
+    ],
+    "sessions": [
+      {
+        "key": "full_a",
+        "name": "Corpo inteiro A — quadríceps",
+        "slots": [
+          {
+            "pattern": "squat",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hinge",
+            "role": "SECONDARY",
+            "base_sets": 3,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "horizontal_push",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_pull",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "knee_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "anti_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      },
+      {
+        "key": "full_b",
+        "name": "Corpo inteiro B — posterior",
+        "slots": [
+          {
+            "pattern": "hinge",
+            "role": "MAIN",
+            "base_sets": 3,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "lunge",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_pull",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_push",
+            "role": "SECONDARY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "knee_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "calf_raise",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      },
+      {
+        "key": "full_c",
+        "name": "Corpo inteiro C — quadríceps e posterior",
+        "slots": [
+          {
+            "pattern": "squat",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "lunge",
+            "role": "SECONDARY",
+            "base_sets": 3,
+            "prefer_laterality": "UNILATERAL"
+          },
+          {
+            "pattern": "horizontal_pull",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_push",
+            "role": "SECONDARY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "knee_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "knee_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "legf4",
+    "name": "Inferiores ×3 + Superiores — ênfase em pernas (coxas)",
+    "days_per_week": 4,
+    "min_tier": "NOVICE",
+    "focuses": [],
+    "priority": 10,
+    "rationale": "Para quem prioriza as coxas com 4 dias: três treinos com pernas (quadríceps, posterior e um de corpo inteiro) e superiores 2× em volume de manutenção.",
+    "emphasis": [
+      "LEGS"
+    ],
+    "sessions": [
+      {
+        "key": "lower_quads",
+        "name": "Inferiores — quadríceps",
+        "slots": [
+          {
+            "pattern": "squat",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "lunge",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hinge",
+            "role": "SECONDARY",
+            "base_sets": 2,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "knee_extension",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "calf_raise",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "anti_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      },
+      {
+        "key": "upper",
+        "name": "Superiores",
+        "slots": [
+          {
+            "pattern": "horizontal_push",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_pull",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_pull",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_push",
+            "role": "SECONDARY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "shoulder_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "elbow_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "elbow_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      },
+      {
+        "key": "lower_post",
+        "name": "Inferiores — posterior",
+        "slots": [
+          {
+            "pattern": "hinge",
+            "role": "MAIN",
+            "base_sets": 3,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "squat",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "knee_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "knee_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "calf_raise",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          }
+        ]
+      },
+      {
+        "key": "full_legs",
+        "name": "Corpo inteiro — pernas e costas",
+        "slots": [
+          {
+            "pattern": "squat",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_pull",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_push",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "knee_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "elbow_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "legf5",
+    "name": "Inferiores ×3 + Superiores ×2 — ênfase em pernas (coxas)",
+    "days_per_week": 5,
+    "min_tier": "INTERMEDIATE",
+    "focuses": [],
+    "priority": 10,
+    "rationale": "Para quem prioriza as coxas com 5 dias: pernas 3× (quadríceps, posterior, unilateral) e superiores divididos em empurrar e puxar, em volume de manutenção.",
+    "emphasis": [
+      "LEGS"
+    ],
+    "sessions": [
+      {
+        "key": "lower_quads",
+        "name": "Inferiores — quadríceps",
+        "slots": [
+          {
+            "pattern": "squat",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "lunge",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hinge",
+            "role": "SECONDARY",
+            "base_sets": 2,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "knee_extension",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "calf_raise",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "anti_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          }
+        ]
+      },
+      {
+        "key": "push",
+        "name": "Empurrar (peito, ombros e tríceps)",
+        "slots": [
+          {
+            "pattern": "horizontal_push",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "vertical_push",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_adduction",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "shoulder_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "elbow_extension",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          }
+        ]
+      },
+      {
+        "key": "lower_post",
+        "name": "Inferiores — posterior",
+        "slots": [
+          {
+            "pattern": "hinge",
+            "role": "MAIN",
+            "base_sets": 3,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "squat",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "knee_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "knee_extension",
+            "role": "ACCESSORY",
+            "base_sets": 2
+          },
+          {
+            "pattern": "calf_raise",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          }
+        ]
+      },
+      {
+        "key": "pull",
+        "name": "Puxar (costas e bíceps)",
+        "slots": [
+          {
+            "pattern": "vertical_pull",
+            "role": "MAIN",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_pull",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "horizontal_pull",
+            "role": "SECONDARY",
+            "base_sets": 2,
+            "prefer_laterality": "UNILATERAL"
+          },
+          {
+            "pattern": "horizontal_abduction",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "elbow_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          }
+        ]
+      },
+      {
+        "key": "legs",
+        "name": "Pernas — unilateral e volume",
+        "slots": [
+          {
+            "pattern": "lunge",
+            "role": "MAIN",
+            "base_sets": 3,
+            "prefer_laterality": "UNILATERAL"
+          },
+          {
+            "pattern": "squat",
+            "role": "SECONDARY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "hinge",
+            "role": "SECONDARY",
+            "base_sets": 3,
+            "target_muscle": "hamstrings"
+          },
+          {
+            "pattern": "knee_extension",
+            "role": "ACCESSORY",
+            "base_sets": 3
+          },
+          {
+            "pattern": "knee_flexion",
+            "role": "ACCESSORY",
+            "base_sets": 3
           },
           {
             "pattern": "anti_rotation",

@@ -188,10 +188,10 @@ class ProgramWhyScreen : Screen() {
         fit.goalCheck()?.let { report ->
             root.goalSection(report, kb) { push(QuestionnaireScreen(fit.currentAnswers(), startAt = Step.PRIORITY)) }
         }
-        val warnings = p.warnings.filterNot { kb.isGoalCheck(it) }
+        val warnings = p.warnings
         if (warnings.isNotEmpty()) { root.h2("Avisos"); root.card(stroke = C.warning) { warnings.forEach { explanation(it) } } }
         root.h2("Decisões do motor")
-        root.card { p.explanations.filterNot { kb.isGoalCheck(it) }.forEach { explanation(it) } }
+        root.card { p.explanations.forEach { explanation(it) } }
         root.h2("Volume semanal planejado")
         root.card {
             fit.kb.trackedMuscles.forEach { m ->

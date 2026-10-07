@@ -125,7 +125,7 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         val budgets = baseSessions.indices.map { assignment.dayForSession[it].minutes }
 
         // 5. Tempo de cada dia
-        val fitted = baseSessions.mapIndexed { i, s -> fitter.fit(s, budgets[i]) }
+        val fitted = baseSessions.mapIndexed { i, s -> fitter.fit(s, budgets[i], protect = priorityMuscles) }
         fitted.forEachIndexed { i, f ->
             if (f.changes.isNotEmpty()) explanations += Explanation.rule(
                 "${baseSessions[i].name} (${assignment.dayForSession[i].day.pt()}, ${budgets[i]} min): " +
@@ -139,14 +139,21 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         val balanced = planner.balance(fitted.map { it.session.exercises }, budgets, targets, constraints, prescriptionFor, preferFocus = priorityMuscles)
         balanced.notes.forEach { explanations += Explanation.rule(it, rules.volume.id) }
 
-        // 6b. Região priorizada em mais sessões da semana (ex.: glúteos 3×), só com o tempo que sobrou.
-        val withFrequency = balanced.sessions.map { it.toMutableList() }
-        for (region in profile.priorities.sortedBy { it.ordinal }) {
-            for (note in ensureFrequency(withFrequency, budgets, region, targets, constraints, prescriptionFor)) explanations += Explanation.rule(note, rules.priority.id)
+        // 6b. Região priorizada em mais sessões da semana (ex.: glúteos 3×), só com o tempo que sobrou;
+        // depois, o tempo que ainda restar volta para quem está abaixo da meta (prioridade primeiro).
+        var finalSessions = balanced.sessions
+        if (profile.priorities.isNotEmpty()) {
+            val withFrequency = balanced.sessions.map { it.toMutableList() }
+            for (region in profile.priorities.sortedBy { it.ordinal }) {
+                for (note in ensureFrequency(withFrequency, budgets, region, targets, constraints, prescriptionFor)) explanations += Explanation.rule(note, rules.priority.id)
+            }
+            val again = planner.balance(withFrequency, budgets, targets, constraints, prescriptionFor, preferFocus = priorityMuscles)
+            again.notes.filter { n -> explanations.none { it.text == n } }.forEach { explanations += Explanation.rule(it, rules.volume.id) }
+            finalSessions = again.sessions
         }
 
         val sessions = baseSessions.indices.map { i ->
-            val items = prioritizeOrder(withFrequency[i], priorityMuscles)
+            val items = prioritizeOrder(finalSessions[i], priorityMuscles)
             baseSessions[i].copy(
                 exercises = items,
                 day = assignment.dayForSession[i].day,
@@ -173,7 +180,7 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         // 7. Avisos de volume. Com prioridade, músculos de fora dela que ficaram um pouco abaixo da
         // manutenção viram um aviso só (é o preço esperado da prioridade, não um problema por músculo).
         val priorityRegionMuscles = kb.musclesOf(profile.priorities)
-        val belowMaintenance = mutableListOf<String>()
+        val belowMaintenance = linkedMapOf<String, MutableList<String>>()
         for ((m, t) in targets) {
             val v = weekly[m] ?: 0.0
             if (v > t.max + 1e-9) {
@@ -190,14 +197,14 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
             if (v + 1e-9 < t.min) {
                 val direct = sessions.any { s -> s.exercises.any { m in it.exercise.primaryMuscles } }
                 val possible = kb.exercises.any { m in it.primaryMuscles && Eligibility.isAllowed(it, constraints) }
-                if (profile.priorities.isNotEmpty() && m !in priorityRegionMuscles && possible) {
-                    belowMaintenance += "${kb.muscleName(m).lowercase()} ${fmt(v)} de ${fmt(t.min)}"
-                    continue
-                }
                 val why = when {
                     direct -> "o tempo disponível limita o volume"
                     possible -> "não coube um exercício direto no tempo das sessões"
                     else -> "nenhum exercício direto compatível com seu equipamento/restrições"
+                }
+                if (profile.priorities.isNotEmpty() && m !in priorityRegionMuscles) {
+                    belowMaintenance.getOrPut(why) { mutableListOf() } += "${kb.muscleName(m).lowercase()} ${fmt(v)} de ${fmt(t.min)}"
+                    continue
                 }
                 warnings += Explanation.rule(
                     "Volume de ${kb.muscleName(m).lowercase()} planejado em ${fmt(v)} séries/semana, abaixo do mínimo de ${fmt(t.min)} — $why.",
@@ -205,12 +212,10 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
                 )
             }
         }
-        if (belowMaintenance.isNotEmpty()) {
+        // Fora da prioridade: um aviso por motivo, sem culpar a prioridade pelo que já faltaria sem ela.
+        for ((why, items) in belowMaintenance) {
             warnings += Explanation.rule(
-                "Com a prioridade em ${profile.priorities.joinToString(" e ") { it.label.lowercase() }}, sobrou menos tempo para o resto e " +
-                    "alguns músculos ficaram abaixo do mínimo de manutenção (séries/semana planejadas de mínimo): " +
-                    "${belowMaintenance.joinToString()}. Para equilibrar, acrescente um dia de treino ou alguns minutos por treino " +
-                    "— ou aceite essa fase de foco.",
+                "Fora da prioridade, abaixo do mínimo de manutenção (séries/semana planejadas de mínimo): ${items.joinToString()} — $why.",
                 rules.volume.id,
             )
         }
@@ -223,7 +228,7 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         // 8. Seu objetivo × seu treino: confere o que foi gerado e mostra em números (vem primeiro).
         val report = alignment.check(draft, profile)
         return ProgramResult.Generated(
-            draft.copy(explanations = report.lines + explanations, warnings = report.warnings + warnings)
+            draft.copy(goalCheck = report.warnings + report.lines)
         )
     }
 
@@ -249,9 +254,13 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         val forDays = kb.splits.filter { it.daysPerWeek == nDays }
         // Com região priorizada, prefere o modelo cuja ênfase cobre a prioridade (ex.: inferiores 3× para glúteos);
         // sem prioridade, prefere os modelos equilibrados (sem ênfase).
-        fun fit(s: SplitTemplate): Int =
-            if (profile.priorities.isEmpty()) (if (s.emphasis.isEmpty()) 1 else -1)
-            else (s.emphasis intersect profile.priorities).size * 2 - (if (s.emphasis.isNotEmpty() && (s.emphasis intersect profile.priorities).isEmpty()) 3 else 0)
+        // Pontos por região pedida que o modelo enfatiza, menos 1 por ênfase que ninguém pediu (pernas (coxas) não
+        // cai no modelo de glúteos) e menos 3 se a ênfase não tem nada a ver com o pedido.
+        fun fit(s: SplitTemplate): Int {
+            if (profile.priorities.isEmpty()) return if (s.emphasis.isEmpty()) 1 else -1
+            val hit = (s.emphasis intersect profile.priorities).size
+            return hit * 2 - (s.emphasis - profile.priorities).size - (if (s.emphasis.isNotEmpty() && hit == 0) 3 else 0)
+        }
         return forDays.filter { it.suits(profile.tier, profile.focus) }
             .sortedWith(compareByDescending<SplitTemplate> { fit(it) }.thenByDescending { it.priority }.thenBy { it.id.value })
             .firstOrNull()
@@ -308,7 +317,18 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
      */
     private fun prioritizeOrder(items: List<PlannedExercise>, priority: Set<MuscleId>): List<PlannedExercise> {
         if (priority.isEmpty()) return items
-        fun hits(e: PlannedExercise) = e.exercise.primaryMuscles.any { it in priority }
+        // Foco, não só músculo principal: para glúteos, a elevação pélvica abre o dia antes do agachamento.
+        fun hits(e: PlannedExercise) = e.exercise.focus.any { it in priority }
+        // Duas regiões priorizadas no mesmo dia: intercala (1º composto de cada região antes do 2º de qualquer uma),
+        // para as duas abrirem o treino.
+        fun region(e: PlannedExercise) = e.exercise.focus.firstOrNull { it in priority }?.let { kb.muscle(it).focusRegion }
+        val rankInRegion = mutableMapOf<Int, Int>()
+        val seen = mutableMapOf<BodyRegion?, Int>()
+        items.withIndex().filter { it.value.role != SlotRole.ACCESSORY && hits(it.value) }.forEach { (i, e) ->
+            val r = region(e)
+            rankInRegion[i] = seen.getOrDefault(r, 0)
+            seen[r] = (seen[r] ?: 0) + 1
+        }
         return items.withIndex().sortedWith(compareBy<IndexedValue<PlannedExercise>> { (_, e) ->
             when {
                 e.role != SlotRole.ACCESSORY && hits(e) -> 0
@@ -316,7 +336,7 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
                 hits(e) -> 2
                 else -> 3
             }
-        }.thenBy { it.index }).map { it.value }
+        }.thenBy { rankInRegion[it.index] ?: 0 }.thenBy { it.index }).map { it.value }
     }
 
     private fun spotReductionNotice(): Explanation {
