@@ -284,7 +284,7 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
 
     fun weekPlan(weekStart: LocalDate): WeekPlan? =
         db.single("SELECT * FROM week_plans WHERE user_id=$USER AND week_start=?", listOf(weekStart.toString())) {
-            WeekPlan(weekStart, DayOfWeek.of(it.int("from_day")), it.str("reason"), Codec.sessionsFrom(it.str("sessions_json"), kb))
+            WeekPlan(weekStart, DayOfWeek.of(it.int("from_day")), LegacyNames.pt(it.str("reason")), Codec.sessionsFrom(it.str("sessions_json"), kb))
         }
 
     fun clearWeekPlans() = db.execute("DELETE FROM week_plans WHERE user_id=$USER")

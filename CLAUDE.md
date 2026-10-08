@@ -13,6 +13,8 @@
 - SQL do `user.db` precisa rodar no SQLite do Android 8 (3.18): sem UPSERT, sem funções JSON, sem window functions.
 - `user.db` mudou de esquema? Suba `UserDb.VERSION`, acrescente o passo (idempotente) em `UserDb.migrate` e um teste migrando um banco da versão anterior com dados.
 - Exercício novo no banco: preencha `focus` quando o foco não for todos os músculos principais e confira a figura em `app/figure/FigureMapping.kt` (folhas `figuras_*.png` com `-Pscreenshots`).
+- Notificações e alarmes: a lógica (quando avisar, texto) fica em `appcore/Reminders.kt`; em `app/notify`, canal e `Notification.Builder(Context, String)` da API 26 por reflexão, `POST_NOTIFICATIONS` como string e pedida em tempo de execução só no Android 13+, alarme inexato (`setAndAllowWhileIdle`), nunca exato.
+- Vocabulário dos treinos: "Inferiores" = dia de glúteos + coxas + panturrilha; "Pernas" só no dia completo da divisão empurrar/puxar/pernas; a região priorizável é "Coxas".
 - Testes de UI desligam animações (`Motion.enabled = false` no `setUp`); só `MotionTest` e `ScreenshotTest` ligam.
 - Prioridade por região: parâmetros em `rules.json` (`priority.region`); confira com `PriorityScenarioTest` e a CLI (`--perfil examples/perfil-gluteos.json programa`) que a checagem "objetivo × treino" bate com o treino impresso.
 - Antes de entregar mudança de tela: `./gradlew :app:test` (Robolectric) e, se mexeu em layout, `./gradlew :app:test -Pscreenshots` e olhe os PNGs.

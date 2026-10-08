@@ -73,6 +73,10 @@ class AppFlowTest {
         assertEquals("Corpo inteiro B", LegacyNames.pt("Full Body B"))
         assertEquals("Superiores A", LegacyNames.pt("Superiores A"))
         assertEquals("Inferiores B — glúteos e posterior", LegacyNames.pt("Inferiores B — glúteos e posterior"))
+        // Explicações gravadas pela 0.1.0 também são traduzidas ao ler.
+        assertEquals("Divisão Empurrar / Puxar / Pernas: com 3 dias…", LegacyNames.pt("Divisão Push / Pull / Legs: com 3 dias…"))
+        assertEquals("Empurrar (segunda, 45 min): Removido: Crucifixo", LegacyNames.pt("Push (empurrar) (segunda, 45 min): Removido: Crucifixo"))
+        assertEquals("Índice de recuperação 60/100", LegacyNames.pt("Recovery Score 60/100"))
     }
 
     @Test fun `banco da versao 1 migra para a 2 sem perder dados`() {

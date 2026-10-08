@@ -30,7 +30,7 @@ object Codec {
     fun explanationsFrom(arr: JsonArray?): List<Explanation> = arr.orEmpty().map { el ->
         val o = el.jsonObject
         Explanation(
-            Provenance.valueOf(o.str("p")), o.str("text"), o["rule"]?.jsonPrimitive?.content?.let(::RuleId),
+            Provenance.valueOf(o.str("p")), LegacyNames.pt(o.str("text")), o["rule"]?.jsonPrimitive?.content?.let(::RuleId),
             o["claims"]?.jsonArray.orEmpty().map { ClaimId(it.jsonPrimitive.content) },
         )
     }

@@ -142,10 +142,12 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
         // 6b. Região priorizada em mais sessões da semana (ex.: glúteos 3×), só com o tempo que sobrou;
         // depois, o tempo que ainda restar volta para quem está abaixo da meta (prioridade primeiro).
         var finalSessions = balanced.sessions
+        // Sessão que ganhou trabalho da prioridade fora do seu tipo (ex.: remada num dia de inferiores) muda de nome.
+        val addedRegion = mutableMapOf<Int, MutableSet<BodyRegion>>()
         if (profile.priorities.isNotEmpty()) {
             val withFrequency = balanced.sessions.map { it.toMutableList() }
             for (region in profile.priorities.sortedBy { it.ordinal }) {
-                for (note in ensureFrequency(withFrequency, budgets, region, targets, constraints, prescriptionFor)) explanations += Explanation.rule(note, rules.priority.id)
+                for (note in ensureFrequency(withFrequency, budgets, region, targets, constraints, prescriptionFor, addedRegion)) explanations += Explanation.rule(note, rules.priority.id)
             }
             val again = planner.balance(withFrequency, budgets, targets, constraints, prescriptionFor, preferFocus = priorityMuscles)
             again.notes.filter { n -> explanations.none { it.text == n } }.forEach { explanations += Explanation.rule(it, rules.volume.id) }
@@ -154,7 +156,9 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
 
         val sessions = baseSessions.indices.map { i ->
             val items = prioritizeOrder(finalSessions[i], priorityMuscles)
+            val extra = addedRegion[i].orEmpty().filter { r -> items.any { e -> e.exercise.focus.any { kb.muscle(it).focusRegion == r } } }
             baseSessions[i].copy(
+                name = if (extra.isEmpty()) baseSessions[i].name else baseSessions[i].name + " + " + extra.joinToString(" e ") { it.label.lowercase() },
                 exercises = items,
                 day = assignment.dayForSession[i].day,
                 budgetMinutes = budgets[i],
@@ -276,6 +280,7 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
     private fun ensureFrequency(
         sessions: List<MutableList<PlannedExercise>>, budgets: List<Int>, region: BodyRegion, targets: Map<MuscleId, VolumeTarget>,
         constraints: UserConstraints, prescriptionFor: (SlotRole, Exercise) -> RepPrescription,
+        addedRegion: MutableMap<Int, MutableSet<BodyRegion>> = mutableMapOf(),
     ): List<String> {
         val muscles = kb.trackedMuscles.filter { it.focusRegion == region && it.fillPattern != null }
         if (muscles.isEmpty()) return emptyList()
@@ -302,6 +307,7 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
                 }
                 if (overshoots) continue
                 sessions[si].add(planned)
+                addedRegion.getOrPut(si) { mutableSetOf() } += region
                 have++
                 notes += "Prioridade ${region.label.lowercase()}: ${ex.name} incluído em mais um treino da semana (${have}×/semana)."
                 break
@@ -329,14 +335,18 @@ class ProgramGenerator(private val kb: KnowledgeBase) {
             rankInRegion[i] = seen.getOrDefault(r, 0)
             seen[r] = (seen[r] ?: 0) + 1
         }
-        return items.withIndex().sortedWith(compareBy<IndexedValue<PlannedExercise>> { (_, e) ->
+        // Abre com o 1º composto de cada região priorizada; logo depois os principais do dia (o agachamento pesado não
+        // vai para depois de afundos); então os demais compostos da prioridade, os outros compostos e os acessórios.
+        return items.withIndex().sortedWith(compareBy<IndexedValue<PlannedExercise>> { (i, e) ->
             when {
-                e.role != SlotRole.ACCESSORY && hits(e) -> 0
-                e.role != SlotRole.ACCESSORY -> 1
-                hits(e) -> 2
-                else -> 3
+                e.role != SlotRole.ACCESSORY && hits(e) && (rankInRegion[i] ?: 0) == 0 -> 0
+                e.role == SlotRole.MAIN -> 1
+                e.role != SlotRole.ACCESSORY && hits(e) -> 2
+                e.role != SlotRole.ACCESSORY -> 3
+                hits(e) -> 4
+                else -> 5
             }
-        }.thenBy { rankInRegion[it.index] ?: 0 }.thenBy { it.index }).map { it.value }
+        }.thenBy { it.index }).map { it.value }
     }
 
     private fun spotReductionNotice(): Explanation {

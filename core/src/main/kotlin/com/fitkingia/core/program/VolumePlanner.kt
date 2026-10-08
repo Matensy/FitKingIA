@@ -76,12 +76,17 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
         var steps = 0
         while (steps++ < MAX_STEPS) {
             val weekly = calc.ofExercises(s.flatten())
-            val needy = preferFocus.filter { m -> targets[m]?.let { (weekly[m] ?: 0.0) < it.target - EPS || focusShort(s, m, it, preferFocus) } == true }
+            // Primeiro a prioridade abaixo da meta; depois, o resto abaixo do mínimo de manutenção (o tempo que a
+            // prioridade usou acima da própria meta volta para eles: redistribuir vale nos dois sentidos).
+            val priorityNeeds = preferFocus.filter { m -> targets[m]?.let { (weekly[m] ?: 0.0) < it.target - EPS || focusShort(s, m, it, preferFocus) } == true }
                 .sortedByDescending { m -> targets.getValue(m).let { (it.target - (weekly[m] ?: 0.0)) / it.target } }
+            val maintenanceNeeds = targets.filter { (m, t) -> m !in preferFocus && (weekly[m] ?: 0.0) < t.min - EPS }.keys
+                .sortedByDescending { m -> targets.getValue(m).let { (it.min - (weekly[m] ?: 0.0)) / it.min } }
+            val needy = priorityNeeds + maintenanceNeeds
             if (needy.isEmpty()) break
             var progressed = false
             loop@ for (m in needy) for ((si, list) in s.withIndex()) {
-                val focusOnly = (weekly[m] ?: 0.0) >= targets.getValue(m).target - EPS
+                val focusOnly = m in preferFocus && (weekly[m] ?: 0.0) >= targets.getValue(m).target - EPS
                 val receivers = list.indices.filter { i ->
                     val e = list[i]
                     m in e.exercise.primaryMuscles && (!focusOnly || m in e.exercise.focus) &&
@@ -95,6 +100,8 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
                     val e = list[i]
                     e.sets > rules.minSetsPerExercise && !(e.role == SlotRole.MAIN && e.sets <= (e.slot?.baseSets ?: 3)) &&
                         e.exercise.primaryMuscles.none { it in needy } &&
+                        // A prioridade só cede série se as séries focadas dela continuarem no mínimo.
+                        e.exercise.focus.none { f -> f in preferFocus && targets[f]?.let { focusedSets(s, f) - 1 < it.min - EPS } == true } &&
                         e.exercise.primaryMuscles.all { o -> targets[o]?.let { (weekly[o] ?: 0.0) - calc.credit(e, o) >= it.target - EPS } ?: true } &&
                         e.exercise.secondaryMuscles.all { o -> targets[o]?.let { (weekly[o] ?: 0.0) - calc.credit(e, o) >= it.min - EPS } ?: true }
                 }.sortedWith(compareBy<Int> { list[it].role.keepPriority }.thenByDescending { list[it].sets })
@@ -112,7 +119,7 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
             }
             if (!progressed) break
         }
-        if (moved > 0) notes += "Prioridade: $moved série(s) remanejada(s) de exercícios de músculos já na meta para exercícios da região priorizada, no mesmo tempo de treino."
+        if (moved > 0) notes += "Remanejamento: $moved série(s) passaram, no mesmo dia, de exercícios de músculos já na meta para quem estava abaixo (prioridade primeiro, depois a manutenção do resto)."
     }
 
     /** Primeiro reduz séries; se não bastar, remove o exercício menos importante. */
@@ -188,6 +195,8 @@ class VolumePlanner(private val kb: KnowledgeBase, private val selector: Exercis
             )
             for (si in order) {
                 if ((si to m) in filled) continue
+                // Mesmo padrão para o mesmo músculo já no dia (ex.: flexora na máquina): não empilha uma 2ª versão.
+                if (s[si].any { it.exercise.pattern == pattern && m in it.exercise.primaryMuscles }) continue
                 val used = s[si].map { it.exercise.id }.toSet()
                 val ex = selector.select(slot, constraints, used, usedInWeek) ?: continue
                 val planned = PlannedExercise(ex, SlotRole.ACCESSORY, rules.minSetsPerExercise, prescriptionFor(SlotRole.ACCESSORY, ex), slot = slot)

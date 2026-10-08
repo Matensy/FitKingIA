@@ -99,11 +99,17 @@ class PriorityScenarioTest {
         }
     }
 
+    private fun isPushPullLegs(s: com.fitkingia.core.knowledge.SplitTemplate) =
+        s.sessions.any { it.name.startsWith("Empurrar") } && s.sessions.any { it.name.startsWith("Puxar") } && s.emphasis.isEmpty()
+
     @Test fun `nomes de modelos e sessoes em portugues e inferiores diferenciados`() {
         val english = Regex("\\b(Full Body|Upper|Lower|Push|Pull|Legs)\\b")
         for (s in kb.splits) {
             assertFalse(english.containsMatchIn(s.name), "modelo ${s.id}: ${s.name}")
             for (se in s.sessions) assertFalse(english.containsMatchIn(se.name), "sessão ${s.id}/${se.key}: ${se.name}")
+            // Vocabulário: "Pernas" é o dia completo da divisão empurrar/puxar/pernas; fora dela, o dia de
+            // glúteos + coxas + panturrilha se chama "Inferiores" (e a região priorizável, "Coxas").
+            assertTrue(s.sessions.none { it.name.startsWith("Pernas") } || isPushPullLegs(s), "${s.id}: \"Pernas\" fora de empurrar/puxar/pernas")
             // Duas sessões de inferiores no mesmo modelo precisam ter nomes e exercícios principais diferentes.
             val lower = s.sessions.filter { se -> se.slots.firstOrNull()?.pattern?.value in setOf("squat", "hinge", "hip_extension", "lunge") }
             assertEquals(lower.size, lower.map { it.name }.toSet().size, "${s.id}: sessões de inferiores com o mesmo nome")

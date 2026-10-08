@@ -144,6 +144,18 @@ class GoalAlignment(private val kb: KnowledgeBase) {
                 rule.id,
             )
         }
+        // A promessa é "as demais regiões continuam sendo treinadas": quase nada fora da prioridade vira aviso.
+        if (profile.priorities.isNotEmpty()) {
+            val priorityMuscles = kb.musclesOf(profile.priorities)
+            val starved = kb.trackedMuscles.filter { m ->
+                m.id !in priorityMuscles && (weekly[m.id] ?: 0.0) + 1e-9 < (program.volumeTargets[m.id]?.min ?: 0.0) * 0.5
+            }
+            if (starved.isNotEmpty()) warnings += Explanation.rule(
+                "⚠️ Fora da prioridade, ficaram com pouco ou nenhum treino: ${starved.joinToString { "${it.name.lowercase()} ${Fmt.num(weekly[it.id] ?: 0.0)}" }} " +
+                    "séries/semana. Com mais tempo por treino (ou um dia a mais) o motor mantém a manutenção do resto do corpo.",
+                rule.id,
+            )
+        }
         // Objetivos de "perder barriga" já recebem o aviso completo do gerador; aqui só quem prioriza abdômen.
         val goalNotice = profile.primaryGoal.spotReductionNotice || profile.secondaryGoal?.spotReductionNotice == true
         if (BodyRegion.CORE in profile.priorities && !goalNotice) {

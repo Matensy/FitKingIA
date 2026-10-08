@@ -66,7 +66,8 @@ class ExerciseSelector(private val kb: KnowledgeBase) {
         // região priorizada, repetir o melhor exercício com carga vale mais que trocar por uma regressão
         // (ex.: elevação pélvica com barra de novo, em vez de ponte só com o peso do corpo).
         val focusPriority = slot.role != SlotRole.ACCESSORY && ex.focus.any { it in c.priorityMuscles }
-        s -= (usedInWeek[ex.id] ?: 0) * if (slot.role == SlotRole.ACCESSORY) 5.0 else if (focusPriority) 6.0 else 12.0
+        // Acessório repetido pesa pouco: na academia, a flexora na máquina de novo é melhor que a versão com elástico.
+        s -= (usedInWeek[ex.id] ?: 0) * if (slot.role == SlotRole.ACCESSORY) 3.0 else if (focusPriority) 6.0 else 12.0
         // Região priorizada: no mesmo slot, prefere o exercício que tem o músculo prioritário como principal
         // (ex.: no slot de dobradiça, stiff/elevação pélvica antes de extensão lombar para quem prioriza glúteos).
         if (c.priorityMuscles.isNotEmpty()) {

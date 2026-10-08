@@ -374,7 +374,7 @@
       },
       {
         "key": "legs",
-        "name": "Pernas (completo)",
+        "name": "Pernas",
         "slots": [
           {
             "pattern": "squat",
@@ -1033,12 +1033,12 @@
   },
   {
     "id": "fbl3",
-    "name": "Corpo inteiro ×3 — ênfase em glúteos e pernas",
+    "name": "Corpo inteiro ×3 — ênfase em glúteos",
     "days_per_week": 3,
     "min_tier": "NOVICE",
     "focuses": [],
     "priority": 10,
-    "rationale": "Para quem prioriza glúteos/pernas com 3 dias: todo treino começa pelos inferiores (glúteos e pernas 3×/semana) e mantém superiores em volume de manutenção.",
+    "rationale": "Para quem prioriza glúteos com 3 dias: todo treino começa por um exercício de glúteo (inferiores 3×/semana) e mantém os superiores em volume de manutenção.",
     "emphasis": [
       "GLUTES",
       "LEGS"
@@ -1158,12 +1158,12 @@
   },
   {
     "id": "lowf4",
-    "name": "Inferiores ×3 + Superiores — ênfase em glúteos e pernas",
+    "name": "Ênfase em glúteos — inferiores 3× + superiores",
     "days_per_week": 4,
     "min_tier": "NOVICE",
     "focuses": [],
     "priority": 10,
-    "rationale": "Para quem prioriza glúteos/pernas com 4 dias: três treinos com inferiores (dois de inferiores e um de corpo inteiro começando por glúteos) e superiores 2× em volume de manutenção.",
+    "rationale": "Para quem prioriza glúteos com 4 dias: três treinos com inferiores (dois dias de inferiores e um de corpo inteiro começando por glúteos) e superiores 2× em volume de manutenção.",
     "emphasis": [
       "GLUTES",
       "LEGS"
@@ -1319,12 +1319,12 @@
   },
   {
     "id": "lowf5",
-    "name": "Inferiores ×3 + Superiores ×2 — ênfase em glúteos e pernas",
+    "name": "Ênfase em glúteos — inferiores 3× + empurrar/puxar",
     "days_per_week": 5,
     "min_tier": "INTERMEDIATE",
     "focuses": [],
     "priority": 10,
-    "rationale": "Para quem prioriza glúteos/pernas com 5 dias: três treinos de inferiores com ênfases diferentes (glúteos/posterior, quadríceps, glúteos) e dois de superiores (empurrar e puxar).",
+    "rationale": "Para quem prioriza glúteos com 5 dias: inferiores 3× (glúteos e posterior, quadríceps e glúteos, glúteos unilateral) e superiores divididos em empurrar e puxar, em volume de manutenção.",
     "emphasis": [
       "GLUTES",
       "LEGS"
@@ -1503,7 +1503,7 @@
   },
   {
     "id": "fbl2",
-    "name": "Corpo inteiro A/B — ênfase em glúteos e pernas",
+    "name": "Corpo inteiro A/B — ênfase em glúteos",
     "days_per_week": 2,
     "min_tier": "NOVICE",
     "focuses": [],
@@ -1592,7 +1592,7 @@
   },
   {
     "id": "lowf6",
-    "name": "Inferiores ×3 + Superiores ×3 — ênfase em glúteos e pernas",
+    "name": "Ênfase em glúteos — inferiores 3× + superiores 3×",
     "days_per_week": 6,
     "min_tier": "ADVANCED",
     "focuses": [],
@@ -1817,7 +1817,7 @@
   },
   {
     "id": "legf3",
-    "name": "Corpo inteiro ×3 — ênfase em pernas (coxas)",
+    "name": "Corpo inteiro ×3 — ênfase em coxas",
     "days_per_week": 3,
     "min_tier": "NOVICE",
     "focuses": [],
@@ -1942,12 +1942,12 @@
   },
   {
     "id": "legf4",
-    "name": "Inferiores ×3 + Superiores — ênfase em pernas (coxas)",
+    "name": "Ênfase em coxas — inferiores 3× + superiores",
     "days_per_week": 4,
     "min_tier": "NOVICE",
     "focuses": [],
     "priority": 10,
-    "rationale": "Para quem prioriza as coxas com 4 dias: três treinos com pernas (quadríceps, posterior e um de corpo inteiro) e superiores 2× em volume de manutenção.",
+    "rationale": "Para quem prioriza as coxas com 4 dias: três treinos com inferiores (quadríceps, posterior e um de corpo inteiro) e superiores 2× em volume de manutenção.",
     "emphasis": [
       "LEGS"
     ],
@@ -2064,7 +2064,7 @@
       },
       {
         "key": "full_legs",
-        "name": "Corpo inteiro — pernas e costas",
+        "name": "Corpo inteiro — coxas e costas",
         "slots": [
           {
             "pattern": "squat",
@@ -2102,12 +2102,12 @@
   },
   {
     "id": "legf5",
-    "name": "Inferiores ×3 + Superiores ×2 — ênfase em pernas (coxas)",
+    "name": "Ênfase em coxas — inferiores 3× + empurrar/puxar",
     "days_per_week": 5,
     "min_tier": "INTERMEDIATE",
     "focuses": [],
     "priority": 10,
-    "rationale": "Para quem prioriza as coxas com 5 dias: pernas 3× (quadríceps, posterior, unilateral) e superiores divididos em empurrar e puxar, em volume de manutenção.",
+    "rationale": "Para quem prioriza as coxas com 5 dias: inferiores 3× (quadríceps, posterior, unilateral) e superiores divididos em empurrar e puxar, em volume de manutenção.",
     "emphasis": [
       "LEGS"
     ],
@@ -2246,7 +2246,7 @@
       },
       {
         "key": "legs",
-        "name": "Pernas — unilateral e volume",
+        "name": "Inferiores — unilateral e volume",
         "slots": [
           {
             "pattern": "lunge",

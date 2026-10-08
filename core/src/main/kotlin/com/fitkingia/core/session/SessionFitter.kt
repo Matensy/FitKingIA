@@ -29,9 +29,10 @@ data class FitResult(
  *  1. remover exercícios não principais totalmente redundantes (músculos já cobertos na sessão);
  *  2. encurtar descanso para o limite inferior da faixa prescrita;
  *  3. reduzir séries de acessórios, depois de secundários;
- *  4. remover não principais (mais redundante primeiro);
+ *  4. remover não principais (mais redundante primeiro), mantendo o último de superiores e o último de inferiores;
  *  5. reduzir séries dos principais;
- *  6. remover principais do fim, mantendo pelo menos [keepMain].
+ *  6. remover também esse último não principal;
+ *  7. remover principais do fim, mantendo pelo menos [keepMain].
  * Cada mudança é registrada com o motivo — o usuário vê o que foi removido e por quê.
  */
 class SessionFitter(private val kb: KnowledgeBase) {
@@ -46,6 +47,10 @@ class SessionFitter(private val kb: KnowledgeBase) {
     fun fit(session: PlannedSession, budgetMinutes: Int, keepMain: Int = 1, protect: Set<MuscleId> = emptySet()): FitResult {
         val guarded = { e: PlannedExercise -> e.exercise.primaryMuscles.any { it in protect } }
         val items = session.exercises.toMutableList()
+        // Treino de corpo inteiro continua de corpo inteiro: o último exercício de superiores (ou de inferiores)
+        // é o último a sair — com prioridade em glúteos e 30 min, o supino não some para sobrar só glúteo.
+        val halvesAtStart = items.mapNotNull { half(it) }.toSet()
+        val lastOfHalf = { e: PlannedExercise -> half(e)?.let { h -> h in halvesAtStart && items.count { half(it) == h } == 1 } == true }
         val changes = mutableListOf<SessionChange>()
         val original = clock.estimateMinutes(items)
         fun over() = clock.estimateMinutes(items) > budgetMinutes
@@ -59,8 +64,9 @@ class SessionFitter(private val kb: KnowledgeBase) {
             }
             if (reduceSets(items, changes, SlotRole.ACCESSORY, guarded)) continue
             if (reduceSets(items, changes, SlotRole.SECONDARY, guarded)) continue
-            if (removeMostRedundant(items, changes, guarded)) continue
+            if (removeMostRedundant(items, changes, guarded, lastOfHalf, keepLastOfHalf = true)) continue
             if (reduceSets(items, changes, SlotRole.MAIN, guarded)) continue
+            if (removeMostRedundant(items, changes, guarded, lastOfHalf, keepLastOfHalf = false)) continue
             if (removeLastMain(items, changes, keepMain)) continue
             changes += SessionChange(
                 ChangeKind.NOT_ENOUGH_TIME, null,
@@ -132,15 +138,24 @@ class SessionFitter(private val kb: KnowledgeBase) {
         items[idx] = ex.copy(sets = ex.sets - 1)
         changes += SessionChange(
             ChangeKind.SETS_REDUCED, ex.exercise.name, "${ex.exercise.name}: ${ex.sets} → ${ex.sets - 1} séries",
-            "papel ${role.label.lowercase()} cede tempo antes dos exercícios principais",
+            if (role == SlotRole.MAIN) "menos séries no principal: nem com os outros exercícios reduzidos a sessão cabia no tempo"
+            else "papel ${role.label.lowercase()} cede tempo antes dos exercícios principais",
         )
         return true
     }
 
-    private fun removeMostRedundant(items: MutableList<PlannedExercise>, changes: MutableList<SessionChange>, guarded: (PlannedExercise) -> Boolean): Boolean {
-        val victim = items.withIndex().filter { it.value.role != SlotRole.MAIN }
+    /** Metade do corpo do exercício pelos músculos principais (null = tronco/core ou misto). */
+    private fun half(e: PlannedExercise): String? =
+        e.exercise.primaryMuscles.map { kb.muscle(it).region }.distinct().singleOrNull()?.takeIf { it == "upper" || it == "lower" }
+
+    private fun removeMostRedundant(
+        items: MutableList<PlannedExercise>, changes: MutableList<SessionChange>,
+        guarded: (PlannedExercise) -> Boolean, lastOfHalf: (PlannedExercise) -> Boolean, keepLastOfHalf: Boolean,
+    ): Boolean {
+        // Primeira passada: o último de cada metade fica (antes, os principais perdem séries); só depois sai.
+        val victim = items.withIndex().filter { it.value.role != SlotRole.MAIN && !(keepLastOfHalf && lastOfHalf(it.value)) }
             .sortedWith(
-                compareBy<IndexedValue<PlannedExercise>> { if (guarded(it.value)) 1 else 0 }
+                compareBy<IndexedValue<PlannedExercise>> { if (lastOfHalf(it.value)) 2 else if (guarded(it.value)) 1 else 0 }
                     .thenBy { it.value.role.keepPriority }
                     .thenByDescending { redundancy(it.value, items) }
                     .thenByDescending { it.index }

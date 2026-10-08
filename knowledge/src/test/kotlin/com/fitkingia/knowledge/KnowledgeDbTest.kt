@@ -25,7 +25,7 @@ class KnowledgeDbTest {
         assertEquals((1..6).toSet(), daysWithEmphasis(emptySet()))
         // Modelos com ênfase em glúteos (e pernas) de 2 a 6 dias: inferiores 3×/semana a partir de 3 dias.
         assertEquals((2..6).toSet(), daysWithEmphasis(setOf(BodyRegion.GLUTES, BodyRegion.LEGS)))
-        // "Pernas (coxas)" tem modelos próprios: não cai no modelo de glúteos.
+        // "Coxas" tem modelos próprios: não cai no modelo de glúteos.
         assertEquals(setOf(3, 4, 5), daysWithEmphasis(setOf(BodyRegion.LEGS)))
     }
 

@@ -73,7 +73,7 @@ enum class Goal(
  */
 enum class BodyRegion(val label: String, val emoji: String) {
     // Só emojis do Emoji 5.0 ou anteriores: o Android 8 (minSdk) não desenha os mais novos (ex.: 🦵).
-    GLUTES("Glúteos", "🍑"), LEGS("Pernas (coxas)", "🏃"), BACK("Costas", "🧗"), CHEST("Peito", "🏋️"),
+    GLUTES("Glúteos", "🍑"), LEGS("Coxas", "🏃"), BACK("Costas", "🧗"), CHEST("Peito", "🏋️"),
     SHOULDERS("Ombros", "🤸"), ARMS("Braços", "💪"), CORE("Abdômen", "🧘"),
 }
 

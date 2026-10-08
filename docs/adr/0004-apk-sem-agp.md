@@ -19,7 +19,7 @@ Além disso, o dono do produto pediu um app guiado só por alternativas, sem dig
 
 ## Consequências
 - Build reprodutível só com Maven Central + pacotes do Ubuntu (o CI instala `aapt dalvik-exchange libandroid-23-java zipalign apksigner`).
-- APK pequeno (~1,6 MB) e sem permissões além de vibração.
+- APK pequeno (~1,6 MB na 0.1.0; ~1,8 MB na 0.2.0, com ilustrações e animações). Permissões: vibração; desde a 0.2.0, também notificações (`POST_NOTIFICATIONS`, pedida só quando a pessoa liga um lembrete) e `RECEIVE_BOOT_COMPLETED` (reagendar lembretes). Continua sem internet.
 - Sem Compose/Room/AndroidX: menos conveniências (sem previews, sem migrações automáticas do Room — o `user.db` usa `PRAGMA user_version`).
 - Ao compilar contra a API 23, propriedades Kotlin de getters adicionados depois (ex.: `LinearLayout.gravity`, `GradientDrawable.cornerRadius`) não existem: use os setters.
 - Para publicar em loja, trocar a chave de depuração por uma chave de release guardada fora do repositório.
