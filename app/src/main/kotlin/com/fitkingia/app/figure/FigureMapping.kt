@@ -9,7 +9,8 @@ import java.util.Locale
  *
  * 1. Mapa explícito por id (os 125 exercícios de exercises.json na data deste arquivo).
  * 2. Exercícios novos: variações reconhecidas pelo nome que o padrão não distingue
- *    (ex.: "mesa flexora", "coice", "búlgaro").
+ *    (ex.: "mesa flexora", "coice", "búlgaro"). Cada regra só vale para os padrões de movimento
+ *    compatíveis: "declinado" num supino não pode virar abdominal declinado.
  * 3. Padrão de movimento + tipo de carga + equipamento.
  * 4. Padrão desconhecido: palavras-chave do nome; por fim "em_pe" (posição neutra).
  * Nunca devolve um movimento inexistente.
@@ -140,58 +141,77 @@ object FigureMapping {
         "farmers_walk" to "fazendeiro",
         "suitcase_carry" to "mala",
         // Aparelhos e variações acrescentados depois (foco em glúteos e iniciantes)
-        "machine_hip_thrust" to "hip_thrust_barra",
-        "smith_hip_thrust" to "hip_thrust_barra",
-        "machine_glute_kickback" to "coice_polia",
+        "machine_hip_thrust" to "hip_thrust_maquina",
+        "smith_hip_thrust" to "hip_thrust_smith",
+        "machine_glute_kickback" to "coice_maquina",
         "cable_glute_kickback" to "coice_polia",
         "ankle_weight_kickback" to "coice_quatro_apoios",
         "cable_hip_abduction" to "abducao_polia",
         "side_lying_hip_abduction" to "abducao_deitado",
-        // Concha: não há ilustração própria; a abdução deitado de lado é a mais próxima.
-        "mini_band_clamshell" to "abducao_deitado",
-        "mini_band_glute_bridge" to "ponte",
-        "dumbbell_sumo_squat" to "agachamento_goblet",
+        "mini_band_clamshell" to "concha",
+        "mini_band_glute_bridge" to "ponte_mini_band",
+        "dumbbell_sumo_squat" to "agachamento_sumo",
         "seated_calf_raise" to "panturrilha_sentado",
         "t_bar_row" to "remada_curvada",
-        "machine_assisted_pull_up" to "barra_fixa",
+        "machine_assisted_pull_up" to "barra_fixa_maquina",
         "preacher_curl" to "rosca_scott",
-        "swiss_ball_leg_curl" to "flexora_deslizante",
+        "swiss_ball_leg_curl" to "flexora_bola",
         "decline_crunch" to "abdominal_declinado",
-        "swiss_ball_crunch" to "abdominal",
+        "swiss_ball_crunch" to "abdominal_bola",
     )
+
+    /** Regra por nome: palavras → movimento, só nos padrões de movimento em que faz sentido. */
+    /** [loads] null = qualquer tipo de carga; senão a regra só vale para esses (o acessório desenhado muda). */
+    private class NameRule(val words: List<String>, val motion: String, val patterns: Set<String>, val loads: Set<String>? = null)
+
+    private fun rule(vararg words: String, to: String, patterns: Set<String>) = NameRule(words.toList(), to, patterns)
+    private fun rule(vararg words: String, to: String, pattern: String, loads: Set<String>? = null) = NameRule(words.toList(), to, setOf(pattern), loads)
 
     /**
      * Variações que o padrão de movimento sozinho não distingue (ex.: mesa × cadeira flexora).
-     * Palavras sem acento, minúsculas, casadas como palavra inteira. Ordem importa.
+     * Palavras sem acento, minúsculas, casadas como palavra inteira. Ordem importa. Cada regra
+     * vale só nos padrões listados; com padrão desconhecido (o banco ganhou um padrão novo), vale
+     * qualquer uma, porque aí só o nome orienta.
      */
-    private val refinements: List<Pair<List<String>, String>> = listOf(
-        listOf("mesa flexora", "flexora deitado", "flexora deitada", "lying leg curl") to "flexora_mesa",
-        listOf("quatro apoios", "quadruped", "donkey kick") to "coice_quatro_apoios",
-        listOf("coice", "kickback", "glute kickback") to "coice_polia",
-        // Concha (clamshell) usa a abdução deitado de lado: a mais próxima entre as ilustrações.
-        listOf("deitado de lado", "side lying", "concha", "clamshell") to "abducao_deitado",
-        listOf("abducao em pe", "abducao de quadril em pe", "standing abduction") to "abducao_em_pe",
-        listOf("panturrilha sentado", "seated calf") to "panturrilha_sentado",
-        listOf("scott", "preacher") to "rosca_scott",
-        listOf("declinado", "decline") to "abdominal_declinado",
-        listOf("cavalinho", "t-bar", "t bar") to "remada_curvada",
-        listOf("barra fixa", "pull up", "pull-up", "chin up") to "barra_fixa",
-        listOf("nordica", "nordic") to "flexao_nordica",
-        listOf("bulgaro", "bulgarian") to "bulgaro",
-        listOf("agachamento frontal", "front squat") to "agachamento_frontal",
-        listOf("hack") to "agachamento_hack",
-        listOf("pull through", "pull-through") to "pull_through",
-        listOf("swing") to "swing",
-        listOf("face pull") to "face_pull",
-        listOf("serrote") to "remada_unilateral",
-        listOf("pike") to "flexao_pike",
-        listOf("diamante", "diamond") to "flexao",
-        listOf("testa", "skull crusher") to "triceps_testa",
-        listOf("dead bug") to "dead_bug",
-        listOf("roda abdominal", "ab wheel") to "roda_abdominal",
-        listOf("lenhador", "woodchop") to "lenhador",
-        listOf("mala", "suitcase") to "mala",
-        listOf("ponte unilateral", "single leg glute bridge") to "ponte_unilateral",
+    private val refinements: List<NameRule> = listOf(
+        rule("mesa flexora", "flexora deitado", "flexora deitada", "lying leg curl", to = "flexora_mesa", pattern = "knee_flexion"),
+        // Bola suíça, não qualquer bola: "abdominal com bola medicinal" não deita numa bola.
+        rule("bola suica", "bola de pilates", "na bola", "fitball", "swiss ball", "stability ball", to = "flexora_bola", pattern = "knee_flexion"),
+        rule("bola suica", "bola de pilates", "na bola", "fitball", "swiss ball", "stability ball", to = "abdominal_bola", pattern = "trunk_flexion"),
+        rule("quatro apoios", "quadruped", "donkey kick", to = "coice_quatro_apoios", pattern = "hip_extension"),
+        rule("coice", "kickback", "glute kickback", to = "coice_polia", pattern = "hip_extension"),
+        // Depois do coice (coice com mini band continua coice) e só sem carga externa: elevação
+        // pélvica com barra e mini band é a da barra, não a ponte no chão.
+        rule("mini band", "miniband", "mini elastico", to = "ponte_mini_band", pattern = "hip_extension", loads = setOf("BODYWEIGHT", "BAND")),
+        rule("concha", "clamshell", "abertura de joelhos", to = "concha", pattern = "hip_abduction"),
+        rule("deitado de lado", "deitada de lado", "side lying", to = "abducao_deitado", pattern = "hip_abduction"),
+        rule("abducao em pe", "abducao de quadril em pe", "standing abduction", to = "abducao_em_pe", pattern = "hip_abduction"),
+        rule("panturrilha sentado", "seated calf", to = "panturrilha_sentado", pattern = "calf_raise"),
+        rule("scott", "preacher", to = "rosca_scott", pattern = "elbow_flexion"),
+        rule("declinado", "decline", to = "abdominal_declinado", pattern = "trunk_flexion"),
+        // Só pendurado: "elevação de pernas deitado" é no chão, sem barra.
+        rule("na barra", "pendurado", "pendurada", "hanging", to = "elevacao_joelhos", pattern = "trunk_flexion"),
+        rule("cavalinho", "t-bar", "t bar", to = "remada_curvada", pattern = "horizontal_pull"),
+        rule("assistida na maquina", "gravitron", "graviton", to = "barra_fixa_maquina", pattern = "vertical_pull"),
+        rule("barra fixa", "pull up", "pull-up", "chin up", to = "barra_fixa", pattern = "vertical_pull"),
+        rule("nordica", "nordic", to = "flexao_nordica", pattern = "knee_flexion"),
+        rule("bulgaro", "bulgarian", to = "bulgaro", patterns = setOf("lunge", "squat")),
+        // A figura do sumô segura um halter (ou kettlebell) entre as pernas; sumô com barra fica no padrão.
+        rule("sumo", to = "agachamento_sumo", pattern = "squat", loads = setOf("DUMBBELL", "KETTLEBELL")),
+        rule("agachamento frontal", "front squat", to = "agachamento_frontal", pattern = "squat"),
+        rule("hack", to = "agachamento_hack", pattern = "squat"),
+        rule("pull through", "pull-through", to = "pull_through", patterns = setOf("hinge", "hip_extension")),
+        rule("swing", to = "swing", pattern = "hinge"),
+        rule("face pull", to = "face_pull", patterns = setOf("horizontal_abduction", "horizontal_pull")),
+        rule("serrote", to = "remada_unilateral", pattern = "horizontal_pull"),
+        rule("pike", to = "flexao_pike", pattern = "vertical_push"),
+        rule("diamante", "diamond", to = "flexao", patterns = setOf("horizontal_push", "elbow_extension")),
+        rule("testa", "skull crusher", to = "triceps_testa", pattern = "elbow_extension"),
+        rule("dead bug", "inseto morto", to = "dead_bug", patterns = setOf("anti_extension", "trunk_flexion")),
+        rule("roda abdominal", "ab wheel", to = "roda_abdominal", pattern = "anti_extension"),
+        rule("lenhador", "woodchop", to = "lenhador", patterns = setOf("rotation", "anti_rotation")),
+        rule("mala", "suitcase", to = "mala", pattern = "carry"),
+        rule("ponte unilateral", "single leg glute bridge", to = "ponte_unilateral", pattern = "hip_extension"),
     )
 
     /** Para padrões desconhecidos (o banco ganhou um padrão novo): adivinha pelo nome. */
@@ -201,7 +221,8 @@ object FigureMapping {
         listOf("extensao de quadril") to "coice_polia",
         listOf("abdutora", "abducao", "abduction") to "abdutora",
         listOf("adutora", "aducao", "adduction") to "adutora",
-        listOf("sumo") to "agachamento_goblet",
+        listOf("concha", "clamshell") to "concha",
+        listOf("sumo") to "agachamento_sumo",
         listOf("leg press") to "leg_press",
         listOf("stiff", "romeno", "rdl", "good morning", "bom dia") to "terra_romeno",
         listOf("terra", "deadlift") to "terra",
@@ -241,17 +262,19 @@ object FigureMapping {
     }
 
     /** Todos os movimentos que as regras por nome podem devolver (o teste confere que existem). */
-    internal val ruleTargets: Set<String> get() = (refinements + keywords).map { it.second }.toSet()
+    internal val ruleTargets: Set<String> get() = (refinements.map { it.motion } + keywords.map { it.second }).toSet()
 
     /** Versão só com textos (testável sem o banco). */
     fun motionId(id: String, name: String, aliases: List<String>, pattern: String, loadType: String, equipment: Set<String>): String {
         explicit[id]?.let { return it }
         val text = (listOf(id.replace('_', ' '), name) + aliases).joinToString(" | ") { normalize(it) }
-        fun match(rules: List<Pair<List<String>, String>>) = rules.firstOrNull { (words, _) -> words.any { w -> containsWord(text, w) } }?.second
-        match(refinements)?.let { return it }
+        fun has(words: List<String>) = words.any { w -> containsWord(text, w) }
         val byPattern = byPattern(pattern, loadType, equipment)
-        if (byPattern != GENERIC) return byPattern
-        return match(keywords) ?: GENERIC
+        // Padrão conhecido: só as regras compatíveis com ele; desconhecido: todas.
+        val known = byPattern != GENERIC
+        refinements.firstOrNull { (!known || pattern in it.patterns) && (it.loads == null || loadType in it.loads) && has(it.words) }?.let { return it.motion }
+        if (known) return byPattern
+        return keywords.firstOrNull { has(it.first) }?.second ?: GENERIC
     }
 
     /** Padrão de movimento + carga + equipamento (exercícios futuros sem palavra-chave conhecida). */
@@ -285,12 +308,17 @@ object FigureMapping {
                 else -> "terra_romeno"
             }
             "hip_extension" -> when {
+                "hip_thrust_machine" in equipment -> "hip_thrust_maquina"
+                "glute_machine" in equipment -> "coice_maquina"
+                loadType == "SMITH" || "smith_machine" in equipment -> "hip_thrust_smith"
+                machine -> "hip_thrust_maquina"
                 cable -> "coice_polia"
-                body || band -> "ponte"
+                body || band -> if ("mini_band" in equipment) "ponte_mini_band" else "ponte"
                 dumbbell -> "hip_thrust_halter"
                 else -> "hip_thrust_barra"
             }
             "knee_flexion" -> when {
+                "swiss_ball" in equipment -> "flexora_bola"
                 band -> "flexora_elastico"
                 body -> "flexora_deslizante"
                 else -> "flexora_cadeira"
@@ -350,6 +378,7 @@ object FigureMapping {
                 else -> "remada_curvada"
             }
             "vertical_pull" -> when {
+                "assisted_pull_up_machine" in equipment -> "barra_fixa_maquina"
                 cable -> "pulldown_bracos_estendidos"
                 band -> if ("pull_up_bar" in equipment) "barra_fixa_assistida" else "puxada_elastico"
                 machine -> "puxada"
@@ -375,6 +404,7 @@ object FigureMapping {
                 else -> "prancha_lateral"
             }
             "trunk_flexion" -> when {
+                "swiss_ball" in equipment -> "abdominal_bola"
                 cable -> "abdominal_polia"
                 "pull_up_bar" in equipment -> "elevacao_joelhos"
                 else -> "abdominal"

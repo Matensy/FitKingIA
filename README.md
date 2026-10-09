@@ -21,11 +21,11 @@ Tudo é **por toque** — nada para digitar:
 2. O **motor determinístico** gera o programa e mostra *por quê* (divisão, dias, volume por músculo, avisos) e **"Seu objetivo × seu treino"**: em números, se a região pedida recebe dias, séries focadas e lugar no começo do treino — ou por que não deu.
 3. **Hoje**: treino do dia já ajustado; "⚡ Pouco tempo" (20–60 min) e "🙂 Como estou" (avaliação → índice de recuperação) refazem a sessão; "🔄 Trocar o treino de hoje" por outro da semana; treino perdido abre as opções A–D; água (+250/+500) e sono.
 4. **Semana**: "‹ Anterior / Próxima ›" navega entre as semanas que passaram (só consulta: o que foi feito e o que ficou sem fazer), a atual e a próxima; tocar num dia mostra o treino; "Fazer este treino hoje" (desta semana) e "Trocar com outro dia" (de hoje em diante ou na próxima semana; só nessa semana ou todas), com avisos de pernas em dias seguidos ou perto do esporte e "↩️ Desfazer".
-5. **Treino**: ilustração animada do movimento ("👁 Ver o movimento"), carga sugerida pelo seu histórico (dupla progressão), aquecimento, anilhas, séries por toque (carga, reps, RIR), cronômetro de descanso em anel com vibração, troca de exercício, resumo com recordes, XP e confete.
+5. **Treino**: ilustração animada do movimento ("👁 Ver o movimento"), carga sugerida pelo seu histórico (dupla progressão), aquecimento, anilhas, séries por toque (carga, repetições, RIR), cronômetro de descanso em anel com vibração, troca de exercício, resumo com recordes, XP e confete.
 6. **Progresso**: consistência, volume semanal por músculo, 1RM estimado e tendência, sugestão de semana de descarga, recordes, peso e cintura (média móvel, IMC, cintura/altura), fotos de progresso.
 7. **Mais**: **lembretes** (água só quando está abaixo do ritmo, treino do dia, sequência — notificações do próprio aparelho, desligadas até você ligar; depois do primeiro programa, um cartão na Hoje pergunta uma vez se você quer ligá-las), nutrição (alimentos TACO por toque), água, sono, cardio, mobilidade, suplementos, evidências, simulador "e se?", anilhas/1RM/aquecimento, perfil, dores, exportar e apagar dados.
 
-As "fotos" dos exercícios são **ilustrações animadas desenhadas pelo próprio app** (110 movimentos, todos os 125 exercícios mapeados) — não usamos fotos de terceiros. Navegação com transições curtas, toques com mola e animações que respeitam a opção "remover animações" do Android.
+As "fotos" dos exercícios são **ilustrações animadas desenhadas pelo próprio app** (119 movimentos, todos os 125 exercícios mapeados; para iniciantes a ilustração já vem aberta no treino) — não usamos fotos de terceiros. Navegação com transições curtas, toques com mola e animações que respeitam a opção "remover animações" do Android (sem animação, a ilustração mostra o início e o fim do movimento lado a lado).
 
 ![Telas](docs/img/telas-1.png)
 ![Telas](docs/img/telas-2.png)
@@ -52,7 +52,7 @@ Requer JDK 21. Para o APK, as ferramentas Android livres do Ubuntu:
 ```bash
 sudo apt-get install aapt dalvik-exchange libandroid-23-java zipalign apksigner zip
 
-./gradlew build                                   # compila e roda os ~800 testes (inclui UI com Robolectric)
+./gradlew build                                   # compila e roda os ~900 testes (inclui UI com Robolectric)
 ./gradlew :app:apk                                # APK assinado em app/build/outputs/ (+ checagem de API do Android 8)
 ./gradlew :app:test -Pscreenshots                 # capturas das telas em app/build/screenshots/
 ./gradlew :knowledge:buildKnowledgeDb             # gera knowledge/build/fitness.db + relatório de integridade

@@ -11,7 +11,7 @@ enum class XpEvent(val key: String, val label: String) {
     PERSONAL_RECORD("personal_record", "Novo recorde"),
     HYDRATION_GOAL("hydration_goal", "Meta de hidratação"),
     WEEK_COMPLETED("week_completed", "Semana completa"),
-    CHECK_IN("check_in", "Check-in de prontidão"),
+    CHECK_IN("check_in", "Avaliação do dia"),
 }
 
 data class XpStatus(val totalXp: Int, val level: Int, val xpIntoLevel: Int, val xpForNext: Int)

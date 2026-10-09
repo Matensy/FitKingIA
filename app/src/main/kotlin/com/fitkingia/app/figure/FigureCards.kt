@@ -17,7 +17,9 @@ fun LinearLayout.exerciseFigureCard(ex: Exercise): ExerciseFigureView {
     card {
         label("Como fazer")
         view = add(ExerciseFigureView(context, FigureMapping.motionFor(ex), description = ex.name), bottom = 6)
-        muted("Ilustração animada — veja também as instruções abaixo", 12f)
+        // Com "remover animações" ligado a figura fica parada (início e fim): o texto não promete animação.
+        muted(if (view.animated) "Ilustração animada — veja também as instruções abaixo"
+            else "Início e fim do movimento — veja também as instruções abaixo", 12f)
     }
     return view
 }
@@ -29,7 +31,7 @@ fun LinearLayout.exerciseFigureCard(ex: Exercise): ExerciseFigureView {
 fun LinearLayout.exerciseFigureToggle(ex: Exercise, shown: Boolean, onToggle: () -> Unit) {
     button(if (shown) "Esconder o movimento" else "👁 Ver o movimento", Btn.GHOST, onClick = onToggle)
     if (shown) card(bottom = 10) {
-        add(ExerciseFigureView(context, FigureMapping.motionFor(ex), heightDp = 200, description = ex.name), bottom = 2)
-        muted("Toque na figura para pausar", 12f)
+        val view = add(ExerciseFigureView(context, FigureMapping.motionFor(ex), heightDp = 200, description = ex.name), bottom = 2)
+        muted(if (view.animated) "Toque na figura para pausar" else "Início à esquerda, fim à direita", 12f)
     }
 }

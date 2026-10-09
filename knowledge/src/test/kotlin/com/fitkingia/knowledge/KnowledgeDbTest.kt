@@ -29,6 +29,21 @@ class KnowledgeDbTest {
         assertEquals(setOf(3, 4, 5), daysWithEmphasis(setOf(BodyRegion.LEGS)))
     }
 
+    /**
+     * Nome de exercício e de equipamento vai para a tela: o português vem na frente e o termo em
+     * inglês, quando ajuda a reconhecer o aparelho, fica entre parênteses ("Voador (pec deck)").
+     */
+    @Test fun exerciseAndEquipmentNamesLeadWithPortuguese() {
+        val english = Regex("\\b(goblet|sissy|pike|peck|deck|mini band|band|leg press|stiff|swing|dead bug|pull|push|press|curl|fly|row|squat|thrust|kickback|clamshell)\\b", RegexOption.IGNORE_CASE)
+        val parentheses = Regex("\\([^)]*\\)")
+        val names = ArrayList<String>()
+        for (e in kb.exercises) names += e.name
+        for (e in kb.equipment) names += e.name
+        for (name in names) assertFalse(english.containsMatchIn(parentheses.replace(name, "")), "termo em inglês fora dos parênteses: $name")
+        // Grafia do aparelho: "pec deck" (de "peitoral"), não "peck deck".
+        for (name in names) assertFalse(name.contains("peck", ignoreCase = true), name)
+    }
+
     // Fora do teste de nome acentuado (lambdas lá dentro geram .class com acento).
     private fun daysWithEmphasis(emphasis: Set<BodyRegion>): Set<Int> =
         kb.splits.filter { it.emphasis == emphasis }.map { it.daysPerWeek }.toSet()

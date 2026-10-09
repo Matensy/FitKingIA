@@ -277,7 +277,7 @@ class ReadinessScreen : Screen() {
             main.toast("Índice de recuperação ${r.score} — ${r.band.label}")
             pop()
         }
-        if (fit.todayView()?.readiness != null) root.button("Apagar check-in de hoje", Btn.GHOST) { fit.clearCheckIn(); pop() }
+        if (fit.todayView()?.readiness != null) root.button("Apagar a avaliação de hoje", Btn.GHOST) { fit.clearCheckIn(); pop() }
         root.muted("O Índice de recuperação é uma heurística do app para comparar seus próprios dias — não é medida clínica.")
     }
 

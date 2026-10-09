@@ -3,6 +3,7 @@ package com.fitkingia.app.screens
 import android.content.Context
 import android.media.AudioManager
 import android.media.ToneGenerator
+import android.os.SystemClock
 import android.os.Vibrator
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -12,6 +13,8 @@ import com.fitkingia.app.figure.exerciseFigureToggle
 import com.fitkingia.app.ui.*
 import com.fitkingia.appcore.ActiveWorkout
 import com.fitkingia.appcore.Perceived
+import com.fitkingia.appcore.RestTimer
+import com.fitkingia.appcore.WorkoutDisplay
 import com.fitkingia.appcore.WorkoutSummary
 import com.fitkingia.core.model.ExerciseId
 import com.fitkingia.core.model.Fmt
@@ -35,11 +38,13 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
     private val reps = HashMap<ExerciseId, Int>()
     private val rir = HashMap<ExerciseId, Int>()
     private var showWarmup = false
-    /** Exercícios com a ilustração aberta (só nesta tela, como o aquecimento). */
-    private val showFigure = HashSet<ExerciseId>()
+    /** Iniciantes começam com a ilustração aberta; os outros, fechada (só nesta tela, como o aquecimento). */
+    private var figureByDefault: Boolean? = null
+    /** Exercícios em que a pessoa inverteu o padrão (abriu ou escondeu a ilustração). */
+    private val figureToggled = HashSet<ExerciseId>()
 
-    private var restLeft = 0
-    private var restTotal = 0
+    /** Descanso pelo horário de término: continua certo com a tela coberta (ex.: "Como fazer"). */
+    private val rest = RestTimer()
     private var restRing: RestRing? = null
     private val tick = Runnable { onTick() }
     override val page get() = if (finishing) Int.MAX_VALUE else index
@@ -96,7 +101,7 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
 
         root.label("Exercício ${index + 1} de $count · ${pe.role.label}")
         root.h1(ex.name)
-        root.exerciseFigureToggle(ex, id in showFigure) { if (!showFigure.add(id)) showFigure.remove(id); refresh() }
+        root.exerciseFigureToggle(ex, figureShown(id)) { if (!figureToggled.add(id)) figureToggled.remove(id); refresh() }
         root.text("${pe.sets} × ${p.target} · RIR ${p.rir} · descanso ${Dates.mmss(pe.restSeconds)}", 15f, C.accent, bold = true)
         pe.note?.let { root.muted(it) }
 
@@ -119,7 +124,7 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
             label("Séries feitas")
             logged.forEachIndexed { i, s ->
                 row(bottom = 4) {
-                    val what = (if (timed) "${s.reps} s" else (if (s.loadKg > 0 || loaded) "${Fmt.kg(s.loadKg)} × ${s.reps}" else "${s.reps} reps")) +
+                    val what = (if (timed) "${s.reps} s" else (if (s.loadKg > 0 || loaded) "${Fmt.kg(s.loadKg)} × ${s.reps}" else repetitions(s.reps))) +
                         (s.rir?.let { " · RIR $it" } ?: "")
                     val t = text("Série ${i + 1}: $what", 15f, bottom = 0)
                     t.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -148,7 +153,7 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
             muted(if (timed) "Tempo (segundos)" else "Repetições", 12f)
             val r = reps.getValue(id)
             val d = if (timed) 5 else 1
-            stepper(r.toString(), if (timed) "s" else "reps", steps = listOf(
+            stepper(r.toString(), if (timed) "s" else repetitionsUnit(r), steps = listOf(
                 "−$d" to { reps[id] = (r - d).coerceAtLeast(0); refresh() },
                 "+$d" to { reps[id] = r + d; refresh() },
             ))
@@ -187,46 +192,70 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
     }
 
     override fun footer(root: LinearLayout) {
-        if (restLeft <= 0) return
+        restRing = null
+        if (!rest.active) return
+        // Toda vez que a tela é desenhada com descanso em andamento, o próximo tique fica agendado
+        // (inclusive ao voltar de outra tela); se ele acabou enquanto ela estava coberta, avisa já.
+        scheduleTick()
+        val left = rest.left(now())
+        if (left <= 0) return
         root.card(bottom = 6, color = C.surface2, stroke = C.fact) {
-            restRing = restTimer(restLeft, restTotal)
+            restRing = restTimer(left, rest.total)
             buttonRow(
-                Triple("−15 s", Btn.SECONDARY) { restLeft = (restLeft - 15).coerceAtLeast(1); updateRest() },
-                Triple("+15 s", Btn.SECONDARY) { restLeft += 15; updateRest() },
+                Triple("−15 s", Btn.SECONDARY) { adjustRest(-15) },
+                Triple("+15 s", Btn.SECONDARY) { adjustRest(15) },
                 Triple("Pular", Btn.GHOST) { stopRest(); refresh() },
                 bottom = 2,
             )
         }
     }
 
+    private fun now() = SystemClock.elapsedRealtime()
+
+    private fun figureShown(id: ExerciseId): Boolean {
+        val byDefault = figureByDefault ?: WorkoutDisplay.figureOpenByDefault(fit.profile()?.experience).also { figureByDefault = it }
+        return byDefault != (id in figureToggled)
+    }
+
     private fun startRest(seconds: Int) {
         stopRest()
-        restLeft = seconds
-        restTotal = seconds
-        main.mainHandler.postDelayed(tick, 1000)
+        rest.start(seconds, now())
+        scheduleTick()
     }
 
     private fun stopRest() {
         main.mainHandler.removeCallbacks(tick)
-        restLeft = 0
+        rest.stop()
         restRing = null
     }
 
+    private fun adjustRest(seconds: Int) {
+        rest.adjust(seconds, now())
+        updateRest()
+        scheduleTick()
+    }
+
+    /** Próximo tique na virada do segundo (calculado do relógio: refresh no meio não atrasa o descanso). */
+    private fun scheduleTick() {
+        main.mainHandler.removeCallbacks(tick)
+        if (rest.active) main.mainHandler.postDelayed(tick, rest.nextTickIn(now()))
+    }
+
     private fun updateRest() {
-        restTotal = maxOf(restTotal, restLeft)
-        restRing?.set(restLeft, restTotal)
+        restRing?.set(rest.left(now()), rest.total)
     }
 
     private fun onTick() {
-        restLeft--
-        if (restLeft <= 0) {
+        if (!rest.active) return
+        if (rest.finished(now())) {
+            // Toca e vibra mesmo com outra tela por cima (ex.: lendo "Como fazer" no descanso).
             stopRest()
             alert()
             if (main.current === this) refresh()
             return
         }
-        updateRest()
-        main.mainHandler.postDelayed(tick, 1000)
+        if (main.current === this) updateRest()
+        scheduleTick()
     }
 
     private fun alert() {
@@ -254,10 +283,15 @@ class WorkoutScreen(private var w: ActiveWorkout) : Screen() {
         return true
     }
 
+    /** Saiu de vez (voltar, nova raiz, Activity destruída). Coberta por outra tela, o descanso segue. */
     override fun onLeave() {
         main.mainHandler.removeCallbacks(tick)
     }
 }
+
+/** "1 repetição", "8 repetições". */
+internal fun repetitions(n: Int) = "$n ${repetitionsUnit(n)}"
+internal fun repetitionsUnit(n: Int) = if (n == 1) "repetição" else "repetições"
 
 /** Resumo depois do treino: PRs, XP, volume. */
 class WorkoutSummaryScreen(private val s: WorkoutSummary) : Screen() {

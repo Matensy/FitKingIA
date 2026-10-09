@@ -58,10 +58,38 @@ class ProgressionEngineTest {
         assertEquals("Você normalmente completa 9–11 repetições com 62,5 kg (2 sessões).", s.pattern)
     }
 
+    /** O texto vai direto para a tela: "repetições", nunca o inglês "reps". */
+    @Test fun suggestionsSpeakPortuguese() {
+        val histories = listOf(
+            listOf(log(0, 60.0, 12, 12, 12)), // aumenta
+            listOf(log(0, 60.0, 12, 12, 12, rir = 0)), // consolida
+            listOf(log(0, 60.0, 10, 10, 9)), // mantém
+            listOf(log(1, 70.0, 10, 9, 8), log(0, 70.0, 7, 6, 6)), // abaixo da faixa uma vez
+            listOf(log(1, 70.0, 7, 7, 6), log(0, 70.0, 7, 6, 6)), // reduz
+        )
+        val english = Regex("\\breps\\b")
+        for (h in histories) {
+            val s = engine.suggest(bench, presc, 3, h)
+            assertFalse(english.containsMatchIn(s.message), s.message)
+            assertFalse(english.containsMatchIn(s.explanation.text), s.explanation.text)
+            assertTrue("repetições" in s.message + s.explanation.text)
+        }
+    }
+
     @Test fun `exercício em tempo progride por duração`() {
         val plank = Fixtures.kb.exercise(x("plank"))
         val s = engine.suggest(plank, presc.copy(holdSeconds = 20..45), 3, listOf(ExerciseLog(plank.id, TODAY, listOf(SetLog(0.0, 1)))))
         assertTrue("aumente a duração" in s.message)
+    }
+
+    /** Prancha sem histórico: a primeira sugestão fala de segundos, não de "carga que permita 15 repetições". */
+    @Test fun timedExerciseStartsFromTheHoldTime() {
+        val plank = Fixtures.kb.exercise(x("plank"))
+        val s = engine.suggest(plank, presc.copy(holdSeconds = 20..45), 3, emptyList())
+        assertEquals(ProgressionAction.START, s.action)
+        assertNull(s.suggestedLoadKg)
+        assertTrue("20 s" in s.message && "45 s" in s.message, s.message)
+        assertFalse("repetições" in s.message || "carga" in s.message, s.message)
     }
 }
 

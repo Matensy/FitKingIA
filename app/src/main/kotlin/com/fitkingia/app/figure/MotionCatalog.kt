@@ -90,7 +90,7 @@ object MotionCatalog {
         ), Props.barbell(barFront))
 
         val goblet = grip(17.5, 6, P(-1f, 0.3f))
-        list += Motion("agachamento_goblet", "Agachamento goblet (halter no peito)", listOf(
+        list += Motion("agachamento_goblet", "Agachamento com halter no peito (goblet)", listOf(
             key(49, 49.7, lean = 4, arm = goblet, leg = ankle),
             key(41, 76, lean = 24, head = -10, arm = goblet, leg = ankle),
         ), listOf(
@@ -205,7 +205,7 @@ object MotionCatalog {
             key(43.6, 80.15, lean = -109.5, head = 39.5, arm = ang(86, 90), leg = foot(76, 88.5, angle = 160, bend = KNEE_UP)),
         ), listOf(Props.mat(4f, 88f), Prop.Line(Anchor.On(J.ANKLE, -3f, 2.4f), Anchor.On(J.ANKLE, 5f, 2.4f), 1.8f, Ink.BAND, Layer.FRONT)))
 
-        list += Motion("sissy", "Agachamento sissy", listOf(
+        list += Motion("sissy", "Agachamento com joelhos à frente (sissy)", listOf(
             key(50, 49.7, lean = 0, arm = ang(70, 70, rel = true), leg = foot(50, 89)),
             key(51, 57.9, lean = -40, head = 25, arm = ang(70, 70, rel = true), leg = foot(50, 87, angle = 50)),
         ))
@@ -491,7 +491,7 @@ object MotionCatalog {
             key(42, 68, lean = -6, arm = reach(40.5, 15.6, ELBOW_DOWN), leg = seatedFeet),
         ), uprightSeat(42f, 68f, -6f) + Props.lever(p(24, 34), Anchor.On(J.WRIST), roller = false))
 
-        list += Motion("flexao_pike", "Flexão pike (quadril alto)", listOf(
+        list += Motion("flexao_pike", "Flexão com quadril elevado (pike)", listOf(
             key(38.35, 51, lean = 120, arm = reach(60, 90.6, P(-1f, -0.6f)), leg = Leg(legReach(24, 87.6, KNEE), 94f, footRelative = true)),
             key(38.35, 51, lean = 140, arm = reach(60, 90.6, P(-1f, -0.6f)), leg = Leg(legReach(24, 87.6, KNEE), 94f, footRelative = true)),
         ))
@@ -893,6 +893,103 @@ object MotionCatalog {
             Props.pad(p(16, 87), p(62, 73.5), 3.4f), Props.frame(p(22, 87), p(22, GROUND), 2f), Props.frame(p(58, 76), p(58, GROUND), 2f),
             Prop.Disc(pt(68.5, 70.5), 2.4f, Ink.PAD), Prop.Disc(pt(64.5, 78.5), 2.4f, Ink.PAD, layer = Layer.BACK),
         ))
+
+        // --- Variações com acessório ou aparelho próprio ---------------------------------
+        // Concha vista de frente e do alto (deitado de lado): o que vem para quem olha desce no
+        // desenho. Quadris e joelhos flexionados, pés juntos; só o joelho de cima abre. As pernas
+        // usam Limb.Free porque, girando em direção a quem olha, a coxa muda de tamanho aparente.
+        val shellRig = FRONT.copy(hipHalf = 3.7f, shoulderHalf = 6.6f)
+        val shellFoot = -80f
+        // Braço de cima apoiado no quadril (um pouco inclinado: o tronco aqui é mais estreito).
+        fun shell(topKnee: P, topAnkle: P) = key(46, 79, lean = 86, arm = lyingArms.first, armB = ang(-80, -80),
+            leg = Leg(Limb.Free(pt(32.2, 90), pt(18.4, 82.3)), shellFoot),
+            legB = Leg(Limb.Free(Anchor.At(topKnee), Anchor.At(topAnkle)), shellFoot))
+        list += Motion("concha", "Concha (abertura de joelhos deitado de lado)", listOf(
+            shell(p(32.6, 85.6), p(18.9, 78.6)),
+            shell(p(31, 68.5), p(18.9, 78.6)),
+        ), listOf(
+            Prop.Block(2f, 80f, 98f, GROUND, Ink.PAD),
+            Props.band(Anchor.Seg(J.HIP, J.KNEE, 12f), Anchor.Seg(J.HIP_B, J.KNEE_B, 12f)),
+        ), rig = shellRig, viewLabel = "vista de frente e do alto (deitado de lado)")
+
+        // Sumô com um halter seguro pela cabeça, pendurado entre as pernas (vista de frente).
+        val sumoHands = reach(51, 55.5, P(0f, 1f))
+        list += Motion("agachamento_sumo", "Agachamento sumô com halter entre as pernas", listOf(
+            sym(key(50, 51.5, arm = sumoHands, leg = foot(66, angle = 60, bend = OUT_R))),
+            sym(key(50, 68, arm = reach(51, 72, P(0f, 1f)), leg = foot(66, angle = 60, bend = OUT_R))),
+        ), listOf(
+            Prop.Line(Anchor.On(J.WRIST, -1f, 1f), Anchor.On(J.WRIST, -1f, 10f), 1.8f, Ink.METAL, Layer.FRONT),
+            Prop.Disc(Anchor.On(J.WRIST, -1f, 1.5f), 2.8f, Ink.METAL),
+            Prop.Disc(Anchor.On(J.WRIST, -1f, 10.5f), 3.2f, Ink.METAL),
+        ), rig = FRONT.copy(armsOverTorso = true))
+
+        // Bola suíça: bola apoiada no chão (centro em y = GROUND − raio).
+        val ballR = 8f
+        fun ball(at: Anchor) = Prop.Disc(at, ballR, Ink.PAD, layer = Layer.BACK)
+        // Flexora na bola: ponte com os calcanhares sobre a bola, que rola em direção ao glúteo.
+        val ballArms = ang(86, 90)
+        list += Motion("flexora_bola", "Flexão de joelhos na bola suíça", listOf(
+            key(40, 76, lean = -118.7, head = 48.7, arm = ballArms, leg = Leg(legReach(77, 74.5, KNEE_UP), 160f)),
+            key(37.3, 72, lean = -129.8, head = 59.8, arm = ballArms, leg = Leg(legReach(58, 74.5, KNEE_UP), 160f)),
+        ), listOf(Props.mat(2f, 52f), ball(Anchor.On(J.ANKLE, 1f, GROUND - ballR - 74.5f))))
+
+        // Abdominal na bola: lombar apoiada na bola, pés no chão; o tronco enrola para cima.
+        val ballFeet = Leg(legReach(68, 89, KNEE_UP), 76f)
+        list += Motion("abdominal_bola", "Abdominal na bola suíça", listOf(
+            key(52, 75, lean = -100, head = 20, arm = ang(25, 150, rel = true), leg = ballFeet),
+            key(52, 75, lean = -60, head = 20, arm = ang(25, 150, rel = true), leg = ballFeet),
+        ), listOf(ball(pt(46, GROUND - ballR))))
+
+        // Coice na máquina de glúteo: tronco e antebraços apoiados, o pé empurra a alavanca para trás.
+        list += Motion("coice_maquina", "Coice na máquina de glúteo", listOf(
+            key(48, 50.5, lean = 55, head = -15, arm = ang(0, 90), leg = legAng(15, -30, 80), legB = foot(50)),
+            key(48, 50.5, lean = 55, head = -15, arm = ang(0, 90), leg = legAng(-38, -45, 80), legB = foot(50)),
+        ), listOf(
+            Props.frame(p(36, GROUND - 0.8f), p(84, GROUND - 0.8f), 2f),
+            Props.frame(p(60, 49), p(60, GROUND), 2.2f),
+            Props.pad(Anchor.Body(4f, 4.6f), Anchor.Body(16f, 4.6f), 3.6f, Layer.MID),
+            Props.frame(p(80, 55), p(80, GROUND), 2.2f),
+            Props.pad(p(64, 53.8), p(86, 53.8), 3.2f),
+        ) + Props.lever(p(44, 56), Anchor.On(J.ANKLE)))
+
+        // Elevação pélvica na máquina: encosto, cinto/almofada sobre o quadril preso por cabo à base
+        // (a resistência puxa o quadril para baixo) e plataforma para os pés, tudo numa estrutura só.
+        val thrustFeet = foot(64)
+        val thrustHands = grip(1, 5.5, P(0f, -1f))
+        val thrustKeys = listOf(
+            key(39.3, 83.5, lean = -54.5, head = 20, arm = thrustHands, leg = thrustFeet),
+            key(44, 69, lean = -90, head = 20, arm = thrustHands, leg = thrustFeet),
+        )
+        val beltPad = Anchor.Body(1f, 5.4f)
+        list += Motion("hip_thrust_maquina", "Elevação pélvica na máquina", thrustKeys, listOf(
+            Props.frame(p(4, 74), p(4, GROUND), 1.6f), Props.frame(p(17, 74), p(17, GROUND), 1.6f),
+            Props.frame(p(2, GROUND - 0.8f), p(78, GROUND - 0.8f), 2f),
+            Props.pad(p(1.7, 73.7), p(19.3, 73.7), 3.4f),
+            Prop.Block(54f, 89.4f, 78f, GROUND, Ink.PAD),
+        ) + Props.cable(p(42, 90), beltPad) + listOf(Props.pad(Anchor.Body(-2.5f, 5.6f), Anchor.Body(4.5f, 5.6f), 3.2f, Layer.FRONT)))
+
+        // Elevação pélvica no Smith: a barra corre num trilho vertical (atrás do corpo).
+        list += Motion("hip_thrust_smith", "Elevação pélvica no Smith", thrustKeys,
+            listOf(Props.frame(p(42, 30), p(42, GROUND), 1.8f)) + Props.bench(0f, 21f, 72f) + Props.barbell(Anchor.Body(1f, 4.6f), 7f))
+
+        // Barra assistida na máquina: ajoelhado na plataforma, que sobe junto (coluna telescópica).
+        val pullHands = reach(52, -14, P(-1f, 0.4f))
+        val kneelOnPad = legAng(2, -88, 80)
+        list += Motion("barra_fixa_maquina", "Barra fixa assistida na máquina", listOf(
+            key(49.3, 38.5, lean = 4, arm = pullHands, leg = kneelOnPad),
+            key(52.84, 19.6, lean = -10, head = -15, arm = pullHands, leg = kneelOnPad),
+        ), Props.fixedBar(52f, -14f, postX = 28f) + listOf(
+            // A coluna sobe e desce na vertical com a plataforma (não inclina quando o corpo avança).
+            Prop.Line(Anchor.On(J.KNEE, -6f, 4.5f), Anchor.Plumb(J.KNEE, -6f, GROUND), 2.2f, Ink.FRAME),
+            Props.pad(Anchor.On(J.KNEE, 1.5f, 3.4f), Anchor.On(J.KNEE, -15f, 3.4f), 3f),
+        ))
+
+        // Ponte com mini band: a faixa laranja abraça as coxas logo acima dos joelhos.
+        val bridgeArms = ang(84, 90)
+        list += Motion("ponte_mini_band", "Ponte de glúteo com mini elástico", listOf(
+            key(45, 88.5, lean = -90, head = 20, arm = bridgeArms, leg = foot(62, bend = KNEE_UP)),
+            key(40.9, 74.7, lean = -123.5, head = 53.5, arm = bridgeArms, leg = foot(62, bend = KNEE_UP)),
+        ), listOf(Props.mat(4f, 76f), Prop.Line(Anchor.Seg(J.HIP, J.KNEE, 15f, -2.7f), Anchor.Seg(J.HIP, J.KNEE, 15f, 2.7f), 2.2f, Ink.BAND, Layer.FRONT)))
 
         list += Motion("em_pe", "Posição em pé", listOf(
             key(50, 49.6, arm = ang(4), leg = foot(50)),

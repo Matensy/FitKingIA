@@ -96,7 +96,12 @@ object Motion {
     var changing = false
         private set
     private var rendering = false
-    private var screenKey: Any? = null
+    /**
+     * Tela do último render. Referência fraca: este objeto vive o processo inteiro e a tela
+     * guarda a Activity (Views, foto da transição); uma referência forte seguraria a Activity
+     * destruída até o próximo render.
+     */
+    private var screenKey: WeakReference<Any>? = null
     private val memory = HashMap<String, Any>()
     private val touched = HashSet<String>()
     private val counters = HashMap<String, Int>()
@@ -108,9 +113,9 @@ object Motion {
         rendering = on
         entering = on && (change == ScreenChange.PUSH || change == ScreenChange.ROOT)
         changing = on && !navigation
-        if (navigation || screen !== screenKey) memory.clear()
+        if (navigation || screen !== screenKey?.get()) memory.clear()
         if (navigation) clearConfetti()
-        screenKey = screen
+        if (screen !== screenKey?.get()) screenKey = WeakReference(screen)
         counters.clear()
     }
 
@@ -386,6 +391,9 @@ class ScreenTransitions(private val host: ViewGroup, private val area: View) {
             val bmp = bitmap?.takeIf { it.width == w && it.height == h } ?: Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565).also { bitmap = it }
             val canvas = Canvas(bmp)
             canvas.drawColor(C.bg)
+            // View.draw() não aplica a rolagem da própria View (quem aplica é o pai): sem isto a
+            // foto de uma tela rolada mostraria o topo dela.
+            canvas.translate(-area.scrollX.toFloat(), -area.scrollY.toFloat())
             area.draw(canvas)
             val d = BitmapDrawable(area.resources, bmp)
             d.setBounds(area.left, area.top, area.right, area.bottom)
@@ -396,6 +404,23 @@ class ScreenTransitions(private val host: ViewGroup, private val area: View) {
             // Sem memória para a foto: a troca acontece sem a saída animada.
             bitmap = null
         }
+    }
+
+    /** Foto da última captura (testes). */
+    internal val lastCapture: Bitmap? get() = bitmap
+
+    /** Solta a foto (tela cheia) e o que estiver animando: Activity destruída ou app fora da tela. */
+    fun release() {
+        exit?.cancel()
+        exit = null
+        // end(), não cancel(): cancelada no meio, a entrada deixaria o conteúdo transparente ou
+        // deslocado (ex.: app minimizado logo depois de um toque que trocou de tela).
+        for (a in enter) a.end()
+        enter.clear()
+        shot?.let { host.overlay.remove(it) }
+        shot = null
+        fresh = false
+        bitmap = null
     }
 
     /** Chamado depois de montar a tela nova. */

@@ -16,7 +16,7 @@ Legenda: ✅ implementado e testado · 🟡 parcial (domínio/banco prontos, fal
 | **Gerador de programa** por dias e tempo; recalcula ao mudar a disponibilidade | ✅ | `core/program` |
 | **"Tenho só 40 minutos"** — treino rápido explicando o que saiu e por quê | ✅ | `SessionFitter`, `SessionAdapter.forTime` |
 | **Banco de exercícios** (125) com padrão, músculos, foco curado, equipamento (40 aparelhos/acessórios), dificuldade, estabilidade, mobilidade, demanda articular, instruções, erros comuns, segurança, progressão, substituições | ✅ (meta 300+) | `exercises.json`, `equipment.json` |
-| **Ilustrações animadas** dos exercícios (sem fotos de terceiros): 110 movimentos, todos os exercícios mapeados | ✅ | `app/figure`, `ExerciseScreen`, `WorkoutScreen` |
+| **Ilustrações animadas** dos exercícios (sem fotos de terceiros): 119 movimentos, todos os exercícios mapeados | ✅ | `app/figure`, `ExerciseScreen`, `WorkoutScreen` |
 | **23 padrões de movimento** (empurrar/puxar H/V, agachar, dobradiça, afundo, carregar, antirrotação, antiextensão…) | ✅ | `patterns.json` |
 | **Substituição** por padrão, músculos, equipamento, nível, estabilidade, dificuldade, dor, curadoria e histórico | ✅ | `SubstitutionEngine` |
 | **Prescrição**: séries, faixa de reps/tempo, RIR, descanso, cadência, aquecimento | ✅ | regra `prescription.reps_rir_rest`, `WarmupGenerator` |
@@ -65,7 +65,7 @@ Legenda: ✅ implementado e testado · 🟡 parcial (domínio/banco prontos, fal
 
 | Item | Status |
 |---|---|
-| Testes de unidade, integração, banco, motor de regras, geração (216 cenários), prioridade por região (~300 cenários), questionário (90 combinações), UI (Robolectric), regressão e diálogo | ✅ ~800 testes |
+| Testes de unidade, integração, banco, motor de regras, geração (216 cenários), prioridade por região (~300 cenários), questionário (90 combinações), UI (Robolectric), regressão e diálogo | ✅ ~900 testes |
 | Banco distribuído não vazio (`fitness.db`) separado do `user.db` | ✅ |
 | Privacidade: local, consentimento, exportar (JSON) e apagar dados, sem permissão de internet | ✅ · ⬜ criptografia (SQLCipher) |
 | App Android (Kotlin, telas em código, SQLite do sistema) — APK em `dist/` | ✅ v0.2.0 — ver [ADR 0004](adr/0004-apk-sem-agp.md) |

@@ -526,7 +526,7 @@ internal class WeekReorder(private val fit: FitKing) {
                 "corpo todo" -> "Se o corpo estiver cansado"
                 else -> "Se estiverem cansados"
             }
-            return "$who, o check-in “Como estou” ajusta o treino."
+            return "$who, a avaliação do dia (“🙂 Como estou”) ajusta o treino."
         }
 
         /**
@@ -564,7 +564,7 @@ internal class WeekReorder(private val fit: FitKing) {
 
         // Corta pelo texto fixo do motor: nomes de sessão também têm " — " (ex.: "Inferiores A — quadríceps").
         private fun sportText(msg: String) =
-            msg.substringBefore(" — com os dias") + ": perna pesada perto do esporte. Se as pernas estiverem cansadas, o check-in “Como estou” ajusta o treino."
+            msg.substringBefore(" — com os dias") + ": perna pesada perto do esporte. Se as pernas estiverem cansadas, a avaliação do dia (“🙂 Como estou”) ajusta o treino."
     }
 
     /** Um aviso de dias seguidos (ou de esporte, com x = y) já dado — para não repetir o mesmo par. */

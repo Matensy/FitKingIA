@@ -6,11 +6,11 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
 import android.os.SystemClock
-import android.provider.Settings
 import android.util.TypedValue
 import android.view.View
 import com.fitkingia.app.ui.C
 import com.fitkingia.app.ui.dp
+import com.fitkingia.app.ui.Motion as UiMotion
 
 /** Adaptador do [FigureCanvas] para o Canvas do Android. */
 class AndroidFigureCanvas : FigureCanvas {
@@ -72,7 +72,7 @@ class AndroidFigureCanvas : FigureCanvas {
 /**
  * Ilustração animada de um exercício: a figura repete o movimento em ciclo (≈ 2,4 s, com pausa
  * nos extremos) enquanto está na janela. Tocar pausa/retoma. Com animações desligadas no sistema
- * (acessibilidade), mostra o fim do movimento parado.
+ * (acessibilidade, economia de bateria), mostra o início e o fim do movimento lado a lado.
  *
  * As telas são reconstruídas inteiras a cada atualização (ex.: cada toque no "+" da carga). Por
  * isso o relógio da animação e a pausa ficam guardados por movimento, fora da View: a figura
@@ -87,14 +87,22 @@ class ExerciseFigureView(
 ) : View(context) {
     private val drawer = AndroidFigureCanvas()
     private val bounds = FigurePainter.bounds(motion)
+    private val description = description
     private val palette = FigurePalette(
         figure = C.text, figureBack = 0xFF8C96A5.toInt(), equipment = C.accent,
         frame = 0xFF5A6472.toInt(), pad = 0xFF6E7A89.toInt(), floor = C.stroke,
         background = C.surface, label = C.muted,
     )
     private var running = false
-    private var animations = true
     private var failed = false
+
+    /**
+     * O sistema permite animar? Lido ao criar (as telas recriam a figura a cada atualização) e de
+     * novo ao entrar na janela, e não a cada quadro: é uma consulta ao sistema. Sem animação a
+     * figura mostra início e fim lado a lado, não é tocável e os textos não falam em "animada".
+     */
+    var animated: Boolean = UiMotion.systemAllows(context)
+        private set
 
     /** Quadro fixo (0 = início, 1 = fim do percurso); null = animando. Usado em testes e capturas. */
     var fixedFrame: Float? = null
@@ -103,19 +111,26 @@ class ExerciseFigureView(
     val paused: Boolean get() = motion.id in pausedAt
 
     init {
-        contentDescription = "Ilustração animada: $description. Toque para pausar ou continuar."
-        isClickable = true
         setOnClickListener { togglePause() }
+        applyMode()
     }
 
-    private fun readAnimationsEnabled(): Boolean = try {
-        Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) > 0f
-    } catch (e: Exception) { true }
+    /** Toque e descrição para o leitor de tela conforme o modo (animada/parada) e a pausa. */
+    private fun applyMode() {
+        isClickable = animated
+        contentDescription = when {
+            !animated -> "Ilustração: $description. Início do movimento à esquerda e fim à direita."
+            paused -> "Ilustração animada: $description. Pausada; toque para continuar."
+            else -> "Ilustração animada: $description. Em movimento; toque para pausar."
+        }
+    }
 
     fun togglePause() {
+        if (!animated) return
         val now = SystemClock.uptimeMillis()
         val since = pausedAt.remove(motion.id)
         if (since != null) offset[motion.id] = (offset[motion.id] ?: 0L) + (now - since) else pausedAt[motion.id] = now
+        applyMode()
         invalidate()
     }
 
@@ -128,8 +143,8 @@ class ExerciseFigureView(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         running = true
-        // Lido uma vez por exibição (e não a cada quadro): é uma consulta ao sistema.
-        animations = readAnimationsEnabled()
+        animated = UiMotion.systemAllows(context)
+        applyMode()
         invalidate()
     }
 
@@ -138,10 +153,10 @@ class ExerciseFigureView(
         super.onDetachedFromWindow()
     }
 
-    /** Posição no percurso agora. */
+    /** Posição no percurso agora (sem animação, o desenho mostra início e fim; aqui vale o fim). */
     fun currentFrame(): Float {
         fixedFrame?.let { return it }
-        if (!animations) return 1f
+        if (!animated) return 1f
         val now = pausedAt[motion.id] ?: SystemClock.uptimeMillis()
         return motion.phase(now - (offset[motion.id] ?: 0L))
     }
@@ -153,14 +168,15 @@ class ExerciseFigureView(
         if (w <= 0f || h <= 0f || failed) return
         val label = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 11f, resources.displayMetrics)
         try {
-            paintFrame(canvas, currentFrame(), w, h, context.dp(10).toFloat(), label)
+            if (!animated && fixedFrame == null) paintStartAndEnd(canvas, w, h, label)
+            else paintFrame(canvas, currentFrame(), w, h, context.dp(10).toFloat(), label)
         } catch (e: RuntimeException) {
             // Uma pose inválida não pode derrubar o treino: some a figura, o resto da tela continua.
             failed = true
             android.util.Log.e("FitKingIA", "falha ao desenhar ${motion.id}", e)
             return
         }
-        if (paused && fixedFrame == null && animations) {
+        if (paused && fixedFrame == null && animated) {
             // Ícone de pausa (duas barrinhas) no canto superior direito.
             val x = w - label * 0.8f
             val y = label * 0.5f
@@ -168,7 +184,7 @@ class ExerciseFigureView(
             drawer.rect(x - label * 0.35f, y, x, y + label * 1.1f, label * 0.12f, C.accent)
         }
         // Próximo quadro só enquanto estiver na janela, animando e sem pausa.
-        if (running && fixedFrame == null && !paused && animations) postInvalidateOnAnimation()
+        if (running && fixedFrame == null && !paused && animated) postInvalidateOnAnimation()
     }
 
     /** Desenha o quadro [frame] num Canvas qualquer (folhas de contato nos testes). */
@@ -177,12 +193,29 @@ class ExerciseFigureView(
         paintFrame(canvas, frame, w, h, context.dp(8).toFloat(), label)
     }
 
-    private fun paintFrame(canvas: Canvas, frame: Float, w: Float, h: Float, pad: Float, label: Float) {
+    private fun paintFrame(canvas: Canvas, frame: Float, w: Float, h: Float, pad: Float, label: Float, showViewLabel: Boolean = true) {
         drawer.canvas = canvas
         // Com rótulo da vista ("vista de cima"…), a figura começa abaixo dele em vez de passar por cima.
         val top = if (motion.viewLabel != null) pad + label * 1.2f else pad
         val viewport = FigurePainter.fit(bounds, w, h, pad, top)
-        FigurePainter.paint(drawer, motion, motion.pose(frame), viewport, w, palette, label)
+        FigurePainter.paint(drawer, motion, motion.pose(frame), viewport, w, palette, if (showViewLabel) label else 0f)
+    }
+
+    /** Sem animação: início e fim lado a lado, com legenda embaixo de cada um. */
+    private fun paintStartAndEnd(canvas: Canvas, w: Float, h: Float, label: Float) {
+        val half = w / 2
+        val caption = label * 1.6f
+        val pad = context.dp(6).toFloat()
+        for ((i, frame) in listOf(0f, 1f).withIndex()) {
+            canvas.save()
+            canvas.translate(half * i, 0f)
+            canvas.clipRect(0f, 0f, half, h)
+            paintFrame(canvas, frame, half, h - caption, pad, label, showViewLabel = i == 0)
+            val text = if (i == 0) "início" else "fim"
+            drawer.text(text, (half - drawer.textWidth(text, label)) / 2, h - caption * 0.35f, label, C.muted)
+            canvas.restore()
+        }
+        drawer.line(half, h * 0.12f, half, h - caption, context.dp(1).toFloat(), C.stroke)
     }
 
     private companion object {

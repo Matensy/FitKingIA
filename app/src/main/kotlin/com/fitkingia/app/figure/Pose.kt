@@ -93,6 +93,11 @@ data class Rig(
     val showLegs: Boolean = true,
     /** Quanto do tronco aparece (vistas em que ele aponta para quem olha). */
     val torsoVisible: Boolean = true,
+    /**
+     * Vista de frente com os braços passando na frente do tronco (ex.: halter pendurado entre as
+     * pernas): contorno na cor do fundo, senão braço e tronco viram uma mancha só.
+     */
+    val armsOverTorso: Boolean = false,
 ) {
     val front get() = view != ViewKind.SIDE
 
@@ -124,6 +129,15 @@ sealed class Limb {
     data class Reach(val target: Anchor, val bend: P = P(0f, 1f), val world: Boolean = false) : Limb() {
         override fun mirrored(cx: Float) = Reach(target.mirrored(cx), if (world) P(-bend.x, bend.y) else P(bend.x, -bend.y), world)
     }
+
+    /**
+     * Cotovelo/joelho em [mid] e punho/tornozelo em [end], sem cinemática. Só para vistas com
+     * escorço, em que o comprimento APARENTE do segmento muda de verdade (ex.: concha vista de
+     * frente e do alto: a coxa que gira em direção a quem olha fica mais curta no desenho).
+     */
+    data class Free(val mid: Anchor, val end: Anchor) : Limb() {
+        override fun mirrored(cx: Float) = Free(mid.mirrored(cx), end.mirrored(cx))
+    }
 }
 
 /** Perna: membro + pé. [foot] é o ângulo tornozelo→ponta do pé; [footRelative] = relativo à canela. */
@@ -152,6 +166,14 @@ sealed class Anchor {
     /** Sobre a reta a→b: [along] unidades a partir de [a]; [perp] para o lado perp() de a→b. */
     data class Seg(val a: J, val b: J, val along: Float, val perp: Float = 0f) : Anchor() {
         override fun mirrored(cx: Float) = Seg(a.mirror, b.mirror, along, -perp)
+    }
+
+    /**
+     * Na vertical da articulação: x de [j] + [dx], altura [y] fixa. Para peças que acompanham o
+     * corpo só na horizontal e continuam em pé (ex.: coluna da plataforma da barra assistida).
+     */
+    data class Plumb(val j: J, val dx: Float, val y: Float) : Anchor() {
+        override fun mirrored(cx: Float) = Plumb(j.mirror, -dx, y)
     }
 }
 
@@ -183,6 +205,7 @@ class Pose(val rig: Rig, private val pts: Array<P>, val spine: P) {
             val u = (get(a.b) - get(a.a)).unit()
             get(a.a) + u * a.along + u.perp() * a.perp
         }
+        is Anchor.Plumb -> P(get(a.j).x + a.dx, a.y)
     }
 
     companion object {
@@ -223,6 +246,7 @@ fun solve(rig: Rig, k: Key): Pose {
             mid to (mid + dir(spec.lower + off) * l2)
         }
         is Limb.Reach -> ik(root, partial.resolve(spec.target), l1, l2, if (spec.world) spec.bend else bendWorld(spec.bend))
+        is Limb.Free -> partial.resolve(spec.mid) to partial.resolve(spec.end)
     }
 
     fun leg(spec: Leg, hip: J, knee: J, ankle: J, toe: J) {
@@ -265,6 +289,7 @@ fun ik(root: P, target: P, l1: Float, l2: Float, bend: P): Pair<P, P> {
 fun Limb.lerp(o: Limb, t: Float): Limb = when {
     this is Limb.Angles && o is Limb.Angles && relative == o.relative -> Limb.Angles(lerp(upper, o.upper, t), lerp(lower, o.lower, t), relative)
     this is Limb.Reach && o is Limb.Reach && world == o.world -> Limb.Reach(target.lerp(o.target, t), lerp(bend, o.bend, t), world)
+    this is Limb.Free && o is Limb.Free -> Limb.Free(mid.lerp(o.mid, t), end.lerp(o.end, t))
     else -> throw IllegalArgumentException("quadros com tipos de membro diferentes: $this × $o")
 }
 
@@ -273,6 +298,7 @@ fun Anchor.lerp(o: Anchor, t: Float): Anchor = when {
     this is Anchor.Body && o is Anchor.Body -> Anchor.Body(lerp(along, o.along, t), lerp(perp, o.perp, t))
     this is Anchor.On && o is Anchor.On && j == o.j -> Anchor.On(j, lerp(dx, o.dx, t), lerp(dy, o.dy, t))
     this is Anchor.Seg && o is Anchor.Seg && a == o.a && b == o.b -> Anchor.Seg(a, b, lerp(along, o.along, t), lerp(perp, o.perp, t))
+    this is Anchor.Plumb && o is Anchor.Plumb && j == o.j -> Anchor.Plumb(j, lerp(dx, o.dx, t), lerp(y, o.y, t))
     else -> throw IllegalArgumentException("quadros com âncoras incompatíveis: $this × $o")
 }
 

@@ -113,7 +113,7 @@ class ExerciseHistoryScreen(private val ex: Exercise, private val t: Performance
     override fun build(root: LinearLayout) {
         root.text("${t.direction.label}${if (t.direction != TrendDirection.INSUFFICIENT_DATA) " (${Fmt.signed(t.pctPerSession, 1)}% por sessão)" else ""}", 16f, bold = true)
         if (t.e1rmBySession.size >= 2) root.add(LineChart(root.context, t.e1rmBySession.map { Dates.short(it.first) }, t.e1rmBySession.map { it.second }), bottom = 10)
-        root.muted("1RM estimado pela equação de Epley a partir das suas séries (reps + RIR). É uma aproximação.")
+        root.muted("1RM estimado pela equação de Epley a partir das suas séries (repetições + RIR). É uma aproximação.")
         root.card { fit.exerciseLogs(ex.id).asReversed().take(15).forEach { l -> kv(Dates.short(l.date), l.sets.joinToString(" · ") { "${Fmt.num(it.loadKg, 2)}×${it.reps}" }) } }
         root.explanation(Explanation.fact(fit.kb.claim(ClaimId("e1rm_equations")).statement, listOf(ClaimId("e1rm_equations"))), 13f)
     }

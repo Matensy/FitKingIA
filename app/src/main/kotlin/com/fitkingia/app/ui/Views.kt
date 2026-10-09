@@ -307,3 +307,51 @@ class ConfettiView(context: Context, seed: Long = 7L) : View(context) {
         private const val COUNT = 90
     }
 }
+
+/**
+ * Ícone de calendário desenhado (aba Semana). Os emojis de calendário (📅, 🗓) aparecem na fonte
+ * do Android com uma data em inglês ("July 17"); este não tem texto e segue a paleta do app.
+ */
+class CalendarIcon : android.graphics.drawable.Drawable() {
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val rect = RectF()
+    private val clip = Path()
+    private var alphaValue = 255
+
+    override fun draw(canvas: Canvas) {
+        val b = bounds
+        val s = min(b.width(), b.height()).toFloat()
+        val left = b.left + (b.width() - s) / 2
+        val top = b.top + (b.height() - s) / 2
+        val r = s * 0.16f
+        rect.set(left + s * 0.06f, top + s * 0.12f, left + s * 0.94f, top + s * 0.96f)
+        paint.style = Paint.Style.FILL
+        paint.color = withAlpha(0xFFE9EDF2.toInt())
+        canvas.drawRoundRect(rect, r, r, paint)
+        // Faixa do mês (laranja do app) presa ao contorno arredondado.
+        canvas.save()
+        clip.reset()
+        clip.addRoundRect(rect, r, r, Path.Direction.CW)
+        canvas.clipPath(clip)
+        paint.color = withAlpha(C.accent)
+        canvas.drawRect(rect.left, rect.top, rect.right, rect.top + s * 0.27f, paint)
+        canvas.restore()
+        // Argolas e grade de dias (sem números).
+        paint.color = withAlpha(0xFF4A5361.toInt())
+        val ring = s * 0.07f
+        for (x in listOf(0.3f, 0.7f)) canvas.drawRoundRect(left + s * x - ring / 2, top, left + s * x + ring / 2, top + s * 0.24f, ring / 2, ring / 2, paint)
+        val cell = s * 0.13f
+        for (row in 0 until 2) for (col in 0 until 3) {
+            val cx = left + s * (0.26f + col * 0.24f)
+            val cy = top + s * (0.55f + row * 0.22f)
+            canvas.drawRect(cx - cell / 2, cy - cell / 2, cx + cell / 2, cy + cell / 2, paint)
+        }
+    }
+
+    private fun withAlpha(color: Int): Int = (color and 0x00FFFFFF) or (((color ushr 24) * alphaValue / 255) shl 24)
+
+    override fun setAlpha(alpha: Int) { alphaValue = alpha; invalidateSelf() }
+    override fun setColorFilter(colorFilter: android.graphics.ColorFilter?) { paint.colorFilter = colorFilter; invalidateSelf() }
+    @Deprecated("Exigido pela API 23")
+    override fun getOpacity(): Int = android.graphics.PixelFormat.TRANSLUCENT
+}

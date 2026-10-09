@@ -30,8 +30,10 @@ import com.fitkingia.app.screens.WeekScreen
 import com.fitkingia.app.ui.*
 import com.fitkingia.appcore.FitKing
 
-enum class Tab(val label: String, val icon: String) {
-    HOME("Hoje", "🏠"), WEEK("Semana", "📅"), PROGRESS("Progresso", "📈"), MORE("Mais", "☰"),
+/** Aba da barra inferior. [icon] null = ícone desenhado ([CalendarIcon]). */
+enum class Tab(val label: String, val icon: String?) {
+    // Semana sem emoji: 📅 e 🗓 aparecem na fonte do Android com o texto "July 17" (inglês, data fixa).
+    HOME("Hoje", "🏠"), WEEK("Semana", null), PROGRESS("Progresso", "📈"), MORE("Mais", "☰"),
 }
 
 /** Uma tela do app: constrói sua UI em código a cada atualização (estado vem do user.db). */
@@ -56,6 +58,10 @@ abstract class Screen {
 
     /** true = a tela tratou o "voltar". */
     open fun onBack(): Boolean = false
+    /**
+     * A tela saiu da pilha de vez (voltar, nova raiz ou Activity destruída). Coberta por outra
+     * tela ela continua viva (ex.: o descanso do treino segue contando enquanto se lê "Como fazer").
+     */
     open fun onLeave() {}
 
     fun refresh() = main.refresh(this)
@@ -85,7 +91,7 @@ class MainActivity : Activity() {
     private val navItems = ArrayList<NavItem>()
     private var navSelected: Tab? = null
 
-    private class NavItem(val tab: Tab, val pill: View, val icon: TextView, val label: TextView) { var on = false }
+    private class NavItem(val tab: Tab, val view: View, val pill: View, val icon: View, val label: TextView) { var on = false }
 
     val current: Screen? get() = stack.lastOrNull()
 
@@ -172,8 +178,12 @@ class MainActivity : Activity() {
             pill.background = rounded(C.accentDark, dp(16).toFloat())
             pill.alpha = 0f
             box.addView(pill, FrameLayout.LayoutParams(dp(56), dp(30), Gravity.CENTER))
-            val icon = TextView(this).apply { text = t.icon; gravity = Gravity.CENTER; setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f); alpha = 0.55f }
-            box.addView(icon, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
+            val emoji = t.icon
+            val icon: View = if (emoji != null) TextView(this).apply { text = emoji; gravity = Gravity.CENTER; setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f) }
+            else View(this).apply { background = CalendarIcon() }
+            icon.alpha = 0.55f
+            box.addView(icon, if (emoji != null) FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER)
+                else FrameLayout.LayoutParams(dp(21), dp(21), Gravity.CENTER))
             item.addView(box, LinearLayout.LayoutParams(dp(56), dp(30)))
             val label = TextView(this).apply {
                 text = t.label; gravity = Gravity.CENTER
@@ -182,7 +192,7 @@ class MainActivity : Activity() {
             }
             item.addView(label, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(2) })
             nav.addView(item, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            navItems.add(NavItem(t, pill, icon, label))
+            navItems.add(NavItem(t, item, pill, icon, label))
         }
     }
 
@@ -207,6 +217,7 @@ class MainActivity : Activity() {
     private fun styleNavItem(item: NavItem, on: Boolean, animate: Boolean) {
         val wasOn = item.on
         item.on = on
+        item.view.isSelected = on // leitor de tela anuncia a aba ativa
         item.label.setTextColor(if (on) C.accent else C.muted)
         item.label.typeface = if (on) Typeface.create("sans-serif-medium", Typeface.BOLD) else Typeface.DEFAULT
         item.pill.animate().cancel()
@@ -248,7 +259,8 @@ class MainActivity : Activity() {
     }
 
     fun push(s: Screen) {
-        current?.let { scrollMemory[it] = scroll.scrollY; it.onLeave() }
+        // A tela coberta não recebe onLeave: ela volta no pop (e o que ela agendou continua valendo).
+        current?.let { scrollMemory[it] = scroll.scrollY }
         s.main = this
         stack.add(s)
         render(0, if (stack.size > 1) ScreenChange.PUSH else ScreenChange.ROOT)
@@ -378,7 +390,15 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         splashAnims.forEach { it.cancel() }
         stack.forEach { it.onLeave() }
+        stack.clear()
+        transitions.release()
         super.onDestroy()
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        // App fora da tela: a foto da transição (do tamanho da tela) é refeita na próxima navegação.
+        if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && ::transitions.isInitialized) transitions.release()
     }
 
     // ---------------------------------------------------------------------------------------

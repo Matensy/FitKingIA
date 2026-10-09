@@ -397,7 +397,7 @@ class ToolsScreen : Screen() {
                 "+1" to { load += 1; refresh() }, "+5" to { load += 5; refresh() },
             ))
             label("Repetições")
-            stepper(reps.toString(), "reps", steps = listOf("−1" to { reps = (reps - 1).coerceAtLeast(1); refresh() }, "+1" to { reps = (reps + 1).coerceAtMost(30); refresh() }))
+            stepper(reps.toString(), repetitionsUnit(reps), steps = listOf("−1" to { reps = (reps - 1).coerceAtLeast(1); refresh() }, "+1" to { reps = (reps + 1).coerceAtMost(30); refresh() }))
             label("Repetições sobrando (RIR)")
             chips((0..5).map { it to it.toString() }, { it == rir }, small = true) { rir = it; refresh() }
             if (load > 0) {

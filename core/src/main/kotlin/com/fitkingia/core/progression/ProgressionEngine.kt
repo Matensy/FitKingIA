@@ -39,6 +39,13 @@ class ProgressionEngine(private val kb: KnowledgeBase) {
         val p = rule.params
         val range = prescription.reps
         val logs = history.filter { it.exerciseId == exercise.id && it.sets.isNotEmpty() }.sortedBy { it.date }
+        val hold = prescription.holdSeconds
+        // Exercício em tempo (prancha…): começa pela duração, não por "carga que permita N repetições".
+        if (logs.isEmpty() && exercise.timed && hold != null) return ProgressionSuggestion(
+            ProgressionAction.START, null, List(plannedSets) { range.last }, "Primeira vez neste exercício: sustente " +
+                "${hold.first} s por série com boa técnica e suba até ${hold.last} s. A próxima sugestão virá dos seus registros.", null,
+            Explanation.rule("Sem histórico para ${exercise.name}; começa pelo início da faixa de tempo.", rule.id),
+        )
         val last = logs.lastOrNull()
             ?: return ProgressionSuggestion(
                 ProgressionAction.START, null, List(plannedSets) { range.last }, "Primeira vez neste exercício: escolha uma carga " +
@@ -59,7 +66,7 @@ class ProgressionEngine(private val kb: KnowledgeBase) {
         val basis = "Sugestão baseada nas suas sessões anteriores: última sessão ${fmtKg(load)} — " +
             working.joinToString(" / ") { it.reps.toString() } +
             (working.mapNotNull { it.rir }.takeIf { it.isNotEmpty() }?.let { " (RIR ${it.joinToString("/")})" } ?: "") +
-            "; meta ${range.first}–${range.last} reps, RIR ${prescription.rir}."
+            "; meta ${range.first}–${range.last} repetições, RIR ${prescription.rir}."
 
         val allTop = working.size >= plannedSets && working.all { it.reps >= range.last }
         val rirs = working.mapNotNull { it.rir }
@@ -83,14 +90,14 @@ class ProgressionEngine(private val kb: KnowledgeBase) {
                 val next = roundTo(load + step, inc)
                 suggestion(
                     ProgressionAction.INCREASE_LOAD, next, List(plannedSets) { range.first },
-                    "Sugestão para hoje: +${fmtKg(next - load)} (${fmtKg(next)}). Volte ao início da faixa (${range.first} reps) e suba de novo." +
+                    "Sugestão para hoje: +${fmtKg(next - load)} (${fmtKg(next)}). Volte ao início da faixa (${range.first} repetições) e suba de novo." +
                         if (tooEasy) " As séries terminaram bem longe da falha, então o salto é duplo." else "",
                     pattern, basis,
                 )
             }
             allTop -> suggestion(
                 ProgressionAction.CONSOLIDATE, load, List(plannedSets) { range.last },
-                "Você atingiu ${range.last} reps, mas mais perto da falha que o planejado (RIR ${prescription.rir}). " +
+                "Você atingiu ${range.last} repetições, mas mais perto da falha que o planejado (RIR ${prescription.rir}). " +
                     "Mantenha ${fmtKg(load)} até repetir o desempenho com mais folga.", pattern, basis,
             )
             belowMin -> {
@@ -99,18 +106,18 @@ class ProgressionEngine(private val kb: KnowledgeBase) {
                     val next = roundTo(load * (1 - p.reductionFraction), inc).coerceAtLeast(inc)
                     suggestion(
                         ProgressionAction.DECREASE_LOAD, next, List(plannedSets) { range.first },
-                        "$streak sessões seguidas abaixo de ${range.first} reps com ${fmtKg(load)}. Sugestão: ${fmtKg(next)} " +
+                        "$streak sessões seguidas abaixo de ${range.first} repetições com ${fmtKg(load)}. Sugestão: ${fmtKg(next)} " +
                             "e reconstruir a partir do início da faixa.", pattern, basis,
                     )
                 } else suggestion(
                     ProgressionAction.HOLD, load, nextReps(working, range, plannedSets),
-                    "Abaixo da faixa nesta sessão. Mantenha ${fmtKg(load)} e busque ${range.first}+ reps; " +
+                    "Abaixo da faixa nesta sessão. Mantenha ${fmtKg(load)} e busque ${range.first} repetições ou mais; " +
                         "se repetir na próxima, a carga será reduzida.", pattern, basis,
                 )
             }
             else -> suggestion(
                 ProgressionAction.HOLD, load, nextReps(working, range, plannedSets),
-                "Mantenha ${fmtKg(load)} e busque " + nextReps(working, range, plannedSets).joinToString("/") + " reps.",
+                "Mantenha ${fmtKg(load)} e busque " + nextReps(working, range, plannedSets).joinToString("/") + " repetições.",
                 pattern, basis,
             )
         }

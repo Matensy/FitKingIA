@@ -93,7 +93,7 @@ class CoachDialogueTest {
         val r = chat("hoje estou cansado, dormi mal").single()
         assertEquals(Intent.TIRED, r.intent)
         assertTrue("Índice de recuperação" in r.text)
-        assertTrue("Faça o check-in completo" in r.text)
+        assertTrue("Faça a avaliação do dia completa" in r.text)
     }
 
     @Test fun `progressão usa o histórico do usuário`() {
@@ -101,6 +101,22 @@ class CoachDialogueTest {
         assertEquals(Intent.PROGRESSION, r.intent)
         assertTrue("Sugestão baseada nas suas sessões anteriores" in r.text, r.text)
         assertTrue("62,5 kg" in r.text)
+    }
+
+    /** A conversa usa os mesmos termos das telas: "repetições" e "avaliação do dia", sem inglês. */
+    @Test fun repliesUsePortugueseTerms() {
+        val english = Regex("\\b(reps|check-in)\\b", RegexOption.IGNORE_CASE)
+        for (msg in listOf("quanto peso coloco no supino?", "hoje estou cansado, dormi mal", "quanto tempo de prancha?")) {
+            val r = chat(msg).single()
+            assertFalse(english.containsMatchIn(r.text), r.text)
+        }
+        val supino = chat("quanto peso coloco no supino?").single().text
+        assertTrue(Regex("meta \\d+–\\d+ repetições").containsMatchIn(supino), supino)
+        // Exercício em tempo: a meta é em segundos ("20–45 s"), sem "repetições" grudado nela.
+        val prancha = chat("quanto tempo de prancha?").single()
+        assertEquals(Intent.PROGRESSION, prancha.intent)
+        assertTrue(Regex("meta \\d+–\\d+ s,").containsMatchIn(prancha.text), prancha.text)
+        assertFalse("carga que permita" in prancha.text, prancha.text)
     }
 
     @Test fun `dúvida científica responde com nível de evidência e fonte, ou admite não saber`() {

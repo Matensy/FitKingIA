@@ -99,6 +99,7 @@ object FigurePainter {
             if (rig.showLegs) { leg(c, pose, v, pal.figure, true); leg(c, pose, v, pal.figure, false) }
             props(c, m, pose, v, pal, Layer.MID)
             torsoFront(c, pose, v, pal, rig)
+            if (rig.armsOverTorso) { arm(c, pose, v, pal.background, true, extra = 1.8f); arm(c, pose, v, pal.background, false, extra = 1.8f) }
             arm(c, pose, v, pal.figure, true); arm(c, pose, v, pal.figure, false)
             head(c, pose, v, pal, rig)
         }

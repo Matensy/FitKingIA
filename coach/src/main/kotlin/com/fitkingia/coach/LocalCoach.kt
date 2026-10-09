@@ -326,7 +326,7 @@ class LocalCoach(
         val adapted = SessionAdapter(kb).forReadiness(s, result, UserConstraints.of(ctx.profile))
         return reply(Intent.TIRED,
             Say.me("Estimei sua prontidão pelo que você escreveu (sono ${check.sleep.label.substringAfter(' ').lowercase()}, energia ${check.energy}/10, " +
-                "dor muscular ${check.soreness}/10, estresse ${check.stress}/10, motivação ${check.motivation}/10). Faça o check-in completo para um ajuste mais preciso."),
+                "dor muscular ${check.soreness}/10, estresse ${check.stress}/10, motivação ${check.motivation}/10). Faça a avaliação do dia completa (“🙂 Como estou”, na tela Hoje) para um ajuste mais preciso."),
             Say.rule("🔥 Índice de recuperação: ${result.score}/100 — ${result.band.label}"),
             note?.let(Say::rule),
             Say.rule(Say.session(adapted.session)),
@@ -384,7 +384,7 @@ class LocalCoach(
         val s = ProgressionEngine(kb).suggest(ex, presc, planned?.sets ?: 3, ctx.history)
         val trend = Trends.of(ex.id, ctx.history)
         return reply(Intent.PROGRESSION,
-            Say.me("${ex.name} — meta ${presc.target} reps, RIR ${presc.rir}."),
+            Say.me("${ex.name} — meta ${presc.target}${if (presc.holdSeconds == null) " repetições" else ""}, RIR ${presc.rir}."),
             Say.rule(s.message),
             s.pattern?.let { Say.rule(it) },
             Say.rule(s.explanation.text),

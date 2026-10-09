@@ -124,9 +124,10 @@
   },
   {
     "id": "goblet_squat",
-    "name": "Agachamento goblet",
+    "name": "Agachamento com halter no peito (goblet)",
     "aliases": [
       "goblet",
+      "agachamento goblet",
       "agachamento com halter"
     ],
     "pattern": "squat",
@@ -805,9 +806,10 @@
   },
   {
     "id": "sissy_squat",
-    "name": "Agachamento sissy (joelhos à frente)",
+    "name": "Agachamento com joelhos à frente (sissy)",
     "aliases": [
       "sissy",
+      "agachamento sissy",
       "sissy squat"
     ],
     "pattern": "knee_extension",
@@ -2635,9 +2637,10 @@
   },
   {
     "id": "pec_deck",
-    "name": "Voador (peck deck)",
+    "name": "Voador (pec deck)",
     "aliases": [
       "voador",
+      "pec deck",
       "peck deck",
       "fly máquina",
       "peck deck (voador)"
@@ -2934,9 +2937,10 @@
   },
   {
     "id": "pike_push_up",
-    "name": "Flexão pike",
+    "name": "Flexão com quadril elevado (pike)",
     "aliases": [
-      "pike"
+      "pike",
+      "flexão pike"
     ],
     "pattern": "vertical_push",
     "mechanic": "COMPOUND",
@@ -5911,8 +5915,9 @@
   },
   {
     "id": "mini_band_clamshell",
-    "name": "Concha com mini band",
+    "name": "Concha com mini elástico",
     "aliases": [
+      "concha com mini band",
       "clamshell",
       "concha",
       "abertura de joelhos deitado"
@@ -5936,7 +5941,7 @@
       "HIP": 1
     },
     "instructions": [
-      "Deitado de lado, quadris e joelhos flexionados, mini band acima dos joelhos.",
+      "Deitado de lado, quadris e joelhos flexionados, mini elástico acima dos joelhos.",
       "Pés juntos, abra o joelho de cima sem girar o quadril para trás.",
       "Pause aberto e feche devagar."
     ],
@@ -5946,7 +5951,7 @@
     ],
     "safety_notes": [],
     "progression_methods": [
-      "Mini band mais forte",
+      "Mini elástico mais forte",
       "Mais repetições",
       "Pausa de 1–2 s"
     ],
@@ -5961,7 +5966,7 @@
   },
   {
     "id": "mini_band_glute_bridge",
-    "name": "Ponte de glúteo com mini band",
+    "name": "Ponte de glúteo com mini elástico",
     "aliases": [
       "ponte com mini band",
       "ponte com elástico"
@@ -5987,7 +5992,7 @@
       "HIP": 1
     },
     "instructions": [
-      "Deitado, joelhos flexionados, mini band logo acima dos joelhos.",
+      "Deitado, joelhos flexionados, mini elástico logo acima dos joelhos.",
       "Empurre os joelhos para fora contra o elástico e eleve o quadril.",
       "Pause no topo e desça devagar."
     ],
@@ -5997,7 +6002,7 @@
     ],
     "safety_notes": [],
     "progression_methods": [
-      "Mini band mais forte",
+      "Mini elástico mais forte",
       "Mais repetições",
       "Unilateral"
     ],

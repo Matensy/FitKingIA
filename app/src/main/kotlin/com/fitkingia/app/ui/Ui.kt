@@ -134,6 +134,8 @@ fun ViewGroup.button(label: String, style: Btn = Btn.PRIMARY, bottom: Int = 8, w
     b.background = ripple(rounded(if (enabled) bgColor else C.surface2, r, stroke, dp(1)), r)
     b.isClickable = true
     b.setOnClickListener { if (enabled) { Motion.noteTap(it); onClick() } }
+    // Desabilitado de verdade: o leitor de tela anuncia "desativado" em vez de "toque duas vezes".
+    b.isEnabled = enabled
     b.contentDescription = label
     return add(b, bottom, width)
 }
