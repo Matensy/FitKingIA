@@ -675,7 +675,16 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
         return simulator.compare(p, screening.evaluate(p, repo.safetyAnswers()), scenarios)
     }
 
-    fun deleteEverything() = repo.deleteEverything()
+    /**
+     * Chamado depois de [deleteEverything]. O app Android usa para cancelar o alarme dos lembretes e
+     * tirar da barra as notificações com nome de treino e números (o appcore não conhece o Android).
+     */
+    @Volatile var onEverythingDeleted: (() -> Unit)? = null
+
+    fun deleteEverything() {
+        repo.deleteEverything()
+        onEverythingDeleted?.invoke()
+    }
 
     fun exportJson(): String = repo.exportJson(now())
 

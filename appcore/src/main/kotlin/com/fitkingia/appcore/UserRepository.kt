@@ -410,9 +410,16 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
         db.single("SELECT COUNT(*) AS n FROM xp_events WHERE user_id=$USER AND event=? AND substr(at,1,10) BETWEEN ? AND ?",
             listOf(event, from.toString(), to.toString())) { it.int("n") }!! > 0
 
-    /** Dias com qualquer registro (treino, check-in, água, refeição, sono, cardio, mobilidade). */
+    /**
+     * Dias com qualquer registro (treino, check-in, água, refeição, sono, peso/medidas, foto, cardio,
+     * mobilidade) — é o que o 🔥 da tela Hoje e o lembrete da sequência ("qualquer registro conta") usam.
+     * O sono é guardado pela noite (night_of = ontem): conta no dia seguinte, quando foi registrado.
+     */
     fun activeDays(): Set<LocalDate> {
         val q = listOf(
+            "SELECT DISTINCT date(night_of, '+1 day') AS d FROM sleep_logs WHERE user_id=$USER",
+            "SELECT DISTINCT measured_on AS d FROM body_measurements WHERE user_id=$USER",
+            "SELECT DISTINCT taken_on AS d FROM progress_photos WHERE user_id=$USER",
             "SELECT DISTINCT substr(started_at,1,10) AS d FROM workouts WHERE user_id=$USER AND finished_at IS NOT NULL",
             "SELECT DISTINCT substr(checked_at,1,10) AS d FROM readiness_checks WHERE user_id=$USER",
             "SELECT DISTINCT substr(logged_at,1,10) AS d FROM water_logs WHERE user_id=$USER",

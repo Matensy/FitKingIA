@@ -20,6 +20,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import com.fitkingia.app.data.Graph
+import com.fitkingia.app.notify.Notifier
 import com.fitkingia.app.notify.ReminderScheduler
 import com.fitkingia.app.screens.HomeScreen
 import com.fitkingia.app.screens.MoreScreen
@@ -100,6 +101,7 @@ class MainActivity : Activity() {
                 fit = f
                 // Alarmes somem se o app for forçado a parar: abrir o app deixa os lembretes em dia.
                 runCatching { ReminderScheduler.schedule(applicationContext, fit) }
+                tidyReminders()
                 if (fit.hasProfile()) setRoot(HomeScreen()) else setRoot(QuestionnaireScreen(fit.currentAnswers(), firstRun = true))
             }.onFailure { e -> showFatal(e) }
         }
@@ -349,6 +351,28 @@ class MainActivity : Activity() {
         if (pop()) return
         if (s != null && s.tab != null && s.tab != Tab.HOME) { switchTab(Tab.HOME); return }
         super.onBackPressed()
+    }
+
+    /**
+     * Voltando de outro app (ex.: configurações de notificação, onde a pessoa liberou a permissão ou
+     * religou os lembretes): a tela atual é remontada para refletir o estado real do Android. onRestart
+     * e não onResume: o diálogo de permissão só pausa a Activity, e o primeiro resume vem do onCreate.
+     */
+    override fun onRestart() {
+        super.onRestart()
+        if (!::fit.isInitialized) return
+        tidyReminders()
+        current?.let { refresh(it) }
+    }
+
+    /** Saindo do app: tira da barra os lembretes resolvidos aqui dentro (treino concluído, água em dia). */
+    override fun onStop() {
+        if (::fit.isInitialized) tidyReminders()
+        super.onStop()
+    }
+
+    private fun tidyReminders() {
+        runCatching { Notifier.withdrawStale(applicationContext, fit) }
     }
 
     override fun onDestroy() {

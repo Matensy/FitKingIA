@@ -106,6 +106,9 @@ class AndroidSqlTest {
         app.addWater(750); app.undoWater(); app.addWater(500)
         assertEquals(500, app.water()!!.progress.consumedMl)
         app.logSleep(6.5, 3); app.logBody(64.5, 77.0)
+        // Sono conta para a sequência no dia em que foi registrado (night_of + 1 dia, com date() do SQLite).
+        assertEquals(now.toLocalDate().toString(), sql.single("SELECT date(night_of, '+1 day') AS d FROM sleep_logs") { it.str("d") })
+        assertTrue(now.toLocalDate() in app.repo.activeDays())
         app.logFood(kb.foods.first(), 1.0, "Almoço")
         app.logCardio("Corrida", 30, 6); app.logMobility("Quadril", 10)
         app.checkIn(com.fitkingia.core.recovery.ReadinessCheck(SleepQuality.NORMAL, 6, 3, 4, 7))

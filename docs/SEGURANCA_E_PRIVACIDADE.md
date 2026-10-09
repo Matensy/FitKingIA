@@ -22,7 +22,7 @@ Também: menores de 18 anos são encaminhados (recomendações próprias da OMS)
 
 | Princípio | Como está implementado |
 |---|---|
-| Local por padrão | Dados pessoais só no `user.db` do aparelho. O APK não pede permissão de internet. Pede só vibração (fim do descanso) e, para os lembretes opcionais (Mais → Lembretes, tudo desligado por padrão), notificações — perguntada no Android 13+ só quando a pessoa liga um lembrete — e "iniciar com o aparelho" para reagendar os alarmes locais. |
+| Local por padrão | Dados pessoais só no `user.db` do aparelho. O APK não pede permissão de internet. Pede só vibração (fim do descanso) e, para os lembretes opcionais (Mais → Lembretes ou o convite da tela Hoje, tudo desligado por padrão), notificações — perguntada no Android 13+ só quando a pessoa liga um lembrete ou toca "Ligar" no convite — e "iniciar com o aparelho" para reagendar os alarmes locais. |
 | Separação | `fitness.db` (conhecimento, sem dados pessoais) é separado do `user.db`; atualizar conteúdo nunca toca dados do usuário. |
 | Consentimento | Tabela `consents` granular e auditável (armazenamento, coach, fotos, analytics, backup). |
 | Minimização | O coach lê o perfil localmente e não registra conversas sem consentimento (`ai_messages`). |

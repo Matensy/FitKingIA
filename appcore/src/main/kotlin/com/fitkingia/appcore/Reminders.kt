@@ -72,6 +72,8 @@ data class ReminderSettings(
         repo.setPref(KEY_WORKOUT, n.workoutEnabled.toString())
         repo.setPref(KEY_WORKOUT_HOUR, n.workoutHour.toString())
         repo.setPref(KEY_MOTIVATION, n.motivationEnabled.toString())
+        // Quem já ligou algum lembrete (por Mais › Lembretes) não precisa mais do convite da tela Hoje.
+        if (n.anyEnabled && repo.pref(KEY_INVITE) == null) repo.setPref(KEY_INVITE, "configured")
         return true
     }
 
@@ -89,6 +91,9 @@ data class ReminderSettings(
         const val KEY_WORKOUT = "reminder_workout"
         const val KEY_WORKOUT_HOUR = "reminder_workout_hour"
         const val KEY_MOTIVATION = "reminder_motivation"
+
+        /** Resposta ao convite da tela Hoje ("accepted", "dismissed" ou "configured"); sem valor = ainda não perguntado. */
+        const val KEY_INVITE = "reminder_invite"
 
         fun load(repo: UserRepository): ReminderSettings {
             if (!repo.hasUser()) return DEFAULT
@@ -126,22 +131,71 @@ data class ReminderContext(
     val activeToday: Boolean = false,
 )
 
-data class ReminderMessage(val kind: ReminderKind, val title: String, val text: String, val notificationId: Int = kind.notificationId)
+/**
+ * O que notificar. [kinds] diz quais tipos foram juntados no texto (o app guarda isso na notificação
+ * para retirá-la quando o motivo acabar); [coversStreak] = o texto já chama para a sequência.
+ */
+data class ReminderMessage(
+    val kind: ReminderKind,
+    val title: String,
+    val text: String,
+    val notificationId: Int = kind.notificationId,
+    val kinds: Set<ReminderKind> = setOf(kind),
+    val coversStreak: Boolean = false,
+)
 
 /**
  * Quando avisar e o que dizer. Regras de convivência (não são regras de treino):
- *  - nada fora da janela escolhida, nem se o alarme chegar atrasado;
+ *  - nada fora da janela escolhida: vale o horário marcado, com uma pequena tolerância para o alarme
+ *    inexato que chega uns minutos depois do último horário (nunca mais que [LATE_GRACE_MINUTES]);
+ *  - o alarme é sempre inexato; com o horário longe, passagens ([alarmAt]) encurtam o atraso possível;
  *  - água só se estiver abaixo do ritmo esperado para a hora (meta distribuída por igual na janela);
  *    meta batida = silêncio;
- *  - treino só em dia de treino ainda não feito; no descanso, uma mensagem leve se a motivação estiver ligada;
+ *  - treino só em dia de treino ainda não feito; no descanso, uma mensagem leve se a motivação estiver ligada
+ *    (no horário do treino ou, com o lembrete do treino desligado, no horário da motivação);
+ *  - notificação cujo motivo acabou (treino feito, água em dia, outro dia) sai da barra ([stillRelevant]);
  *  - frases variam de forma determinística (dia do ano + hora), sempre sem culpa.
  */
 object ReminderPlanner {
     /** Alarme que chegou mais atrasado que isso (aparelho desligado, modo soneca) não vira notificação. */
     const val MAX_DELAY_MINUTES = 90L
 
+    /**
+     * Tolerância depois do fim da janela para um horário marcado *dentro* dela (ex.: 21h com janela até
+     * 21h) cujo alarme inexato chegou atrasado. Menor que 30 min: 21h30 continua "fora da janela".
+     */
+    const val LATE_GRACE_MINUTES = 20L
+
+    /**
+     * Quanto o Android pode atrasar um alarme inexato (setAndAllowWhileIdle), como fração da antecedência
+     * com que ele foi armado: armado às 21h para as 10h do dia seguinte, pode chegar ~10 h depois no
+     * Android 8–11 (no 12+ o atraso tem teto de 1 h, ainda maior que [LATE_GRACE_MINUTES]).
+     */
+    const val INEXACT_WINDOW_FRACTION = 0.75
+
+    /** Com o horário a até esta antecedência, o alarme vai direto nele: atraso de no máximo 15 min (75% de 20). */
+    const val DIRECT_LEAD_MINUTES = 20L
+
     /** Marcos da sequência que merecem comemoração mesmo quando o dia já está garantido. */
     val STREAK_MILESTONES = setOf(3, 7, 14, 21, 30, 50, 75, 100, 150, 200, 365)
+
+    /**
+     * Para quando armar o alarme (sempre inexato, nunca exato) do aviso de [slot], estando em [now]. Perto do
+     * horário (até [DIRECT_LEAD_MINUTES]) arma no próprio horário. Longe dele arma uma *passagem*: um alarme
+     * que só reagenda e que, mesmo chegando com o atraso máximo, chega até o horário (4/7 da antecedência;
+     * 4/7 × 1,75 = 1). Cada passagem encurta a antecedência e, com ela, o atraso possível do aviso — sem
+     * isso, o primeiro aviso do dia (armado na noite anterior) podia chegar horas depois e ser descartado.
+     * Do fim da janela até o primeiro aviso do dia seguinte são umas 5 passagens; entre avisos de hora em
+     * hora, 2.
+     */
+    fun alarmAt(now: LocalDateTime, slot: LocalDateTime): LocalDateTime {
+        val lead = Duration.between(now, slot)
+        if (lead <= Duration.ofMinutes(DIRECT_LEAD_MINUTES)) return slot
+        return now.plusSeconds((lead.seconds / (1 + INEXACT_WINDOW_FRACTION)).toLong())
+    }
+
+    /** O alarme do aviso de [slot] chegou em [now] antes do horário: é uma passagem (só reagenda, não avisa). */
+    fun isRelay(slot: LocalDateTime, now: LocalDateTime): Boolean = now.isBefore(slot)
 
     /** Horários do dia [date] para cada tipo ligado. */
     fun slots(s: ReminderSettings, date: LocalDate): List<ReminderSlot> {
@@ -177,11 +231,64 @@ object ReminderPlanner {
     /** Mensagem para o disparo de [slot], avaliada em [ctx].now. Null = não notificar. */
     fun messageAt(s: ReminderSettings, slot: LocalDateTime, ctx: ReminderContext): ReminderMessage? {
         if (!ctx.hasProfile) return null
-        if (!s.normalized().inWindow(ctx.now.toLocalTime())) return null
-        if (Duration.between(slot, ctx.now).toMinutes() > MAX_DELAY_MINUTES) return null
         if (ctx.now.toLocalDate() != slot.toLocalDate()) return null
-        return compose(due(s, slot).mapNotNull { message(it, s, ctx) })
+        // Antes do horário (passagem ou relógio que voltou): nada de aviso adiantado.
+        if (isRelay(slot, ctx.now)) return null
+        if (Duration.between(slot, ctx.now).toMinutes() > MAX_DELAY_MINUTES) return null
+        if (!arrivedInWindow(s, slot, ctx.now)) return null
+        return compose(withRestNote(s, due(s, slot), ctx).mapNotNull { message(it, s, ctx) })
     }
+
+    /**
+     * O horário marcado já está na janela (due só devolve horários de [slots]); aqui conta a hora em que o
+     * alarme chegou: nunca antes do início e, depois do fim, só dentro de [LATE_GRACE_MINUTES]. Comparar a
+     * hora de chegada com a janela fazia o último horário (= fim da janela) se perder sempre que o alarme
+     * inexato chegava 1 minuto atrasado.
+     */
+    fun arrivedInWindow(s: ReminderSettings, slot: LocalDateTime, now: LocalDateTime): Boolean {
+        val n = s.normalized()
+        val day = slot.toLocalDate()
+        if (now.isBefore(day.atTime(n.windowStart, 0))) return false
+        return !now.isAfter(day.atTime(n.windowEnd, 0).plusMinutes(LATE_GRACE_MINUTES))
+    }
+
+    /**
+     * A chave da motivação promete "no dia de descanso, uma mensagem leve". Com o lembrete do treino
+     * desligado não há horário de treino: a nota de descanso vai junto com o recado da motivação.
+     */
+    private fun withRestNote(s: ReminderSettings, kinds: Set<ReminderKind>, ctx: ReminderContext): Set<ReminderKind> =
+        if (ReminderKind.MOTIVATION in kinds && !s.workoutEnabled && ctx.workoutDay == WorkoutDay.REST) kinds + ReminderKind.WORKOUT else kinds
+
+    /** O tipo está ligado para este dia? (a nota de descanso também vale só com a motivação ligada) */
+    fun switchedOn(kind: ReminderKind, s: ReminderSettings, ctx: ReminderContext): Boolean = when (kind) {
+        ReminderKind.WATER -> s.waterEnabled
+        ReminderKind.WORKOUT -> s.workoutEnabled || (s.motivationEnabled && ctx.workoutDay == WorkoutDay.REST)
+        ReminderKind.MOTIVATION -> s.motivationEnabled
+    }
+
+    /**
+     * Uma notificação postada em [postedOn] com os tipos [kinds] ainda faz sentido em [ctx].now? Falso
+     * quando o motivo do tipo principal (o que dá título e id à notificação: treino › água › sequência)
+     * acabou — treino feito, água de volta ao ritmo, sequência garantida hoje —, quando ele foi desligado,
+     * quando o dia virou ("Hoje tem…" de ontem) ou quando os dados foram apagados. Uma linha secundária
+     * resolvida não derruba a notificação: "Hoje tem Treino A" + água continua até o treino ser feito.
+     * Com [postedTitle] (o título da notificação na barra), o tipo principal também precisa continuar dizendo
+     * a mesma coisa: "Hoje tem Treino A" sai quando o treino de hoje é trocado para outro dia (hoje virou
+     * descanso, e a motivação ligada faria o tipo "treino" virar a nota de descanso) e "Qualquer registro
+     * hoje mantém a sequência" sai quando o registro de hoje fecha um marco (o recado vira comemoração).
+     * O app usa isto para tirar da barra o que ficou velho.
+     */
+    fun stillRelevant(kinds: Set<ReminderKind>, postedOn: LocalDate?, s: ReminderSettings, ctx: ReminderContext, postedTitle: String? = null): Boolean {
+        if (!ctx.hasProfile || postedOn != ctx.now.toLocalDate()) return false
+        val primary = kinds.minByOrNull { it.ordinal } ?: return false
+        val n = s.normalized()
+        if (!switchedOn(primary, n, ctx)) return false
+        val current = message(primary, n, ctx) ?: return false
+        return postedTitle == null || current.title == postedTitle
+    }
+
+    /** Quanto tempo uma notificação postada em [now] vale: até a meia-noite (o texto fala de "hoje"). */
+    fun lifetime(now: LocalDateTime): Duration = Duration.between(now, now.toLocalDate().plusDays(1).atStartOfDay())
 
     /** Lembrete de teste: o que os lembretes ligados diriam agora, ou um exemplo genérico. */
     fun preview(s: ReminderSettings, ctx: ReminderContext): ReminderMessage {
@@ -191,25 +298,36 @@ object ReminderPlanner {
                 ReminderKind.WORKOUT -> s.workoutEnabled
                 ReminderKind.MOTIVATION -> s.motivationEnabled
             }
-        }.ifEmpty { ReminderKind.values().toList() }
-        val msg = if (ctx.hasProfile) compose(kinds.mapNotNull { message(it, s.copy(motivationEnabled = true), ctx) }) else null
+        }.ifEmpty { ReminderKind.values().toList() }.toSet()
+        val msg = if (ctx.hasProfile) compose(withRestNote(s, kinds, ctx).mapNotNull { message(it, s.copy(motivationEnabled = true), ctx) }) else null
         return msg ?: ReminderMessage(ReminderKind.MOTIVATION, "Lembrete de teste",
             "👑 Tudo certo por aqui! É assim que os lembretes do FitKingIA vão aparecer — só quando fizer sentido.")
     }
 
     fun message(kind: ReminderKind, s: ReminderSettings, ctx: ReminderContext): ReminderMessage? = when (kind) {
         ReminderKind.WATER -> water(s, ctx)?.let { ReminderMessage(kind, kind.title, it) }
-        ReminderKind.WORKOUT -> workout(s, ctx)?.let { (title, text) -> ReminderMessage(kind, title, text) }
+        ReminderKind.WORKOUT -> workout(s, ctx)?.let { (title, text) ->
+            ReminderMessage(kind, title, text, coversStreak = ctx.workoutDay == WorkoutDay.PENDING)
+        }
         ReminderKind.MOTIVATION -> motivation(ctx)?.let { (title, text) -> ReminderMessage(kind, title, text) }
     }
 
-    /** Vários tipos no mesmo horário viram uma notificação só (o treino já fala da sequência). */
+    /**
+     * Vários tipos no mesmo horário viram uma notificação só. O recado da sequência só sai quando outra
+     * parte já chama para ela (o treino pendente: "Bora manter a sequência…"); com descanso ou treino
+     * aberto, as duas linhas ficam.
+     */
     fun compose(parts: List<ReminderMessage>): ReminderMessage? {
         if (parts.isEmpty()) return null
         val sorted = parts.sortedBy { it.kind.ordinal }
-        val kept = if (sorted.any { it.kind == ReminderKind.WORKOUT }) sorted.filter { it.kind != ReminderKind.MOTIVATION } else sorted
+        val kept = if (sorted.any { it.coversStreak }) sorted.filter { it.kind != ReminderKind.MOTIVATION } else sorted
         val first = kept.first()
-        return if (kept.size == 1) first else first.copy(text = kept.joinToString("\n") { it.text })
+        if (kept.size == 1) return first
+        return first.copy(
+            text = kept.joinToString("\n") { it.text },
+            kinds = kept.flatMap { it.kinds }.toCollection(linkedSetOf()),
+            coversStreak = kept.any { it.coversStreak },
+        )
     }
 
     // -------------------------------------------------------------------------------------
@@ -338,4 +456,32 @@ object Reminders {
     }
 
     fun preview(fit: FitKing): ReminderMessage = ReminderPlanner.preview(settings(fit), context(fit))
+
+    /** A notificação postada em [postedOn] com [kinds] e [postedTitle] ainda vale agora? (senão o app a retira da barra) */
+    fun stillRelevant(fit: FitKing, kinds: Set<ReminderKind>, postedOn: LocalDate?, postedTitle: String? = null): Boolean =
+        ReminderPlanner.stillRelevant(kinds, postedOn, settings(fit), context(fit), postedTitle)
+
+    // -------------------------------------------------------------------------------------
+    // Convite (tela Hoje): os lembretes vêm desligados; depois do primeiro programa o app
+    // pergunta uma vez se a pessoa quer ligá-los. Nada liga sem um toque em "Ligar".
+    // -------------------------------------------------------------------------------------
+
+    fun showInvite(fit: FitKing): Boolean =
+        fit.hasProfile() && fit.repo.pref(ReminderSettings.KEY_INVITE) == null && !settings(fit).anyEnabled && fit.program() != null
+
+    /**
+     * "Ligar": água no ritmo da meta e o treino do dia, com os horários que já estavam salvos (padrão:
+     * 8h–21h, treino às 18h). Null se não há perfil onde guardar.
+     */
+    fun acceptInvite(fit: FitKing): ReminderSettings? {
+        val s = settings(fit).copy(waterEnabled = true, workoutEnabled = true)
+        if (!save(fit, s)) return null
+        fit.repo.setPref(ReminderSettings.KEY_INVITE, "accepted")
+        return settings(fit)
+    }
+
+    /** "Agora não" (ou permissão negada): não pergunta de novo; Mais › Lembretes continua disponível. */
+    fun dismissInvite(fit: FitKing) {
+        if (fit.hasProfile()) fit.repo.setPref(ReminderSettings.KEY_INVITE, "dismissed")
+    }
 }

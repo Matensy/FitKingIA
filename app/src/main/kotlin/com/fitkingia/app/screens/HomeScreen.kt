@@ -58,7 +58,7 @@ class HomeScreen(
             }
             notice?.let { n -> root.reorderNotice(n) { notice = null; refresh() } }
             todayCard(root, view)
-            if (fit.showPriorityHint()) priorityHint(root)
+            if (fit.showPriorityHint()) priorityHint(root) else reminderInvite(root)
         }
         waterCard(root)
         sleepCard(root)

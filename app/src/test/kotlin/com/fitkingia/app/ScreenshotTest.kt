@@ -123,6 +123,12 @@ class ScreenshotTest {
         now = LocalDateTime.of(2026, 10, 1, 18, 0) // quinta
         fit.addWater(1250)
         a.setRoot(HomeScreen()); shot("05_hoje")
+        // Convite dos lembretes (fica na Hoje até a pessoa responder): rola até o cartão.
+        val homeScroll = views(a.window.decorView).filterIsInstance<android.widget.ScrollView>().first()
+        val invite = views(a.window.decorView).filterIsInstance<android.widget.TextView>().first { it.text.toString().startsWith("🔔 Quer lembretes") }
+        val inviteRect = android.graphics.Rect().also { invite.getDrawingRect(it) }
+        homeScroll.offsetDescendantRectToMyCoords(invite, inviteRect)
+        homeScroll.scrollTo(0, inviteRect.top - 600); shot("05b_hoje_convite_lembretes")
         a.switchTab(Tab.WEEK); shot("06_semana")
         val t = fit.todayView()!!
         val w = fit.startWorkout(t.session!!, t.sessionId, null)
@@ -183,6 +189,13 @@ class ScreenshotTest {
         fun scrollView(v: View): android.widget.ScrollView? = v as? android.widget.ScrollView
             ?: (v as? android.view.ViewGroup)?.let { g -> (0 until g.childCount).asSequence().mapNotNull { scrollView(g.getChildAt(it)) }.firstOrNull() }
         scrollView(a.window.decorView)!!.scrollTo(0, 100_000); shot("33b_lembretes_fim")
+        // Categoria "Lembretes" desligada no Android (NotificationChannel é da API 26 → reflexão).
+        val nm = a.getSystemService(android.content.Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        com.fitkingia.app.notify.Notifier.ensureChannel(a)
+        val channel = android.app.NotificationManager::class.java.getMethod("getNotificationChannel", String::class.java).invoke(nm, com.fitkingia.app.notify.Notifier.CHANNEL_ID)
+        channel.javaClass.getMethod("setImportance", Int::class.javaPrimitiveType).invoke(channel, 0)
+        android.app.NotificationManager::class.java.getMethod("createNotificationChannel", channel.javaClass).invoke(nm, channel)
+        a.setRoot(NotificationsScreen()); shot("33c_lembretes_categoria_desligada")
         controller.pause().stop().destroy()
         Graph.override = null; Graph.fit = null
     }

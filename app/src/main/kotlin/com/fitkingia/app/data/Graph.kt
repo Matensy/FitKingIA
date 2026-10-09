@@ -2,6 +2,7 @@ package com.fitkingia.app.data
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import com.fitkingia.app.notify.ReminderScheduler
 import com.fitkingia.appcore.FitKing
 import com.fitkingia.appcore.UserDb
 import com.fitkingia.core.knowledge.KnowledgeBase
@@ -22,13 +23,21 @@ object Graph {
     @Synchronized
     fun load(context: Context): FitKing {
         fit?.let { return it }
-        override?.let { return it(context).also { f -> fit = f } }
+        val f = override?.invoke(context) ?: open(context)
+        val app = context.applicationContext ?: context
+        // "Apagar todos os meus dados" também cancela o alarme e tira os lembretes da barra.
+        f.onEverythingDeleted = { ReminderScheduler.clearAll(app) }
+        fit = f
+        return f
+    }
+
+    private fun open(context: Context): FitKing {
         val kb = loadKnowledge(context)
         val userDb = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath("user.db").also { it.parentFile?.mkdirs() }, null)
         userDb.setForeignKeyConstraintsEnabled(true) // "apagar meus dados" depende do ON DELETE CASCADE
         val sql = AndroidSqlDatabase(userDb)
         UserDb.migrate(sql, context.assets.open("user.sql").bufferedReader().use { it.readText() })
-        return FitKing(kb, sql).also { fit = it }
+        return FitKing(kb, sql)
     }
 
     private fun loadKnowledge(context: Context): KnowledgeBase {

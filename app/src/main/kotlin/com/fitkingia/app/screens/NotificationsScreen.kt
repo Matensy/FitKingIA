@@ -74,27 +74,48 @@ class NotificationsScreen : Screen() {
         root.muted("Os horários são aproximados: o Android agrupa alarmes para economizar bateria. Lembretes são incentivos, não orientação médica.", 12f)
     }
 
+    /**
+     * Estado real do Android a cada montagem (a MainActivity remonta a tela ao voltar das configurações):
+     * permissão negada nesta visita, notificações do app bloqueadas ou só a categoria "Lembretes" desligada.
+     */
     private fun permissionCard(root: LinearLayout, s: ReminderSettings) {
         val ctx = main
+        // Liberada depois (outro toque, configurações): o aviso de "negada" não vale mais.
+        if (Notifier.hasPermission(ctx)) denied = false
         val blocked = s.anyEnabled && !Notifier.canPost(ctx)
         if (!denied && !blocked) return
+        // Só a categoria "Lembretes" desligada (o resto das notificações do app liberado): texto e atalho próprios.
+        val channelOff = !denied && Notifier.hasPermission(ctx) && Notifier.appNotificationsEnabled(ctx) && Notifier.channelBlocked(ctx)
         root.card(stroke = C.warning) {
             h3(if (denied) "Sem permissão, sem lembretes" else "Notificações bloqueadas no Android")
-            body(if (denied) "O Android só deixa o FitKingIA mostrar lembretes com a permissão de notificações. Por isso eles continuam desligados — tudo bem, o app funciona igual."
-                else "Seus lembretes estão ligados aqui, mas o Android não vai mostrá-los enquanto as notificações do FitKingIA estiverem bloqueadas.")
-            muted("Se mudar de ideia: Configurações › Apps › FitKingIA › Notificações.")
+            body(when {
+                denied -> "O Android só deixa o FitKingIA mostrar lembretes com a permissão de notificações. Por isso eles continuam desligados — tudo bem, o app funciona igual."
+                channelOff -> "Seus lembretes estão ligados aqui, mas a categoria “Lembretes” do FitKingIA está desligada no Android. Enquanto ela estiver assim, nenhum aviso aparece."
+                else -> "Seus lembretes estão ligados aqui, mas o Android não vai mostrá-los enquanto as notificações do FitKingIA estiverem bloqueadas."
+            })
+            muted(if (channelOff) "Para religar: Configurações › Apps › FitKingIA › Notificações › Lembretes."
+                else "Se mudar de ideia: Configurações › Apps › FitKingIA › Notificações.")
             space(6)
-            button("Abrir configurações de notificações", Btn.SECONDARY, bottom = 2) { openSettings() }
+            button("Abrir configurações de notificações", Btn.SECONDARY, bottom = 2) { openSettings(channelOff) }
         }
     }
 
-    private fun openSettings() {
+    private fun openSettings(channel: Boolean) {
         val ctx = main
-        try {
-            ctx.startActivity(Notifier.settingsIntent(ctx))
-        } catch (e: Exception) {
-            try { ctx.startActivity(Notifier.appDetailsIntent(ctx)) } catch (e2: Exception) { main.toast("Abra as configurações do Android › Apps › FitKingIA") }
+        val intents = listOfNotNull(
+            if (channel) Notifier.channelSettingsIntent(ctx) else null,
+            Notifier.settingsIntent(ctx),
+            Notifier.appDetailsIntent(ctx),
+        )
+        for (intent in intents) {
+            try {
+                ctx.startActivity(intent)
+                return
+            } catch (e: Exception) {
+                // tenta a próxima tela de configurações
+            }
         }
+        main.toast("Abra as configurações do Android › Apps › FitKingIA")
     }
 
     /** Ao ligar um lembrete, pede a permissão (Android 13+). Negada → nada muda e a tela explica. */
@@ -134,9 +155,52 @@ class NotificationsScreen : Screen() {
 
     private fun postTest() {
         val msg = Reminders.preview(fit)
-        val sent = Notifier.post(main, msg.copy(title = "Teste · ${msg.title}", notificationId = Notifier.TEST_ID))
+        val sent = Notifier.post(main, msg.copy(title = "Teste · ${msg.title}", notificationId = Notifier.TEST_ID), fit.clock.now())
         main.toast(if (sent) "Lembrete de teste enviado" else "O Android bloqueou as notificações do FitKingIA")
         refresh()
+    }
+}
+
+/**
+ * Convite na tela Hoje: os lembretes vêm desligados e só existiam em Mais › Lembretes. Depois do
+ * primeiro programa, um cartão pergunta uma vez. "Ligar" pede a permissão (Android 13+) e só então liga
+ * água e treino; "Agora não" (ou permissão negada) guarda a resposta e o cartão não volta.
+ */
+fun Screen.reminderInvite(root: LinearLayout) {
+    if (!Reminders.showInvite(fit)) return
+    val s = Reminders.settings(fit)
+    root.card(stroke = C.accent) {
+        h3("🔔 Quer lembretes de água e do treino?")
+        muted("Avisos do próprio aparelho, sem internet: água só quando você estiver abaixo do ritmo da meta e o treino do dia às ${s.workoutHour}h, sempre entre ${s.windowStart}h e ${s.windowEnd}h. Dá para ajustar ou desligar em Mais › Lembretes.", 14f)
+        buttonRow(
+            Triple("Agora não", Btn.SECONDARY) { Reminders.dismissInvite(fit); refresh() },
+            Triple("Ligar", Btn.PRIMARY) { acceptReminderInvite() },
+            bottom = 2,
+        )
+    }
+}
+
+private fun Screen.acceptReminderInvite() {
+    if (Notifier.hasPermission(main)) { turnOnFromInvite(); return }
+    main.requestPermission(Notifier.PERMISSION) { granted ->
+        if (granted) turnOnFromInvite()
+        else {
+            Reminders.dismissInvite(fit)
+            main.toast("Sem a permissão de notificações os lembretes ficam desligados. Dá para ligar depois em Mais › Lembretes.")
+            refresh()
+        }
+    }
+}
+
+private fun Screen.turnOnFromInvite() {
+    Reminders.acceptInvite(fit)
+    ReminderScheduler.schedule(main, fit)
+    if (Notifier.canPost(main)) {
+        main.toast("Lembretes de água e do treino ligados. Ajuste em Mais › Lembretes.")
+        refresh()
+    } else {
+        // Ligados aqui, mas bloqueados no Android: a tela de Lembretes explica e leva às configurações.
+        push(NotificationsScreen())
     }
 }
 
