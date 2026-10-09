@@ -171,7 +171,7 @@ class App(private val kb: KnowledgeBase, private val pf: ProfileFile) {
         ?: throw IllegalArgumentException("Sem treino na ${d.pt()}. Dias de treino: ${program.trainingDays.joinToString { it.pt() }}")
 
     private fun quick(minutes: Int, d: DayOfWeek) {
-        val adapted = SessionAdapter(kb).forTime(sessionOn(d), minutes)
+        val adapted = SessionAdapter(kb).forTime(sessionOn(d), minutes, protect = kb.priorityMuscles(program.priorities))
         out.rule(adapted.title)
         out.explanations(adapted.explanations)
         out.session(adapted.session)

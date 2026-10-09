@@ -66,6 +66,9 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
     // Perfil
     // -------------------------------------------------------------------------------------
 
+    /** Várias gravações que valem juntas (ex.: desfazer uma troca de dias). */
+    fun <T> transaction(block: () -> T): T = db.transaction(block)
+
     fun hasUser(): Boolean = db.single("SELECT id FROM users WHERE id = ?", listOf(USER)) { it.long("id") } != null
 
     fun saveProfile(p: UserProfile, safety: Map<String, Boolean>, waistCm: Int?, sweat: SweatLevel, hot: Boolean, now: LocalDateTime) = db.transaction {
@@ -380,9 +383,12 @@ class UserRepository(private val db: SqlDatabase, private val kb: KnowledgeBase)
 
     fun deleteReadiness(id: Long) = db.execute("DELETE FROM readiness_checks WHERE id=?", listOf(id))
 
-    fun recordMissed(programSessionId: Long?, missedOn: LocalDate, option: Char, now: LocalDateTime) =
-        db.execute("INSERT INTO missed_workouts(user_id, program_session_id, missed_on, chosen_option, decided_at) VALUES ($USER,?,?,?,?)",
+    /** Decisão sobre um treino perdido; devolve o id (para “Desfazer”). */
+    fun recordMissed(programSessionId: Long?, missedOn: LocalDate, option: Char, now: LocalDateTime): Long =
+        db.insert("INSERT INTO missed_workouts(user_id, program_session_id, missed_on, chosen_option, decided_at) VALUES ($USER,?,?,?,?)",
             listOf(programSessionId, missedOn.toString(), option.toString(), now.toString()))
+
+    fun deleteMissed(id: Long) = db.execute("DELETE FROM missed_workouts WHERE user_id=$USER AND id=?", listOf(id))
 
     fun missedBetween(from: LocalDate, to: LocalDate): List<MissedRow> =
         db.query("SELECT * FROM missed_workouts WHERE user_id=$USER AND missed_on BETWEEN ? AND ?", listOf(from.toString(), to.toString())) {

@@ -3,6 +3,7 @@ package com.fitkingia.core.session
 import com.fitkingia.core.explain.Explanation
 import com.fitkingia.core.knowledge.KnowledgeBase
 import com.fitkingia.core.model.Joint
+import com.fitkingia.core.model.MuscleId
 import com.fitkingia.core.model.SlotRole
 import com.fitkingia.core.program.PlannedExercise
 import com.fitkingia.core.program.PlannedSession
@@ -26,9 +27,9 @@ class SessionAdapter(private val kb: KnowledgeBase) {
     private val substitutions = SubstitutionEngine(kb)
     private val minSets = kb.ruleSet.volume.params.minSetsPerExercise
 
-    /** "Tenho só 35 minutos hoje." */
-    fun forTime(session: PlannedSession, minutes: Int): AdaptedSession {
-        val fit = fitter.fit(session, minutes)
+    /** "Tenho só 35 minutos hoje." [protect]: músculos priorizados (cortados por último, como no gerador). */
+    fun forTime(session: PlannedSession, minutes: Int, protect: Set<MuscleId> = emptySet()): AdaptedSession {
+        val fit = fitter.fit(session, minutes, protect = protect)
         val head = if (fit.changes.isEmpty())
             "A sessão estimada (${fit.originalMinutes} min) já cabe em $minutes min."
         else "Sessão original estimada em ${fit.originalMinutes} min; versão rápida: ${fit.session.estimatedMinutes} min."

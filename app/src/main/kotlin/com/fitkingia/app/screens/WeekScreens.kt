@@ -19,31 +19,90 @@ import com.fitkingia.core.program.pt
 import com.fitkingia.core.program.ptCapitalized
 import java.time.LocalDate
 
-/** Semana: os 7 dias com status (feito, perdido, hoje, planejado, descanso). */
-class WeekScreen : Screen() {
+/**
+ * Semana: os 7 dias com status (feito, perdido, hoje, planejado, descanso). Navega para as semanas que
+ * passaram (só consulta: o que foi feito e o que ficou sem fazer) e para a próxima (trocar a ordem).
+ */
+class WeekScreen(
+    /** Início da semana mostrada; nulo = a atual. */
+    start: LocalDate? = null,
+) : Screen() {
     override val title = "Semana"
     override val tab = Tab.WEEK
+    private var shown: LocalDate? = start
+    private var pageNo = 0
+    override val page: Int get() = pageNo
 
     override fun build(root: LinearLayout) {
-        val week = fit.week()
+        val today = fit.clock.now().toLocalDate()
+        val current = fit.weekStart(today)
+        val weeks = fit.browsableWeeks()
+        val ws = shown?.let { fit.weekStart(it) }?.takeIf { it in weeks } ?: current
+        val week = fit.week(ws)
         if (week == null) {
             root.card { body("Ainda não há programa. Responda o questionário para gerar um."); button("Abrir questionário") { push(QuestionnaireScreen(fit.currentAnswers())) } }
             return
         }
+        val i = weeks.indexOf(ws)
+        pageNo = i
+        weekNav(root, weekName(ws, current), weeks.getOrNull(i - 1), weeks.getOrNull(i + 1))
+        val past = ws.isBefore(current)
+        val future = ws.isAfter(current)
         val p = week.program.program
-        root.muted("${Dates.short(week.weekStart)} a ${Dates.short(week.weekStart.plusDays(6))} · ${p.split.name}", 14f)
-        root.text("${week.done} de ${week.planned} treinos feitos", 16f, bold = true)
-        root.bar(if (week.planned == 0) 0.0 else week.done.toDouble() / week.planned, C.success, bottom = 14)
-        week.plan?.let { root.card(stroke = C.fact) { text("↪️ Semana replanejada: ${it.reason}", 14f, bottom = 2) } }
-        root.muted("Toque em um dia para ver o treino, fazer hoje ou trocar a ordem.", 13f)
-        for (d in week.days) dayCard(root, d, week.program.program.sessions.firstOrNull { it.key == d.session?.key }?.day)
+        root.muted("${Dates.short(ws)} a ${Dates.short(ws.plusDays(6))} · ${p.split.name}", 14f)
+        if (future) {
+            root.text(if (week.planned == 1) "1 treino planejado" else "${week.planned} treinos planejados", 16f, bold = true, bottom = 14)
+        } else {
+            root.text("${week.done} de ${week.planned} treinos feitos", 16f, bold = true)
+            root.bar(if (week.planned == 0) 0.0 else week.done.toDouble() / week.planned, C.success, bottom = 14)
+        }
+        week.plan?.reason?.takeIf { it.isNotBlank() }?.let { reason ->
+            root.card(stroke = C.fact) { text("↪️ ${if (future) "Semana já trocada" else "Semana replanejada"}: $reason", 14f, bottom = 2) }
+        }
+        root.muted(when {
+            past -> "Semana que passou: só consulta. Treinos que ficaram sem fazer não passam para a semana seguinte."
+            future -> "Toque em um dia para ver o treino ou trocar a ordem dessa semana (ou de todas, daí em diante)."
+            else -> "Toque em um dia para ver o treino, fazer hoje ou trocar a ordem."
+        }, 13f)
+        val remarked = if (future) "↪️ Remarcado nessa semana" else "↪️ Remarcado nesta semana"
+        for (d in week.days) {
+            // Numa semana que passou o programa atual pode ser outro: não diz "remarcado" por comparação com ele.
+            val programDay = if (past) null else p.sessions.firstOrNull { it.key == d.session?.key }?.day
+            dayCard(root, d, programDay, remarked)
+        }
         root.buttonRow(
             Triple("🔬 Por que esta divisão?", Btn.SECONDARY) { push(ProgramWhyScreen()) },
             Triple("🧪 Simular", Btn.SECONDARY) { push(SimulatorScreen()) },
         )
     }
 
-    private fun dayCard(root: LinearLayout, d: DayPlan, programDay: java.time.DayOfWeek?) {
+    private fun weekName(ws: LocalDate, current: LocalDate): String = when (ws) {
+        current -> "Esta semana"
+        current.minusWeeks(1) -> "Semana passada"
+        current.plusWeeks(1) -> "Próxima semana"
+        else -> "Semana de ${Dates.short(ws)}"
+    }
+
+    /** ‹ Anterior · nome da semana · Próxima ›; as setas somem do alcance fora das semanas disponíveis. */
+    private fun weekNav(root: LinearLayout, name: String, prev: LocalDate?, next: LocalDate?) = root.row(bottom = 6) {
+        fun arrow(label: String, to: LocalDate?) = button(label, Btn.SECONDARY, bottom = 0, enabled = to != null) { go(to!!) }.also {
+            it.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            it.setPadding(dp(12), dp(9), dp(12), dp(9))
+            it.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 14f)
+        }
+        arrow("‹ Anterior", prev)
+        val t = text(name, 16f, bold = true, bottom = 0, gravity = android.view.Gravity.CENTER)
+        t.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        arrow("Próxima ›", next)
+    }
+
+    private fun go(to: LocalDate) {
+        shown = to
+        pageNo = fit.browsableWeeks().indexOf(to)
+        main.refreshTop(this)
+    }
+
+    private fun dayCard(root: LinearLayout, d: DayPlan, programDay: java.time.DayOfWeek?, remarked: String) {
         val s = d.session
         val color = when (d.status) {
             DayStatus.DONE -> C.success; DayStatus.MISSED -> C.warning; DayStatus.TODAY -> C.accent; else -> null
@@ -56,7 +115,7 @@ class WeekScreen : Screen() {
             }
             if (s != null) muted("${s.name} · ~${s.estimatedMinutes} min · ${s.exercises.size} exercícios")
             if (d.status == DayStatus.MISSED_RESOLVED) muted("Opção ${d.missedOption} escolhida")
-            else if (programDay != null && programDay != d.day) muted("↪️ Remarcado nesta semana")
+            else if (programDay != null && programDay != d.day) muted(remarked)
             if (s == null && d.workouts.isNotEmpty()) muted("Treino extra registrado")
         }
     }
@@ -81,11 +140,10 @@ class SessionScreen(private val session: PlannedSession, private val sessionId: 
             }
         }
         val today = fit.clock.now().toLocalDate()
-        if (date == null || !date.isAfter(today)) root.button("▶  Fazer este treino agora") {
-            push(WorkoutScreen(fit.startWorkout(session, sessionId, null)))
-        }
-        date?.let { d ->
-            fit.program()?.let { sp -> root.button("🔬 Por que ${session.name} na ${d.dayOfWeek.pt()}?", Btn.GHOST) { push(WhyScreen(fit.why.forDay(sp.program, d.dayOfWeek))) } }
+        if (date == null || !date.isAfter(today)) root.button("▶  Fazer este treino agora") { startOrAsk(session, sessionId, null) }
+        // Explica o treino que a semana mostra nesse dia (se veio de outro dia, diz isso), não o dia do programa.
+        date?.takeIf { d -> fit.week(d)?.days?.firstOrNull { it.date == d }?.session?.key == session.key }?.let { d ->
+            fit.whyOn(d)?.let { w -> root.button("🔬 ${w.title}", Btn.GHOST) { push(WhyScreen(w)) } }
         }
     }
 }
@@ -201,7 +259,13 @@ class ProgramWhyScreen : Screen() {
             }
         }
         root.button("Gerar o programa de novo", Btn.SECONDARY) {
-            main.confirm("Gerar de novo?", "O motor refaz o programa a partir do seu perfil atual. Trocas manuais de exercício serão perdidas.", "Gerar") {
+            main.confirm(
+                "Gerar de novo?",
+                "O motor refaz o programa a partir do seu perfil atual. Trocas manuais de exercício serão perdidas, e trocas de dia " +
+                    "“só esta semana” voltam ao normal. A ordem de dias que você escolheu para todas as semanas continua, " +
+                    "se o programa novo tiver os mesmos treinos nos mesmos dias.",
+                "Gerar",
+            ) {
                 main.background({ fit.regenerate() }) { r -> r.onSuccess { main.toast(if (it is ProgramResult.Generated) "Programa atualizado" else "Não foi possível gerar") }; refresh() }
             }
         }
@@ -282,7 +346,17 @@ class MissedScreen(private val day: DayPlan) : Screen() {
 
     override fun build(root: LinearLayout) {
         val report = fit.missedOptions(day)
-        if (report == null) { root.body("Não há programa ativo."); return }
+        if (report == null) {
+            when {
+                fit.program() == null -> root.body("Não há programa ativo.")
+                fit.weekStart(day.date) != fit.weekStart() -> {
+                    root.body("A semana virou: este treino não pode mais ser replanejado.")
+                    root.muted("A semana nova começa com o programa normal — treinos que ficaram sem fazer não passam para ela.", 14f)
+                }
+                else -> root.body("Este treino não precisa de replanejamento.")
+            }
+            return
+        }
         root.body(report.message)
         root.muted("Sem culpa: escolha a opção que encaixa na sua semana.", 14f)
         for (o in report.options) {
@@ -295,9 +369,14 @@ class MissedScreen(private val day: DayPlan) : Screen() {
                     o.remainingWeek.forEach { s -> muted("${s.day?.ptCapitalized()}: ${s.name} (~${s.estimatedMinutes} min)", 13f) }
                 }
                 if (o.available) button("Escolher ${o.key}", if (o.key == 'A') Btn.PRIMARY else Btn.SECONDARY) {
-                    fit.applyMissed(day, o)
-                    main.toast("Semana atualizada")
-                    pop()
+                    try {
+                        fit.applyMissed(day, o)
+                        main.toast("Semana atualizada")
+                        pop()
+                    } catch (e: IllegalArgumentException) {
+                        // Ex.: treino em andamento num dia que a opção mudaria.
+                        main.toast(e.message ?: "Não foi possível replanejar a semana")
+                    }
                 } else muted("Indisponível nesta semana.")
             }
         }

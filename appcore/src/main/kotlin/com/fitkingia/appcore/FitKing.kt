@@ -5,6 +5,7 @@ import com.fitkingia.core.analytics.MuscleVolumeStatus
 import com.fitkingia.core.analytics.VolumeDashboard
 import com.fitkingia.core.body.*
 import com.fitkingia.core.explain.Explanation
+import com.fitkingia.core.explain.WhyReport
 import com.fitkingia.core.explain.WhyService
 import com.fitkingia.core.gamification.Gamification
 import com.fitkingia.core.gamification.XpEvent
@@ -194,6 +195,8 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
         if (generated is ProgramResult.Generated) {
             repo.saveProgram(generated.program, now())
             repo.clearWeekPlans()
+            // Questionário refeito: o motor decide os dias de novo (a ordem escolhida antes não vale mais).
+            repo.setPref(WeekReorder.PREF_DAY_ORDER, null)
         }
         repo.logEvent("questionnaire", null, now())
         return SubmitOutcome(profile, result, generated)
@@ -201,13 +204,17 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
 
     fun screening(): ScreeningResult? = profile()?.let { screening.evaluate(it, repo.safetyAnswers()) }
 
-    /** Gera de novo o programa a partir do perfil salvo (ex.: depois de registrar dor). */
+    /**
+     * Gera de novo o programa a partir do perfil salvo (ex.: depois de registrar dor). A ordem de dias que o
+     * usuário escolheu (troca “todas as semanas”) volta se o programa novo tiver as mesmas sessões nos mesmos dias.
+     */
     fun regenerate(): ProgramResult? {
         val p = profile() ?: return null
         val r = generator.generate(p, screening.evaluate(p, repo.safetyAnswers()))
         if (r is ProgramResult.Generated) {
             repo.saveProgram(r.program, now())
             repo.clearWeekPlans()
+            reorder.reapplyOrder()
         }
         return r
     }
@@ -257,6 +264,17 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
     fun dismissPriorityHint() = repo.setPref(UserRepository.PREF_PRIORITY_HINT, "dismissed")
 
     fun weekStart(date: LocalDate = today()): LocalDate = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+
+    /**
+     * Semanas que dá para abrir na tela Semana (início de cada uma): as anteriores desde que o programa atual
+     * existe (até [HISTORY_WEEKS] atrás), só para consulta; a atual; e a próxima, para trocar a ordem.
+     */
+    fun browsableWeeks(): List<LocalDate> {
+        val stored = program() ?: return emptyList()
+        val current = weekStart()
+        val first = maxOf(weekStart(stored.createdAt.toLocalDate()), current.minusWeeks(HISTORY_WEEKS))
+        return generateSequence(minOf(first, current)) { it.plusWeeks(1) }.takeWhile { !it.isAfter(current.plusWeeks(1)) }.toList()
+    }
 
     private fun effectiveSessions(stored: StoredProgram, plan: WeekPlan?): List<PlannedSession> {
         plan ?: return stored.program.sessions
@@ -319,6 +337,44 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
             next, pending, repo.unfinishedWorkout())
     }
 
+    /**
+     * Treinos da semana passada que ficaram sem fazer (e sem decisão). A semana virou: eles não são repostos —
+     * a Home avisa, até o usuário dispensar. Dias antes de o programa existir não contam.
+     */
+    fun lastWeekMissed(): List<DayPlan> {
+        val stored = program() ?: return emptyList()
+        val ws = weekStart().minusWeeks(1)
+        if (repo.pref(lastWeekKey(ws)) != null) return emptyList()
+        val created = stored.createdAt.toLocalDate()
+        return week(ws)?.days.orEmpty().filter { it.status == DayStatus.MISSED && !it.date.isBefore(created) }
+    }
+
+    fun dismissLastWeekMissed() = repo.setPref(lastWeekKey(weekStart().minusWeeks(1)), "seen")
+
+    private fun lastWeekKey(ws: LocalDate) = "missed_seen:$ws"
+
+    /**
+     * “Por que este treino neste dia?”: explica o dia do programa. Se nesta semana o treino foi trocado de dia,
+     * diz isso primeiro e explica o dia em que ele fica no programa. Nulo em dia sem treino.
+     */
+    fun whyOn(date: LocalDate): WhyReport? {
+        val week = week(date) ?: return null
+        val s = week.days.first { it.date == date }.session ?: return null
+        val program = week.program.program
+        val day = date.dayOfWeek
+        val ref = if (date == today()) "hoje" else day.ptWithArticle()
+        if (program.sessionOn(day)?.key == s.key) return why.forDay(program, day).copy(title = "Por que ${s.name} $ref?")
+        val baseDay = program.sessions.firstOrNull { it.key == s.key }?.day
+        val ws = week.weekStart
+        val which = if (ws == weekStart()) "Nesta semana" else "Na semana de ${ws.dayOfMonth.toString().padStart(2, '0')}/${ws.monthValue.toString().padStart(2, '0')}"
+        val moved = "$which, ${s.name} está $ref" +
+            (baseDay?.let { " — no programa, fica ${it.ptWithArticle()}" } ?: "") +
+            (week.plan?.reason?.takeIf { it.isNotBlank() }?.let { ". Motivo: $it" } ?: "") +
+            ". Duração estimada neste dia: ~${s.estimatedMinutes} min."
+        val base = baseDay?.let { why.forDay(program, it) }
+        return WhyReport("Por que ${s.name} $ref?", listOf(moved) + base?.lines.orEmpty(), base?.rules.orEmpty())
+    }
+
     /** Aplica prontidão (autorregulação) e depois o limite de tempo do dia. */
     fun adapt(base: PlannedSession, readiness: ReadinessResult?, minutes: Int?): Triple<PlannedSession, String, Pair<List<SessionChange>, List<Explanation>>> {
         var s = base
@@ -332,7 +388,8 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
             if (a.changes.isNotEmpty()) title = a.title
         }
         if (minutes != null) {
-            val a = adapter.forTime(s, minutes)
+            // Como no gerador: os exercícios da região priorizada são os últimos a sair.
+            val a = adapter.forTime(s, minutes, protect = kb.priorityMuscles(program()?.program?.priorities.orEmpty()))
             s = a.session; changes += a.changes; notes += a.explanations
             title = a.title
         }
@@ -355,22 +412,23 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
         repo.readiness(5).filter { it.at.toLocalDate() == today() }.forEach { repo.deleteReadiness(it.id) }
     }
 
+    /** Opções A–D para um treino perdido desta semana (nulo para outra semana: a semana já virou). */
     fun missedOptions(day: DayPlan): MissedWorkoutReport? {
         val week = week() ?: return null
         val p = profile() ?: return null
-        val program = week.program.program.copy(sessions = week.days.mapNotNull { it.session })
-        return missedPlanner.options(program, p, day.day, today().dayOfWeek)
+        val today = today()
+        if (weekStart(day.date) != week.weekStart || !day.date.isBefore(today) || day.session == null) return null
+        // Já treinou hoje: as opções mexem só de amanhã em diante — o treino feito fica onde está e nada
+        // novo é marcado para hoje ([WeekReorder.applyMissed] grava pelo mesmo critério).
+        val todayDone = week.days.first { it.date == today }.status == DayStatus.DONE
+        val sessions = week.days.filter { !(todayDone && it.date == today) }.mapNotNull { it.session }
+        val profile = if (todayDone) p.copy(availability = p.availability.filter { it.day != today.dayOfWeek }) else p
+        val program = week.program.program.copy(sessions = sessions)
+        return missedPlanner.options(program, profile, day.day, today.dayOfWeek)
     }
 
-    fun applyMissed(day: DayPlan, option: MissedOption) {
-        val ws = weekStart()
-        if (option.key != 'C' && option.available) {
-            repo.saveWeekPlan(
-                WeekPlan(ws, today().dayOfWeek, "Treino de ${day.day.pt()} não realizado — opção ${option.key}", option.remainingWeek), now(),
-            )
-        }
-        repo.recordMissed(day.sessionId, day.date, option.key, now())
-    }
+    /** Aplica a opção escolhida para o treino perdido, sem desfazer o que já foi replanejado na semana. */
+    fun applyMissed(day: DayPlan, option: MissedOption) = reorder.applyMissed(day, option)
 
     // =====================================================================================
     // Reorganizar a semana (trocar dias, fazer hoje o treino de outro dia)
@@ -389,6 +447,24 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
 
     /** Prévia de [doToday]: para onde iria o treino de hoje (nulo se hoje é descanso). */
     fun doTodayDisplaces(from: LocalDate): Displaced? = reorder.displaced(from)
+
+    /** Treino de um dia que passou e foi remarcado nesta semana: onde ele está agora (nulo se não foi remarcado). */
+    fun rescheduledTo(date: LocalDate): DayPlan? = reorder.copyOf(date)
+
+    /** “Desfazer” de uma troca; recusa (IllegalArgumentException) se a semana mudou depois. */
+    fun undoReorder(undo: ReorderUndo) = reorder.undo(undo)
+
+    /**
+     * Treino em andamento que impede trocar o treino de hoje: começado hoje, ou com a sessão de hoje.
+     * Ao concluir, ele marcaria como feito o dia errado — a Home pede para concluir ou descartar antes.
+     */
+    fun workoutBlockingToday(): WorkoutRow? {
+        val w = repo.unfinishedWorkout() ?: return null
+        val today = today()
+        if (w.startedAt.toLocalDate() == today) return w
+        val key = week()?.days?.firstOrNull { it.date == today }?.session?.key
+        return w.takeIf { weekStart(it.startedAt.toLocalDate()) == weekStart(today) && key != null && (it.sessionKey ?: it.plan?.key) == key }
+    }
 
     // =====================================================================================
     // Exercícios: por que, substituir, dor
@@ -457,11 +533,32 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
     // Execução do treino
     // =====================================================================================
 
+    /**
+     * Começa (ou retoma, se já estava aberto) o treino de [session]. Com outro treino em andamento, recusa
+     * (IllegalArgumentException): a tela pergunta antes se retoma aquele ou descarta ([openWorkoutConflict]).
+     */
     fun startWorkout(session: PlannedSession, sessionId: Long?, readinessId: Long?): ActiveWorkout {
-        repo.unfinishedWorkout()?.let { return activeFrom(it) }
+        repo.unfinishedWorkout()?.let { w ->
+            require(isSameSession(w, session, sessionId)) {
+                "Há outro treino em andamento (${w.plan?.name ?: "Treino"}). Retome ou descarte esse treino antes de começar ${session.name}."
+            }
+            return activeFrom(w)
+        }
         val id = repo.startWorkout(sessionId, readinessId, session, now())
         return ActiveWorkout(id, session, sessionId, now(), emptyList())
     }
+
+    /** Treino em andamento de outra sessão: “Começar” [session] não pode abrir esse em silêncio. */
+    fun openWorkoutConflict(session: PlannedSession, sessionId: Long?): WorkoutRow? =
+        repo.unfinishedWorkout()?.takeIf { !isSameSession(it, session, sessionId) }
+
+    /**
+     * O treino aberto é o mesmo que se quer começar: mesma sessão e começado nesta semana. Um treino aberto de
+     * outra semana conta lá ao concluir — retomá-lo em silêncio deixaria o treino desta semana pendente.
+     */
+    private fun isSameSession(w: WorkoutRow, session: PlannedSession, sessionId: Long?): Boolean =
+        weekStart(w.startedAt.toLocalDate()) == weekStart() &&
+            (w.sessionKey ?: w.plan?.key) == session.key && (sessionId == null || w.programSessionId == null || w.programSessionId == sessionId)
 
     fun activeWorkout(): ActiveWorkout? = repo.unfinishedWorkout()?.let(::activeFrom)
 
@@ -690,5 +787,8 @@ class FitKing(val kb: KnowledgeBase, db: SqlDatabase, val clock: AppClock = Syst
 
     companion object {
         const val MAX_MEAL_XP_PER_DAY = 5
+
+        /** Quantas semanas para trás a tela Semana mostra. */
+        const val HISTORY_WEEKS = 4L
     }
 }

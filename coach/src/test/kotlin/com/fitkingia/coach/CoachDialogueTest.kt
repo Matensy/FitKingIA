@@ -33,6 +33,28 @@ class CoachDialogueTest {
         assertTrue("O que mudou e por quê" in r.text)
     }
 
+    /** Contexto com glúteos priorizados (o resto igual ao da fixture). */
+    private fun gluteContext(): CoachContext {
+        val profile = CoachFixture.profile.copy(sex = com.fitkingia.core.model.Sex.FEMALE, priorities = setOf(com.fitkingia.core.model.BodyRegion.GLUTES))
+        val program = (com.fitkingia.core.program.ProgramGenerator(CoachFixture.kb).generate(profile, CoachFixture.screening)
+            as com.fitkingia.core.program.ProgramResult.Generated).program
+        return CoachContext(profile, CoachFixture.screening, program, CoachFixture.TODAY, CoachFixture.history)
+    }
+
+    @Test fun `pouco tempo na conversa protege a regiao priorizada como o app`() {
+        val ctx = gluteContext()
+        val session = ctx.program!!.sessionOn(CoachFixture.TODAY.dayOfWeek)!!
+        val protect = CoachFixture.kb.priorityMuscles(ctx.program!!.priorities)
+        val fitter = com.fitkingia.core.session.SessionFitter(CoachFixture.kb)
+        fun gluteSets(p: com.fitkingia.core.program.PlannedSession) = p.exercises.filter { e -> e.exercise.primaryMuscles.any { it in protect } }.sumOf { it.sets }
+        // Guarda do cenário: um tempo em que a proteção muda a sessão (senão o teste não provaria nada).
+        val minutes = (20..60 step 5).first { m -> gluteSets(fitter.fit(session, m, protect = protect).session) > gluteSets(fitter.fit(session, m).session) }
+        val expected = fitter.fit(session, minutes, protect = protect).session
+        val r = coach.reply("tenho só $minutes minutos hoje", ctx, ConversationState())
+        assertEquals(Intent.SHORT_ON_TIME, r.intent)
+        assertTrue(Say.session(expected) in r.text, r.text)
+    }
+
     @Test fun `pergunta o dado que falta e continua a conversa`() {
         val (ask, answer) = chat("hoje estou sem tempo", "uns 30 minutos")
         assertEquals(Intent.SHORT_ON_TIME, ask.intent)

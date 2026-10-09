@@ -249,11 +249,12 @@ class LocalCoach(
     }
 
     private fun shortOnTime(text: String, e: Entities, ctx: CoachContext, state: ConversationState): CoachReply {
-        ctx.program ?: return noProgram(Intent.SHORT_ON_TIME)
+        val program = ctx.program ?: return noProgram(Intent.SHORT_ON_TIME)
         val minutes = e.minutes ?: return ask(Intent.SHORT_ON_TIME, Slot.MINUTES, text, state)
         val (s, note) = sessionFor(e.day, ctx)
         s ?: return reply(Intent.SHORT_ON_TIME, Say.rule(note ?: "Sem treino nesse dia."))
-        val adapted = SessionAdapter(kb).forTime(s, minutes)
+        // Como o app ("⚡ Pouco tempo") e o gerador: a região priorizada sai por último.
+        val adapted = SessionAdapter(kb).forTime(s, minutes, protect = kb.priorityMuscles(program.priorities))
         val changes = adapted.changes.joinToString("\n") { "  • $it" }
         return reply(Intent.SHORT_ON_TIME,
             Say.me("Entendi: você tem $minutes minutos. ${note ?: ""}".trim()),

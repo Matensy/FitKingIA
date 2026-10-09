@@ -85,7 +85,7 @@ class WhyService(private val kb: KnowledgeBase) {
         val days = program.trainingDays.sorted().joinToString { it.pt() }
         val muscles = s.exercises.flatMap { it.exercise.primaryMuscles }.distinct().joinToString { kb.muscleName(it).lowercase() }
         return WhyReport(
-            "Por que ${s.name} na ${day.pt()}?",
+            "Por que ${s.name} ${if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) "no" else "na"} ${day.pt()}?",
             listOf(
                 "Sua divisão (${program.split.name}) foi montada dessa forma porque seus dias de treino são $days, " +
                     "e o algoritmo buscou distribuir os grupos musculares e a recuperação entre as sessões.",

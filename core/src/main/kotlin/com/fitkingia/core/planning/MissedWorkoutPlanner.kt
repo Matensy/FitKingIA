@@ -2,6 +2,7 @@ package com.fitkingia.core.planning
 
 import com.fitkingia.core.knowledge.KnowledgeBase
 import com.fitkingia.core.model.DayAvailability
+import com.fitkingia.core.model.MuscleId
 import com.fitkingia.core.model.SlotRole
 import com.fitkingia.core.model.UserProfile
 import com.fitkingia.core.program.*
@@ -38,18 +39,20 @@ class MissedWorkoutPlanner(private val kb: KnowledgeBase) {
             .filter { it.day >= today && it.minutes >= minMinutes && program.sessionOn(it.day) == null }
             .sortedBy { it.day }
         val message = "Você não realizou o treino ${missed.name} de ${missedDay.pt()}."
+        // Como no gerador: ao reajustar ao tempo, os exercícios da região priorizada saem por último.
+        val protect = kb.priorityMuscles(program.priorities)
         return MissedWorkoutReport(message, listOf(
-            move(missed, upcoming, freeDays),
-            merge(program, missed, upcoming),
+            move(missed, upcoming, freeDays, protect),
+            merge(program, missed, upcoming, protect),
             ignore(program, missed, upcoming),
-            recalc(program, missed, upcoming, profile, today),
+            recalc(program, missed, upcoming, profile, today, protect),
         ))
     }
 
-    private fun move(missed: PlannedSession, upcoming: List<PlannedSession>, free: List<DayAvailability>): MissedOption {
+    private fun move(missed: PlannedSession, upcoming: List<PlannedSession>, free: List<DayAvailability>, protect: Set<MuscleId>): MissedOption {
         val day = free.firstOrNull()
             ?: return MissedOption('A', "Mover para outro dia", false, "Não há dia livre e disponível até domingo.", upcoming)
-        val fit = fitter.fit(missed, day.minutes)
+        val fit = fitter.fit(missed, day.minutes, protect = protect)
         val moved = fit.session.copy(day = day.day)
         val week = (upcoming + moved).sortedBy { it.day }
         val details = fit.changes.map { it.toString() }.toMutableList()
@@ -58,7 +61,7 @@ class MissedWorkoutPlanner(private val kb: KnowledgeBase) {
         return MissedOption('A', "Mover para ${day.day.pt()}", true, "${missed.name} passa para ${day.day.pt()} (${day.minutes} min).", week, details)
     }
 
-    private fun merge(program: Program, missed: PlannedSession, upcoming: List<PlannedSession>): MissedOption {
+    private fun merge(program: Program, missed: PlannedSession, upcoming: List<PlannedSession>, protect: Set<MuscleId>): MissedOption {
         val next = upcoming.firstOrNull()
             ?: return MissedOption('B', "Incorporar parte no próximo treino", false, "Não há próximo treino nesta semana.", upcoming)
         val present = next.exercises.map { it.exercise.id }.toSet()
@@ -71,7 +74,7 @@ class MissedWorkoutPlanner(private val kb: KnowledgeBase) {
             .take(2)
         val mains = next.exercises.count { it.role == SlotRole.MAIN }
         val combined = next.copy(exercises = next.exercises.take(mains) + extra + next.exercises.drop(mains))
-        val fit = fitter.fit(combined, next.budgetMinutes ?: 60)
+        val fit = fitter.fit(combined, next.budgetMinutes ?: 60, protect = protect)
         val week = upcoming.map { if (it === next) fit.session else it }
         return MissedOption(
             'B', "Incorporar parte no próximo treino", extra.isNotEmpty(),
@@ -89,7 +92,9 @@ class MissedWorkoutPlanner(private val kb: KnowledgeBase) {
             if (details.isEmpty()) listOf("Nenhum músculo fica abaixo do mínimo semanal.") else listOf("Ficam abaixo do mínimo semanal:") + details)
     }
 
-    private fun recalc(program: Program, missed: PlannedSession, upcoming: List<PlannedSession>, profile: UserProfile, today: DayOfWeek): MissedOption {
+    private fun recalc(
+        program: Program, missed: PlannedSession, upcoming: List<PlannedSession>, profile: UserProfile, today: DayOfWeek, protect: Set<MuscleId>,
+    ): MissedOption {
         val days = profile.availability.filter { it.day >= today && it.minutes >= minMinutes }
         var toPlace = (listOf(missed) + upcoming).map { it.copy(day = null) }
         val dropped = mutableListOf<String>()
@@ -104,7 +109,7 @@ class MissedWorkoutPlanner(private val kb: KnowledgeBase) {
         val assignment = scheduler.assign(toPlace, chosen, profile.sports)
         val week = toPlace.mapIndexed { i, s ->
             val d = assignment.dayForSession[i]
-            fitter.fit(s, d.minutes).session.copy(day = d.day)
+            fitter.fit(s, d.minutes, protect = protect).session.copy(day = d.day)
         }.sortedBy { it.day }
         val details = week.map { "${it.day?.pt()}: ${it.name} (~${it.estimatedMinutes} min)" } +
             dropped.map { "Fora desta semana: $it (menor impacto no volume)" }

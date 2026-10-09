@@ -13,26 +13,27 @@ import com.fitkingia.appcore.ReorderResult
 import com.fitkingia.appcore.WeekView
 import com.fitkingia.appcore.ptWithArticle
 import com.fitkingia.core.model.Fmt
+import com.fitkingia.core.program.PlannedSession
 import com.fitkingia.core.program.pt
 import com.fitkingia.core.program.ptCapitalized
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 /**
- * Um dia da semana — passado, hoje ou futuro: o treino planejado, o que foi feito e as ações
- * para reorganizar a semana (fazer hoje, trocar com outro dia, opções de treino perdido).
+ * Um dia — de uma semana que passou (só consulta), desta semana ou da próxima: o treino planejado, o que
+ * foi feito e as ações para reorganizar (fazer hoje, trocar com outro dia, opções de treino perdido).
  */
 class DayScreen(
     private val date: LocalDate,
     /** Abre já com a lista de dias para trocar. */
     private var swapping: Boolean = false,
     override val tab: Tab? = Tab.WEEK,
+    /** Abre com “todas as semanas” marcado (ex.: vindo de um dia que já passou). */
+    permanent: Boolean = false,
 ) : Screen() {
     override val title get() = "${date.dayOfWeek.ptCapitalized()} ${Dates.short(date)}"
-    private var permanent = false
+    private var permanent = permanent
     private var result: ReorderResult? = null
-    /** Dias da última troca "só esta semana" (para desfazer). */
-    private var undo: Pair<LocalDate, LocalDate>? = null
 
     override fun build(root: LinearLayout) {
         val week = fit.week(date)
@@ -43,20 +44,22 @@ class DayScreen(
         val today = fit.clock.now().toLocalDate()
         val d = week.days.first { it.date == date }
         val s = d.session
-        val thisWeek = week.weekStart == fit.weekStart(today)
+        val current = fit.weekStart(today)
+        val thisWeek = week.weekStart == current
+        val nextWeek = week.weekStart == current.plusWeeks(1)
+        val pastWeek = week.weekStart.isBefore(current)
         val todayPlan = week.days.firstOrNull { it.date == today }
-        // Treino perdido já remarcado: onde ele está agora.
-        val movedTo = s?.let { cur -> week.days.firstOrNull { it.date != date && !it.date.isBefore(today) && it.session?.key == cur.key } }
-            ?.takeIf { date.isBefore(today) }
+        // Treino que passou e foi remarcado: onde ele está agora (pode ser um dia que também passou).
+        val movedTo = if (thisWeek && date.isBefore(today)) fit.rescheduledTo(date) else null
 
         root.row(bottom = 12) {
             badge("${HomeScreen.statusIcon(d.status, s != null)} ${statusLabel(d)}", statusColor(d.status), bottom = 0)
             relative(date, today)?.let { text("   $it", 13f, C.muted, bottom = 0) }
         }
+        if (pastWeek) root.muted("Semana que passou: só consulta.", 13f)
 
         result?.let { r ->
-            val back = undo
-            root.reorderNotice(r, onUndo = back?.let { (a, b) -> { undoSwap(a, b) } }) { result = null; undo = null; refresh() }
+            root.reorderNotice(r, onUndo = undoAction(r) { result = it; refresh() }) { result = null; refresh() }
         }
 
         if (s == null) {
@@ -75,12 +78,19 @@ class DayScreen(
                 h2(s.name, top = 0)
                 muted(listOfNotNull("~${s.estimatedMinutes} min", "${s.exercises.size} exercícios", s.budgetMinutes?.let { "tempo do dia $it min" }).joinToString(" · "))
                 if (d.status == DayStatus.MISSED_RESOLVED) {
-                    muted(listOfNotNull(d.missedOption?.let { "Opção $it escolhida" }, movedTo?.let { "remarcado para ${ref(it.date, today)}" })
-                        .joinToString(" · ").replaceFirstChar { it.uppercase() })
+                    val copy = movedTo?.let { m ->
+                        "remarcado para ${relative(m.date, today) ?: m.day.pt()}" + when (m.status) {
+                            DayStatus.DONE -> " (feito)"
+                            DayStatus.MISSED -> " (também não realizado)"
+                            else -> ""
+                        }
+                    }
+                    muted(listOfNotNull(d.missedOption?.let { "Opção $it escolhida" }, copy).joinToString(" · ").replaceFirstChar { it.uppercase() })
                 }
+                // Numa semana que passou, o programa atual pode ser outro: “remarcado” só faz sentido desta semana em diante.
                 val baseDay = week.program.program.sessions.firstOrNull { it.key == s.key }?.day
-                if (baseDay != null && baseDay != date.dayOfWeek && d.status != DayStatus.MISSED_RESOLVED) {
-                    muted("↪️ Remarcado nesta semana (no programa, ${baseDay.ptWithArticle()})")
+                if (!pastWeek && baseDay != null && baseDay != date.dayOfWeek && d.status != DayStatus.MISSED_RESOLVED) {
+                    muted("↪️ Remarcado ${if (thisWeek) "nesta" else "nessa"} semana (no programa, ${baseDay.ptWithArticle()})")
                 }
                 if (d.status == DayStatus.DONE && d.workouts.none { it.sessionKey == s.key }) {
                     week.days.flatMap { it.workouts }.firstOrNull { it.sessionKey == s.key }?.let { muted("✅ Feito ${ref(it.startedAt.toLocalDate(), today)}") }
@@ -88,22 +98,34 @@ class DayScreen(
             }
         }
 
-        // Ações
+        // Ações (semanas que passaram: só consulta)
         val todayDone = todayPlan?.status == DayStatus.DONE && todayPlan.session != null
-        val canDoToday = thisWeek && s != null && date != today && d.status != DayStatus.DONE && !todayDone && movedTo?.date != today
-        val candidates = if (thisWeek && !date.isBefore(today) && d.status != DayStatus.DONE) swapTargets(week, d, today) else emptyList()
+        val blocking = if (thisWeek) fit.workoutBlockingToday() else null
+        val canDoToday = thisWeek && s != null && date != today && d.status != DayStatus.DONE && !todayDone &&
+            movedTo?.date != today && movedTo?.status != DayStatus.DONE
+        val candidates = if ((thisWeek || nextWeek) && !date.isBefore(today) && d.status != DayStatus.DONE) swapTargets(week, d, today) else emptyList()
         if (date == today && s != null && d.status == DayStatus.TODAY) root.button("▶  Abrir o treino de hoje") { main.switchTab(Tab.HOME) }
-        if (canDoToday) {
+        if (canDoToday && blocking != null) {
+            root.muted("🔒 Para fazer este treino hoje, conclua ou descarte antes o treino em andamento (${blocking.plan?.name ?: "Treino"}).", 13f)
+        } else if (canDoToday) {
             root.button("▶  Fazer este treino hoje", bottom = 4) { doToday() }
             root.displacedHint(fit.doTodayDisplaces(date), bottom = 10)
         } else if (todayDone && d.status == DayStatus.MISSED && thisWeek) {
             root.muted("Você já treinou hoje. Para remarcar este treino, use as opções de treino perdido.", 13f)
+        } else if (movedTo?.status == DayStatus.DONE) {
+            root.muted("Este treino já foi feito ${ref(movedTo.date, today)}.", 13f)
         }
         if (candidates.isNotEmpty()) {
             root.button(if (swapping) "✕  Fechar a troca" else "🔄  Trocar com outro dia", Btn.SECONDARY) { swapping = !swapping; refresh() }
         }
         if (d.status == DayStatus.MISSED && thisWeek) root.button("Opções de treino perdido (A–D)", Btn.SECONDARY) { push(MissedScreen(d)) }
-        if (swapping && candidates.isNotEmpty()) swapSection(root, d, candidates, today)
+        if (swapping && candidates.isNotEmpty()) swapSection(root, d, candidates, today, thisWeek, week.weekStart)
+        if (thisWeek && candidates.isEmpty() && fit.browsableWeeks().contains(current.plusWeeks(1))) {
+            // Dia que passou (ou já feito): a ordem ainda pode mudar a partir da próxima semana.
+            root.button("🔄  Mudar a ordem a partir da próxima semana", Btn.GHOST) {
+                push(DayScreen(date.plusWeeks(1), swapping = true, tab = tab, permanent = true))
+            }
+        }
 
         if (d.workouts.isNotEmpty()) {
             root.h2("O que você fez")
@@ -154,21 +176,30 @@ class DayScreen(
             }
         }
 
-        if (s != null) fit.program()?.let { sp ->
-            if (sp.program.sessionOn(date.dayOfWeek)?.key == s.key) {
-                root.button("🔬 Por que ${s.name} ${date.dayOfWeek.ptWithArticle()}?", Btn.GHOST) { push(WhyScreen(fit.why.forDay(sp.program, date.dayOfWeek))) }
-            }
+        // Explica o treino que a semana mostra neste dia (trocado ou não). Semanas que passaram: o programa pode ser outro.
+        if (s != null && !pastWeek) fit.whyOn(date)?.let { w ->
+            root.button("🔬 ${w.title}", Btn.GHOST) { push(WhyScreen(w)) }
         }
     }
 
-    /** Dias desta semana (de hoje em diante, ainda não feitos) com que este dia pode trocar. */
+    /** Dias da semana (de hoje em diante, ainda não feitos) com que este dia pode trocar. */
     private fun swapTargets(week: WeekView, d: DayPlan, today: LocalDate): List<DayPlan> =
         week.days.filter { !it.date.isBefore(today) && it.date != d.date && it.status != DayStatus.DONE && (it.session != null || d.session != null) }
 
-    private fun swapSection(root: LinearLayout, d: DayPlan, candidates: List<DayPlan>, today: LocalDate) = root.card(stroke = C.accent) {
+    private fun swapSection(
+        root: LinearLayout, d: DayPlan, candidates: List<DayPlan>, today: LocalDate, thisWeek: Boolean, weekStart: LocalDate,
+    ) = root.card(stroke = C.accent) {
         h3(d.session?.let { "Trocar ${it.name} com…" } ?: "Trazer um treino para ${d.day.pt()}")
-        chips(listOf(false to "Só esta semana", true to "Todas as semanas"), { it == permanent }, small = true, bottom = 4) { permanent = it; refresh() }
-        muted(if (permanent) "Muda o programa: nas próximas semanas a ordem já vem trocada." else "Vale só para esta semana; na próxima, o programa volta ao normal.", 12f)
+        val labels = if (thisWeek) listOf(false to "Só esta semana", true to "Todas as semanas")
+        else listOf(false to "Só nessa semana", true to "Dessa semana em diante")
+        chips(labels, { it == permanent }, small = true, bottom = 4) { permanent = it; refresh() }
+        val ws = Dates.short(weekStart)
+        muted(when {
+            thisWeek && permanent -> "Muda o programa: nas próximas semanas a ordem já vem trocada."
+            thisWeek -> "Vale só para esta semana; na próxima, o programa volta ao normal."
+            permanent -> "Muda o programa a partir da semana de $ws; esta semana continua como está."
+            else -> "Vale só para a semana de $ws; depois, o programa volta ao normal."
+        }, 12f)
         space(6)
         candidates.forEach { c ->
             card(bottom = 8, color = C.surface2, stroke = C.stroke, onClick = { swapWith(c.date) }) {
@@ -185,17 +216,8 @@ class DayScreen(
     private fun swapWith(other: LocalDate) {
         val r = reorderOrToast { fit.swapDays(date, other, permanent) } ?: return
         result = r
-        undo = if (permanent) null else date to other
         swapping = false
         main.refreshTop(this)
-    }
-
-    private fun undoSwap(a: LocalDate, b: LocalDate) {
-        reorderOrToast { fit.swapDays(a, b, false) } ?: return
-        result = null
-        undo = null
-        main.toast("Troca desfeita")
-        refresh()
     }
 
     private fun doToday() {
@@ -225,11 +247,12 @@ class DayScreen(
             DayStatus.PLANNED, DayStatus.REST -> C.muted
         }
 
-        /** "hoje", "amanhã", "ontem" ou "na quinta". */
-        fun ref(d: LocalDate, today: LocalDate): String = when (d) {
-            today -> "hoje"
-            today.plusDays(1) -> "amanhã"
-            today.minusDays(1) -> "ontem"
+        /** "hoje", "amanhã", "ontem", "na quinta" ou, a uma semana ou mais, "em 28/09" (o dia da semana seria ambíguo). */
+        fun ref(d: LocalDate, today: LocalDate): String = when {
+            d == today -> "hoje"
+            d == today.plusDays(1) -> "amanhã"
+            d == today.minusDays(1) -> "ontem"
+            Math.abs(ChronoUnit.DAYS.between(d, today)) >= 7 -> "em ${Dates.short(d)}"
             else -> d.dayOfWeek.ptWithArticle()
         }
     }
@@ -245,6 +268,24 @@ fun Screen.reorderOrToast(action: () -> ReorderResult): ReorderResult? = try {
 } catch (e: IllegalArgumentException) {
     main.toast(e.message ?: "Não foi possível reorganizar a semana")
     null
+}
+
+/**
+ * “Desfazer” de uma reorganização (troca de dias, fazer hoje, inclusive a troca permanente). [update] recebe
+ * null quando desfez (o aviso some) ou o mesmo resultado sem “Desfazer” quando a semana mudou depois.
+ */
+fun Screen.undoAction(r: ReorderResult, update: (ReorderResult?) -> Unit): (() -> Unit)? {
+    val u = r.undo ?: return null
+    return {
+        try {
+            fit.undoReorder(u)
+            main.toast("Troca desfeita")
+            update(null)
+        } catch (e: IllegalArgumentException) {
+            main.toast(e.message ?: "Não foi possível desfazer")
+            update(r.copy(undo = null))
+        }
+    }
 }
 
 /** Card com o resultado de uma reorganização: o que mudou e os avisos (🟢 regras do sistema). Nada é bloqueado. */
@@ -274,6 +315,10 @@ fun pendingSessions(week: WeekView, today: LocalDate): List<DayPlan> =
 fun Screen.swapTodaySheet(onDone: (ReorderResult) -> Unit) {
     val week = fit.week() ?: return
     val today = fit.clock.now().toLocalDate()
+    fit.workoutBlockingToday()?.let { w ->
+        main.toast("Conclua ou descarte antes o treino em andamento (${w.plan?.name ?: "Treino"}).")
+        return
+    }
     val options = pendingSessions(week, today)
     main.sheet("Trocar o treino de hoje") { close ->
         muted("Escolha o treino que você quer fazer hoje. Vale só para esta semana.", 14f)
@@ -294,6 +339,11 @@ fun Screen.doTodayOptions(parent: LinearLayout, onDone: (ReorderResult) -> Unit)
     val today = fit.clock.now().toLocalDate()
     val options = pendingSessions(week, today).take(4)
     if (options.isEmpty()) return
+    if (fit.workoutBlockingToday() != null) {
+        parent.space(4)
+        parent.muted("🔒 Para trazer outro treino para hoje, conclua ou descarte antes o treino em andamento.", 13f)
+        return
+    }
     parent.space(4)
     parent.label("Quer treinar hoje?")
     options.forEach { d -> parent.sessionOption(d, today, "Fazer hoje", null) { reorderOrToast { fit.doToday(d.date) }?.let(onDone) } }
@@ -318,4 +368,30 @@ fun LinearLayout.displacedHint(d: Displaced?, bottom: Int) {
     val to = d.to
     if (to != null) text("↪️ ${d.session.name}, de hoje, vai para ${to.dayOfWeek.pt()}", 13f, C.muted, bottom = bottom)
     else text("⚠️ ${d.session.name}, de hoje, fica fora desta semana (não há outro dia livre com tempo)", 13f, C.warning, bottom = bottom)
+}
+
+/**
+ * “Começar treino”: começa (ou retoma, se é o mesmo) o treino de [s]. Com outro treino em andamento, pergunta
+ * antes — retomar aquele ou descartá-lo e começar este —, em vez de abrir o outro em silêncio.
+ */
+fun Screen.startOrAsk(s: PlannedSession, sessionId: Long?, readinessId: Long?) {
+    val open = fit.openWorkoutConflict(s, sessionId)
+    if (open == null) {
+        push(WorkoutScreen(fit.startWorkout(s, sessionId, readinessId)))
+        return
+    }
+    val name = open.plan?.name ?: "Treino"
+    val today = fit.clock.now().toLocalDate()
+    main.sheet("Treino em andamento") { close ->
+        body("Você começou $name ${DayScreen.ref(open.startedAt.toLocalDate(), today)}, às ${Dates.time(open.startedAt)}, e ainda não concluiu.")
+        muted("Para começar ${s.name}, retome e conclua aquele treino ou descarte-o (as séries registradas nele são apagadas).", 14f)
+        space(4)
+        button("▶  Retomar $name") { close(); fit.activeWorkout()?.let { push(WorkoutScreen(it)) } }
+        button("Descartar e começar ${s.name}", Btn.DANGER) {
+            close()
+            fit.discardWorkout(open.id)
+            push(WorkoutScreen(fit.startWorkout(s, sessionId, readinessId)))
+        }
+        button("Cancelar", Btn.GHOST, bottom = 2) { close() }
+    }
 }

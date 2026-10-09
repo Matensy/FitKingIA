@@ -12,6 +12,7 @@ import com.fitkingia.core.model.Fmt
 import com.fitkingia.core.model.SleepQuality
 import com.fitkingia.core.program.PlannedSession
 import com.fitkingia.core.program.pt
+import com.fitkingia.core.program.ptCapitalized
 import com.fitkingia.core.recovery.ReadinessBand
 import com.fitkingia.core.recovery.ReadinessCheck
 import com.fitkingia.core.safety.ScreeningStatus
@@ -42,7 +43,8 @@ class HomeScreen(
             view.unfinished?.let { w ->
                 root.card(stroke = C.accent) {
                     h3("Treino em andamento")
-                    muted("${w.plan?.name ?: "Treino"} · começou às ${Dates.time(w.startedAt)}")
+                    val day = w.startedAt.toLocalDate()
+                    muted("${w.plan?.name ?: "Treino"} · começou ${if (day == view.date) "" else "${DayScreen.ref(day, view.date)}, "}às ${Dates.time(w.startedAt)}")
                     button("Retomar treino") { fit.activeWorkout()?.let { push(WorkoutScreen(it)) } }
                 }
             }
@@ -53,16 +55,36 @@ class HomeScreen(
                     text("Ver opções →", 14f, C.accent, bold = true, bottom = 2)
                 }
             }
+            lastWeekCard(root)
             if (fit.screening()?.status == ScreeningStatus.CAUTION) root.card(stroke = C.warning, onClick = { push(ProfileScreen()) }) {
                 text("⚠️ Liberado com cautela — toque para ver os cuidados", 14f, C.warning, bottom = 2)
             }
-            notice?.let { n -> root.reorderNotice(n) { notice = null; refresh() } }
+            notice?.let { n -> root.reorderNotice(n, onUndo = undoAction(n) { notice = it; refresh() }) { notice = null; refresh() } }
             todayCard(root, view)
             if (fit.showPriorityHint()) priorityHint(root) else reminderInvite(root)
         }
         waterCard(root)
         sleepCard(root)
         fit.week()?.let { weekStrip(root, it.days) }
+    }
+
+    /**
+     * A semana virou com treinos sem fazer: a semana nova não os repõe (as opções A–D são da semana em curso).
+     * Diz isso com clareza, mostra quais foram e leva à semana passada; some quando o usuário dispensa.
+     */
+    private fun lastWeekCard(root: LinearLayout) {
+        val missed = fit.lastWeekMissed()
+        if (missed.isEmpty()) return
+        root.card(stroke = C.warning) {
+            h3(if (missed.size == 1) "Semana passada: 1 treino ficou sem fazer" else "Semana passada: ${missed.size} treinos ficaram sem fazer")
+            missed.forEach { d -> muted("• ${d.day.ptCapitalized()} ${Dates.short(d.date)}: ${d.session?.name ?: "Treino"}", 14f) }
+            muted("A semana virou, então esses treinos não passam para esta semana: ela começa com o programa normal. Sem culpa — o que conta é a constância.", 13f)
+            buttonRow(
+                Triple("Ver semana passada", Btn.SECONDARY) { push(WeekScreen(fit.weekStart().minusWeeks(1))) },
+                Triple("Entendi", Btn.GHOST) { fit.dismissLastWeekMissed(); refresh() },
+                bottom = 2,
+            )
+        }
     }
 
     /** Novidade para quem já tinha programa: escolher uma região para priorizar (ex.: glúteos). */
@@ -135,22 +157,23 @@ class HomeScreen(
             }
             v.notes.forEach { explanation(it, 13f) }
             space(6)
-            button("▶  Começar treino") { start(s, v.sessionId, v.readinessId) }
+            button("▶  Começar treino") { startOrAsk(s, v.sessionId, v.readinessId) }
             buttonRow(
                 Triple("⚡ Pouco tempo", Btn.SECONDARY) { quickTime(v.quickMinutes) },
                 Triple(if (v.readiness == null) "🙂 Como estou" else "🙂 Refazer", Btn.SECONDARY) { push(ReadinessScreen()) },
             )
-            button("🔄  Trocar o treino de hoje", Btn.SECONDARY) { swapTodaySheet { r -> notice = r; main.refreshTop(this@HomeScreen) } }
+            // Com um treino em andamento, trocar o treino de hoje faria o treino aberto contar no dia errado.
+            if (fit.workoutBlockingToday() == null) {
+                button("🔄  Trocar o treino de hoje", Btn.SECONDARY) { swapTodaySheet { r -> notice = r; main.refreshTop(this@HomeScreen) } }
+            } else {
+                muted("🔒 Para trocar o treino de hoje, conclua ou descarte antes o treino em andamento.", 13f)
+            }
             buttonRow(
                 Triple("📋 Detalhes", Btn.GHOST) { push(SessionScreen(s, v.sessionId, v.date)) },
-                Triple("🔬 Por que hoje?", Btn.GHOST) { fit.program()?.let { push(WhyScreen(fit.why.forDay(it.program, v.date.dayOfWeek))) } },
+                // Explica o treino que está hoje — inclusive quando veio de outro dia.
+                Triple("🔬 Por que hoje?", Btn.GHOST) { fit.whyOn(v.date)?.let { push(WhyScreen(it)) } },
             )
         }
-    }
-
-    private fun start(s: PlannedSession, sessionId: Long?, readinessId: Long?) {
-        val active = fit.startWorkout(s, sessionId, readinessId)
-        push(WorkoutScreen(active))
     }
 
     private fun quickTime(current: Int?) {

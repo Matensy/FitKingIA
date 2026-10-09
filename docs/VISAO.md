@@ -44,7 +44,7 @@ Legenda: ✅ implementado e testado · 🟡 parcial (domínio/banco prontos, fal
 | **Gamificação** discreta (XP, nível, streak) | ✅ | `core/gamification` |
 | **Ferramentas**: anilhas, 1RM, volume, aquecimento | ✅ | `core/tools`, `OneRepMax` |
 | **Timer de descanso** (vibração + som) | ✅ | `WorkoutScreen` |
-| **Semana** com status por dia (feito, perdido, replanejado); qualquer dia abre o treino; fazer hoje o treino de outro dia; trocar dias (só esta semana ou todas) | ✅ · ⬜ calendário mensal | `WeekScreen`, `DayScreen`, `appcore/WeekReorder.kt` |
+| **Semana** com status por dia (feito, perdido, replanejado); semanas anteriores (só consulta) e a próxima; qualquer dia abre o treino; fazer hoje o treino de outro dia; trocar dias de hoje em diante ou na próxima semana (só nessa semana ou todas), com desfazer | ✅ · ⬜ calendário mensal | `WeekScreen`, `DayScreen`, `appcore/WeekReorder.kt` |
 | **Animações** de navegação, toque, cronômetro em anel e comemoração (respeitam "remover animações") | ✅ | `app/ui/Motion.kt` |
 | **Mapa muscular** | 🟡 barras de volume por músculo · ⬜ desenho | `ProgressScreen` |
 

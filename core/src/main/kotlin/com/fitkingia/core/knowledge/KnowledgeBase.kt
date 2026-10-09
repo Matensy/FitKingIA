@@ -41,6 +41,14 @@ class KnowledgeBase(
 
     fun musclesOf(regions: Set<BodyRegion>): Set<MuscleId> = regions.flatMap { musclesOf(it) }.toSet()
 
+    /**
+     * Músculos (com volume contado) das regiões priorizadas — o mesmo critério do gerador. Quem reajusta uma
+     * sessão ao tempo (troca de dia, "pouco tempo", treino perdido) passa esse conjunto ao [SessionFitter]
+     * para que esses exercícios saiam por último.
+     */
+    fun priorityMuscles(regions: Set<BodyRegion>): Set<MuscleId> =
+        if (regions.isEmpty()) emptySet() else trackedMuscles.filter { it.focusRegion != null && it.focusRegion in regions }.map { it.id }.toSet()
+
     fun muscle(id: MuscleId) = musclesById[id] ?: error("Músculo desconhecido: $id")
     fun pattern(id: PatternId) = patternsById[id] ?: error("Padrão desconhecido: $id")
     fun equipment(id: EquipmentId) = equipmentById[id] ?: error("Equipamento desconhecido: $id")
